@@ -9,7 +9,11 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ScaleGeneratorsFactory } from './scale-generator/scale-generators-factory';
+import {
+  IScaleGeneratorsFactory,
+  SCALE_GENERATORS_FACTORY,
+  ScaleGeneratorsFactory
+} from './scale-generator/scale-generators-factory';
 import { ResizeEvent } from 'angular-resizable-element';
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import {
@@ -44,7 +48,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   scaleEndDate: Date | undefined;
   scale: IScale | undefined;
   isItemResizingStarted = false;
-  scaleGeneratorsFactory = new ScaleGeneratorsFactory();
 
   private _ignoreNextScrollEvent = false;
   private _items: ITimelineItem[] = [];
@@ -86,7 +89,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   get scaleGenerator(): IScaleGenerator {
-    return this.scaleGeneratorsFactory.getGenerator(this.zoom);
+    return this._scaleGeneratorsFactory.getGenerator(this.zoom);
   }
 
   get scrollLeft(): number {
@@ -101,6 +104,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   constructor(private _cdr: ChangeDetectorRef,
               @Inject(DIVISIONS_CALCULATOR_FACTORY) private _divisionsCalculatorFactory: TimelineDivisionsCalculatorFactory,
+              @Inject(SCALE_GENERATORS_FACTORY) private _scaleGeneratorsFactory: IScaleGeneratorsFactory,
               @Inject(ZOOMS) private _zooms: ITimelineZoom[],
               @Inject(PLATFORM_ID) private _platformId: object) {
   }
@@ -147,9 +151,9 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   redraw(): void {
-    this.scaleStartDate = this.scaleGenerator.validateStartDate(this._getScaleStartDate());
-    this.scaleEndDate = this.scaleGenerator.validateEndDate(this._getScaleEndDate());
-    this.scale = this.scaleGenerator.getScale(this.scaleStartDate, this.scaleEndDate);
+    this.scaleStartDate = this.scaleGenerator.getStartDateByFirstItem(this._getFirstItem());
+    this.scaleEndDate = this.scaleGenerator.getEndDateByLastItem(this._getLastItem());
+    this.scale = this.scaleGenerator.generateScale(this.scaleStartDate, this.scaleEndDate);
 
     this._calculateItemsPosition();
     this._recalculateLeftPositionForDateMarker();
@@ -258,39 +262,30 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this._getNumberOfColumnsOccupiedByItem(item) * this.columnWidth;
   }
 
-  private _getScaleStartDate(): Date {
-    const firstItemTime = this.getFirstItemTime();
-    const now = Date.now();
+  private _getFirstItem(): ITimelineItem {
+    let firstItem = this._items[0];
 
-    return new Date(firstItemTime < now ? firstItemTime : now);
+    for (let i = 1; i < this._items.length; i++) {
+      const currentItem = this._items[i];
+      if (new Date(firstItem.startDate).getTime() > new Date(currentItem.startDate).getTime()) {
+        firstItem = currentItem;
+      }
+    }
+
+    return firstItem;
   }
 
-  private _getScaleEndDate(): Date {
-    const lastItemTime = this.getLastItemTime();
-    const now = Date.now();
+  private _getLastItem(): ITimelineItem {
+    let lastItem = this._items[0];
 
-    return new Date(lastItemTime < now ? now : lastItemTime);
-  }
+    for (let i = 1; i < this._items.length; i++) {
+      const currentItem = this._items[i];
+      if (new Date(lastItem.endDate).getTime() < new Date(currentItem.endDate).getTime()) {
+        lastItem = currentItem;
+      }
+    }
 
-  getFirstItemTime(): number {
-    return this._items.reduce((minTime: number, item: ITimelineItem) => {
-      if (!item.startDate)
-        return minTime;
-      const itemTime = new Date(item.startDate).getTime();
-      return itemTime < minTime ? itemTime : minTime;
-    }, new Date().getTime());
-  }
-
-  getLastItemTime(): number {
-    const firstItem = this._items && this._items[0];
-    const initialTime = firstItem ? new Date(firstItem.endDate).getTime() : Date.now();
-
-    return this._items.reduce((maxTime: number, item: ITimelineItem) => {
-      if (!item.endDate)
-        return maxTime;
-      const itemTime = new Date(item.endDate).getTime();
-      return itemTime > maxTime ? itemTime : maxTime;
-    }, initialTime);
+    return lastItem;
   }
 
   getState(): ITimelineState {
@@ -350,7 +345,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   zoomFullOut(): void {
-    this.changeZoom({zoom: this._zooms[0]});
+    this.changeZoom({zoom: this._zooms[this._getMinZoomIndex()]});
   }
 
   zoomIn(): void {
@@ -372,8 +367,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   fitToContent(): void {
-    const startDate = new Date(this.getFirstItemTime());
-    const endDate = new Date(this.getLastItemTime());
+    const startDate = new Date(this._getFirstItem().startDate);
+    const endDate = new Date(this._getLastItem().endDate);
     let chosenZoom = this._zooms[this._getMinZoomIndex()];
     let averageTime: number;
 

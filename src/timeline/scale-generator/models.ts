@@ -1,27 +1,29 @@
-import { IIdObject } from "../models";
+import { IIdObject, ITimelineItem } from "../models";
+
+export type DateInput = Date | string | number;
 
 export interface IScaleColumn extends IIdObject {
-    name: string;
-    date: Date;
-    shortName?: string;
-    longName?: string;
+  name: string;
+  date: Date;
+  shortName?: string;
+  longName?: string;
 }
 
 export interface IScaleHeaderGroup extends IIdObject {
-    name: string;
-    columnsCount: number;
-    date: Date;
+  name: string;
+  columnsCount: number;
+  date: Date;
 }
 
 export interface IScale {
-    headerGroups: IScaleHeaderGroup[];
-    columns: IScaleColumn[];
+  headerGroups: IScaleHeaderGroup[];
+  columns: IScaleColumn[];
 }
 
 export interface IScaleGenerator {
-    getScale(startDate: Date, endDate: Date): IScale;
+  generateScale(startDate: Date, endDate: Date): IScale;
 
-    validateStartDate(date: Date): Date;
+  getStartDateByFirstItem(firstItem: ITimelineItem): Date;
 
-    validateEndDate(date: Date): Date;
+  getEndDateByLastItem(lastItem: ITimelineItem): Date;
 }

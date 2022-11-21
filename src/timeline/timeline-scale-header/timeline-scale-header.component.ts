@@ -11,14 +11,14 @@ import { IScale, IScaleColumn, IScaleHeaderGroup } from '../scale-generator/mode
 export class TimelineScaleHeaderComponent {
   @Input() zoom: ITimelineZoom | undefined;
   @Input() columnWidth: number = 0;
-  @Input() scaleData: IScale;
+  @Input() scale: IScale;
 
   get headerGroups(): IScaleHeaderGroup[] {
-    return this.scaleData?.headerGroups ?? [];
+    return this.scale?.headerGroups ?? [];
   }
 
   get columns(): IScaleColumn[] {
-    return this.scaleData?.columns ?? [];
+    return this.scale?.columns ?? [];
   }
 
   getColumnName(column: IScaleColumn): string {

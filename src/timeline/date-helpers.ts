@@ -1,7 +1,9 @@
+import { DateInput } from "./scale-generator/models";
+
 export class DateHelpers {
-  static getLastDayOfMonth(date: Date): Date {
+  static getLastDayOfMonth(date: DateInput): Date {
     const dateWithLastDayOfMonth = new Date(date);
-    dateWithLastDayOfMonth.setMonth(date.getMonth() + 1);
+    dateWithLastDayOfMonth.setMonth(dateWithLastDayOfMonth.getMonth() + 1);
     dateWithLastDayOfMonth.setDate(0);
 
     return dateWithLastDayOfMonth;
@@ -18,13 +20,14 @@ export class DateHelpers {
     return monday.getMonth() === date.getMonth() ? monday : new Date(monday.setDate(monday.getDate() + 7));
   }
 
-  static getFirstDayOfWeek(date: Date): Date {
+  static getFirstDayOfWeek(date: DateInput): Date {
+    date = new Date(date);
     const first = date.getDate() - date.getDay() + 1;
 
     return new Date(new Date(date).setDate(first));
   }
 
-  static getLastDayOfWeek(date: Date): Date {
+  static getLastDayOfWeek(date: DateInput): Date {
     return new Date(new Date(date).setDate(DateHelpers.getFirstDayOfWeek(date).getDate() + 6))
   }
 

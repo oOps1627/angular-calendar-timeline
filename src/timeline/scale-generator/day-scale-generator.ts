@@ -1,63 +1,63 @@
 import { DatesCacheDecorator, generateDateId } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
-import { IScale, IScaleColumn, IScaleGenerator } from './models';
+import { DateInput, IScale, IScaleColumn, IScaleGenerator } from './models';
 import { DateHelpers } from "../date-helpers";
 
 export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
-    private readonly countOfMonthsAfterLastItem = 5;
-    private readonly countOfMonthsBeforeFirstItem = 1;
 
-    @DatesCacheDecorator()
-    getScale(startDate: Date, endDate: Date): IScale {
-        const currentDate = new Date(startDate);
-        const endTime = endDate.getTime();
-        const data: IScale = {
-            headerGroups: [],
-            columns: [],
-        };
+  private readonly countOfMonthsAfterLastItem = 5;
+  private readonly countOfMonthsBeforeFirstItem = 1;
 
-        while (currentDate.getTime() < endTime) {
-            const daysInCurrentMonth = DateHelpers.getDaysInMonth(currentDate);
-            data.headerGroups.push({
-                id: generateDateId(currentDate),
-                name: this.localDatePipe.transform(currentDate, 'LLLL') ?? '',
-                columnsCount: daysInCurrentMonth,
-                date: new Date(currentDate),
-            });
+  @DatesCacheDecorator()
+  generateScale(startDate: Date, endDate: Date): IScale {
+    const currentDate = new Date(startDate);
+    const endTime = endDate.getTime();
+    const data: IScale = {
+      headerGroups: [],
+      columns: [],
+    };
 
-            for (let i = currentDate.getDate(); i <= daysInCurrentMonth; i++) {
-                const currentDay = new Date(currentDate).setDate(i);
-                data.columns.push(this._generateColumn(new Date(currentDay)));
-            }
+    while (currentDate.getTime() < endTime) {
+      const daysInCurrentMonth = DateHelpers.getDaysInMonth(currentDate);
+      data.headerGroups.push({
+        id: generateDateId(currentDate),
+        name: this.localDatePipe.transform(currentDate, 'LLLL') ?? '',
+        columnsCount: daysInCurrentMonth,
+        date: new Date(currentDate),
+      });
 
-            currentDate.setDate(1);
-            currentDate.setMonth(currentDate.getMonth() + 1);
-        }
+      for (let i = currentDate.getDate(); i <= daysInCurrentMonth; i++) {
+        const currentDay = new Date(currentDate).setDate(i);
+        data.columns.push(this._generateColumn(new Date(currentDay)));
+      }
 
-        return data;
+      currentDate.setDate(1);
+      currentDate.setMonth(currentDate.getMonth() + 1);
     }
 
-    private _generateColumn(date: Date): IScaleColumn {
-        return {
-            id: generateDateId(date),
-            date: date,
-            name: this.localDatePipe.transform(date, 'EEE dd/MM') ?? '',
-            shortName: this.localDatePipe.transform(date, 'dd') ?? '',
-            longName: this.localDatePipe.transform(date, 'EEEE dd/MM') ?? '',
-        };
-    }
+    return data;
+  }
 
-    @DatesCacheDecorator()
-    validateStartDate(date: Date): Date {
-        const newDate = new Date(date);
-        newDate.setDate(1);
-        newDate.setMonth(newDate.getMonth() - this.countOfMonthsBeforeFirstItem);
+  private _generateColumn(date: Date): IScaleColumn {
+    return {
+      id: generateDateId(date),
+      date: date,
+      name: this.localDatePipe.transform(date, 'EEE dd/MM') ?? '',
+      shortName: this.localDatePipe.transform(date, 'dd') ?? '',
+      longName: this.localDatePipe.transform(date, 'EEEE dd/MM') ?? '',
+    };
+  }
 
-        return newDate;
-    }
+  protected _addEmptySpaceBefore(startDate: DateInput): Date {
+    const newDate = new Date(startDate);
+    newDate.setDate(1);
+    newDate.setMonth(newDate.getMonth() - this.countOfMonthsBeforeFirstItem);
 
-    @DatesCacheDecorator()
-    validateEndDate(date: Date): Date {
-        return new Date(DateHelpers.getLastDayOfMonth(date).setMonth(date.getMonth() + this.countOfMonthsAfterLastItem));
-    }
+    return newDate;
+  }
+
+  protected _addEmptySpaceAfter(endDate: DateInput): Date {
+    endDate = new Date(endDate);
+    return new Date(DateHelpers.getLastDayOfMonth(endDate).setMonth(endDate.getMonth() + this.countOfMonthsAfterLastItem));
+  }
 }

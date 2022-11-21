@@ -1,6 +1,6 @@
 import { DatesCacheDecorator, generateDateId } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
-import { IScale, IScaleGenerator } from './models';
+import { DateInput, IScale, IScaleGenerator } from './models';
 import { DateHelpers } from "../date-helpers";
 
 export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
@@ -8,7 +8,7 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
   private readonly countOfWeeksBeforeFirstItem = 4;
 
   @DatesCacheDecorator()
-  getScale(startDate: Date, endDate: Date): IScale {
+  generateScale(startDate: Date, endDate: Date): IScale {
     const data: IScale = {headerGroups: [], columns: []};
     const currentWeek = new Date(startDate);
     const endTime = endDate.getTime();
@@ -59,16 +59,14 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
     return data;
   }
 
-  @DatesCacheDecorator()
-  validateStartDate(date: Date): Date {
-    const newDate = new Date(date);
+  protected _addEmptySpaceBefore(startDate: DateInput): Date {
+    const newDate = new Date(startDate);
     newDate.setDate(newDate.getDate() - (this.countOfWeeksBeforeFirstItem * 7));
     return DateHelpers.getFirstMondayOfMonth(newDate);
   }
 
-  @DatesCacheDecorator()
-  validateEndDate(date: Date): Date {
-    const lastDayOfWeek = DateHelpers.getLastDayOfWeek(date);
+  protected _addEmptySpaceAfter(endDate: DateInput): Date {
+    const lastDayOfWeek = DateHelpers.getLastDayOfWeek(endDate);
     return new Date(lastDayOfWeek.setDate(lastDayOfWeek.getDate() + this.countOfWeeksAfterLastItem * 7));
   }
 }

@@ -14,9 +14,15 @@ import {
 } from "./divisions-calculator/divisions-calculator-factory";
 import { ITimelineZoom} from "./models";
 import { DefaultZooms, ZOOMS } from "./zooms";
+import {
+  IScaleGeneratorsFactory,
+  SCALE_GENERATORS_FACTORY,
+  ScaleGeneratorsFactory
+} from "./scale-generator/scale-generators-factory";
 
 interface ITimelineModuleInitializationProviders {
   divisionsCalculatorFactory?: () => ITimelineDivisionsCalculatorFactory;
+  scaleGeneratorsFactory?: () => IScaleGeneratorsFactory;
   zooms?: ITimelineZoom[];
 }
 
@@ -47,7 +53,13 @@ export class TimelineModule {
         {
           provide: DIVISIONS_CALCULATOR_FACTORY,
           useFactory: () => {
-            return config?.divisionsCalculatorFactory() ?? new TimelineDivisionsCalculatorFactory();
+            return (config?.divisionsCalculatorFactory() && config.divisionsCalculatorFactory()) ?? new TimelineDivisionsCalculatorFactory();
+          }
+        },
+        {
+          provide: SCALE_GENERATORS_FACTORY,
+          useFactory: () => {
+            return (config?.scaleGeneratorsFactory && config.scaleGeneratorsFactory()) ?? new ScaleGeneratorsFactory();
           }
         },
         {
