@@ -1,0 +1,19 @@
+<div *ngIf='!isEmpty'
+     [ngStyle]="{'left': left + 'px'}"
+     class='date-marker d-flex flex-column'>
+    <div class='wrapper-block'>
+        <div class='triangle-down'></div>
+    </div>
+</div>
+
+<div *ngIf='isEmpty'
+     [ngStyle]="{'left': left + 'px'}"
+     class='date-marker'>
+    <div class='wrapper-block'>
+        <div class='triangle-down'></div>
+    </div>
+    <span class='empty icon'></span>
+    <p class='text-no-matches'>
+        {{"no-matches-found"}}
+    </p>
+</div>

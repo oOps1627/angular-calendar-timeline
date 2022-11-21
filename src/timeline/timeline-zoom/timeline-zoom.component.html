@@ -1,0 +1,21 @@
+<div class='zoom-buttons ' *ngIf='timeline'>
+    <button (click)='scrollToToday()'
+            class='today'>
+        {{ 'today'}}
+    </button>
+    <div class='zoom-group d-inline-flex'>
+        <button (click)='zoomOut()' class='reduce'>
+            ---
+        </button>
+
+      <input type="text" #input (change)="onSliderChange(+input.value)">
+
+        <button (click)='zoomIn()' class='increase'>
+           +++
+        </button>
+    </div>
+    <button (click)='zoomAndFitToContent()'
+            class='center'>
+        Center
+    </button>
+</div>

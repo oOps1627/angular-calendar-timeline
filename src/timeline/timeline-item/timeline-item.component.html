@@ -1,0 +1,20 @@
+<div class="content-template" *ngIf="contentTemplate; else nameTemplate">
+    <ng-container [ngTemplateOutlet]="contentTemplate"
+                  [ngTemplateOutletContext]="{$implicit: item}"
+    ></ng-container>
+</div>
+
+<ng-template #nameTemplate>
+    {{item.name}}
+</ng-template>
+
+<div *ngIf='item.canResizeLeft'
+     [resizeEdges]='{ left: true }'
+     class='resize-handle-left'
+     mwlResizeHandle
+></div>
+<div *ngIf='item.canResizeRight'
+     [resizeEdges]='{ right: true }'
+     class='resize-handle-right'
+     mwlResizeHandle
+></div>

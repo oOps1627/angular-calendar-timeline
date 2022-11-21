@@ -1,0 +1,19 @@
+<div class='panel-date'>
+    <div class='d-flex flex-column'>
+        <div class='d-flex'>
+            <div *ngFor='let group of headerGroups; trackBy: trackById; index as i'
+                [style.width.px]='columnWidth * group.columnsCount' class='header-column'>
+                <div>{{group.name}}</div>
+            </div>
+        </div>
+        <div class='d-flex'>
+            <div *ngFor='let column of columns; trackBy: trackById'>
+                <div class='item' [style.width.px]='columnWidth'>
+                    {{getColumnName(column)}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
