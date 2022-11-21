@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TimelineComponent } from '../timeline.component';
-import { TimelineMaxZoomIndex, TimelineZooms } from '../models';
+import { DefaultZooms } from "../zooms";
 
 @Component({
     selector: 'app-timeline-zoom',
@@ -19,11 +19,11 @@ export class TimelineZoomComponent {
     }
 
     onSliderChange(index: number): void {
-        this.timeline.changeZoom({zoom: TimelineZooms[index]});
+        this.timeline.changeZoom({zoom: DefaultZooms[index]});
     }
 
     scrollToToday(): void {
-        this.timeline.changeZoom({zoom: TimelineZooms[TimelineMaxZoomIndex], date: new Date()});
+        this.timeline.zoomFullIn();
     }
 
     zoomAndFitToContent(): void {

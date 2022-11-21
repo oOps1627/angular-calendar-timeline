@@ -1,4 +1,4 @@
-import { ITimelineZoom, TimelineZoomDivision } from '../models';
+import { ITimelineZoom, TimelineDivisionType } from '../models';
 import { IScaleGenerator } from './models';
 import { MonthScaleGenerator } from './month-scale-generator';
 import { WeekScaleGenerator } from './week-scale-generator';
@@ -6,9 +6,9 @@ import { DayScaleGenerator } from './day-scale-generator';
 
 export class ScaleGeneratorsFactory {
     private generatorsDictionary = {
-        [TimelineZoomDivision.Day]: new DayScaleGenerator(),
-        [TimelineZoomDivision.Week]: new WeekScaleGenerator(),
-        [TimelineZoomDivision.Month]: new MonthScaleGenerator(),
+        [TimelineDivisionType.Day]: new DayScaleGenerator(),
+        [TimelineDivisionType.Week]: new WeekScaleGenerator(),
+        [TimelineDivisionType.Month]: new MonthScaleGenerator(),
     };
 
     getGenerator(zoom: ITimelineZoom): IScaleGenerator {

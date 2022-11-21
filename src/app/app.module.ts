@@ -10,7 +10,7 @@ import { RouterModule } from "@angular/router";
   ],
   imports: [
     BrowserModule,
-    TimelineModule,
+    TimelineModule.initialize(),
     RouterModule.forRoot([
       {
         path: '',
