@@ -4,31 +4,12 @@
   <app-timeline #timelineComponent
                 [rowHeight]='38'
                 [groupsTitle]="'portfolio'"
-                [itemsToGroups]='convertTimeLineItemsToGroups.bind(this)'
-                [items]='timelineItems'
+                [items]='items'
                 [groupsPanelWidth]='256'
                 [itemContentTemplate]='itemContentTemplate'>
   </app-timeline>
 </div>
 
 <ng-template #itemContentTemplate let-item>
-  <ng-container *ngIf='item.width'>
-    <ng-container *ngIf='isPortfolioTimelineItem(item)'
-                  [ngTemplateOutlet]='portfolioItemTemplate'
-                  [ngTemplateOutletContext]='{$implicit: item}'
-    ></ng-container>
-
-    <ng-container *ngIf='!isPortfolioTimelineItem(item)'
-                  [ngTemplateOutlet]='projectItemTemplate'
-                  [ngTemplateOutletContext]='{$implicit: item}'
-    ></ng-container>
-  </ng-container>
-</ng-template>
-
-<ng-template #portfolioItemTemplate let-item>
-  {{item.name}}
-</ng-template>
-
-<ng-template #projectItemTemplate let-item>
   {{item.name}}
 </ng-template>

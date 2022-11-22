@@ -3,24 +3,20 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, EventEmitter, Inject,
+  ElementRef,
+  EventEmitter,
+  Inject,
   Input,
-  OnDestroy, Output, PLATFORM_ID,
+  OnDestroy,
+  Output,
+  PLATFORM_ID,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {
-  IScaleGeneratorsFactory,
-  SCALE_GENERATORS_FACTORY,
-  ScaleGeneratorsFactory
-} from './scale-generator/scale-generators-factory';
+import { IScaleGeneratorsFactory, SCALE_GENERATORS_FACTORY } from './scale-generator/scale-generators-factory';
 import { ResizeEvent } from 'angular-resizable-element';
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import {
-  ITimelineGroup,
-  ITimelineItem,
-  ITimelineZoom, ITimelineState, IIdObject,
-} from './models';
+import { IIdObject, ITimelineItem, ITimelineState, ITimelineZoom, } from './models';
 import { interval } from 'rxjs';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { startWith } from 'rxjs/operators';
@@ -41,9 +37,8 @@ import { ZOOMS } from "./zooms";
 })
 export class TimelineComponent implements AfterViewInit, OnDestroy {
   currentDate: Date = new Date();
-  timelineMarkerLeft = 0;
+  dateMarkerLeftPosition = 0;
   zoom: ITimelineZoom = this._zooms[this._getMaxZoomIndex()];
-  groups: ITimelineGroup[] = [];
   scaleStartDate: Date = new Date();
   scaleEndDate: Date | undefined;
   scale: IScale | undefined;
@@ -61,13 +56,12 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input() rowHeight: number = 45;
   @Input() groupsPanelWidth: number = 160;
   @Input() itemContentTemplate: TemplateRef<any> | undefined;
-  @Input() itemsToGroups: (items: ITimelineItem[]) => ITimelineGroup[] = (items) => [];
   @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
 
   @Input()
   set items(items) {
     this._items = items;
-    this._setGroups();
+    forEachItem(items, (item: ITimelineItem) => this._sortItems(item));
     this.redraw();
     this.scrollToDate(this.currentDate);
   }
@@ -90,16 +84,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   get scaleGenerator(): IScaleGenerator {
     return this._scaleGeneratorsFactory.getGenerator(this.zoom);
-  }
-
-  get scrollLeft(): number {
-    return this.timelineNativeElement?.scrollLeft ?? 0;
-  }
-
-  set scrollLeft(width: number) {
-    if (this.timelineNativeElement) {
-      this.timelineNativeElement.scrollLeft = width;
-    }
   }
 
   constructor(private _cdr: ChangeDetectorRef,
@@ -147,7 +131,10 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     const scrollLeft = (duration * this.columnWidth) - (this.visibleScaleWidth / 2);
     this.currentDate = date;
     this._ignoreNextScrollEvent = true;
-    this.scrollLeft = scrollLeft < 0 ? 0 : scrollLeft;
+
+    if (this.timelineNativeElement) {
+      this.timelineNativeElement.scrollLeft = scrollLeft < 0 ? 0 : scrollLeft;
+    }
   }
 
   redraw(): void {
@@ -162,7 +149,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   getCurrentDate(): Date {
-    const scrollLeftToCenterScreen = this.scrollLeft + (this.visibleScaleWidth / 2);
+    const currentScrollLeft = this.timelineNativeElement?.scrollLeft ?? 0;
+    const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
     const columns = Math.round(scrollLeftToCenterScreen / this.columnWidth);
 
     return this._getDivisionCalculator().addDivisionToDate(this.scaleStartDate, columns);
@@ -180,6 +168,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       item.endDate = newEndDate.toISOString();
       event.source._dragRef.reset();
       this._updateItemPosition(item);
+
       this.updateItemHandler(item, () => {
         item.startDate = oldStartDate;
         item.endDate = oldEndDate;
@@ -228,8 +217,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  handleGroupClick(group: ITimelineGroup): void {
-    group.expanded = !group.expanded;
+  toggleExpand(item: ITimelineItem): void {
+    item.expanded = !item.expanded;
   }
 
   handleGroupsPanelResize(event: ResizeEvent) {
@@ -239,7 +228,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private _calculateItemsPosition(): void {
-    this._items.forEach(item => this._updateItemPosition(item));
+    forEachItem(this._items, (item) => this._updateItemPosition(item));
   }
 
   private _updateItemPosition(item: ITimelineItem): void {
@@ -262,28 +251,32 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this._getNumberOfColumnsOccupiedByItem(item) * this.columnWidth;
   }
 
-  private _getFirstItem(): ITimelineItem {
+  private _getFirstItem(onlyVisible = false): ITimelineItem {
     let firstItem = this._items[0];
 
-    for (let i = 1; i < this._items.length; i++) {
-      const currentItem = this._items[i];
-      if (new Date(firstItem.startDate).getTime() > new Date(currentItem.startDate).getTime()) {
-        firstItem = currentItem;
+    forEachItem(this._items, (item, parent) => {
+      if (onlyVisible && (parent && !parent?.expanded))
+        return;
+
+      if (new Date(firstItem.startDate).getTime() > new Date(item.startDate).getTime()) {
+        firstItem = item;
       }
-    }
+    });
 
     return firstItem;
   }
 
-  private _getLastItem(): ITimelineItem {
+  private _getLastItem(onlyVisible = false): ITimelineItem {
     let lastItem = this._items[0];
 
-    for (let i = 1; i < this._items.length; i++) {
-      const currentItem = this._items[i];
-      if (new Date(lastItem.endDate).getTime() < new Date(currentItem.endDate).getTime()) {
-        lastItem = currentItem;
+    forEachItem(this._items, (item, parent) => {
+      if (onlyVisible && (parent && !parent?.expanded))
+        return;
+
+      if (new Date(lastItem.endDate).getTime() < new Date(item.endDate).getTime()) {
+        lastItem = item;
       }
-    }
+    });
 
     return lastItem;
   }
@@ -295,32 +288,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  loadState(state: ITimelineState): void {
-    if (!state)
-      return;
-
-    this.changeZoom({
-      zoom: state.zoom,
-      date: new Date(state.currentDate ?? new Date()),
-      emitStateChange: false,
-    });
-  }
-
-  private _setGroups(): void {
-    const groups = this.itemsToGroups(this._items);
-    forEachTimelineGroup(groups, (group) => {
-      this._calculateGroupsHeight(group);
-      this._sortGroupItems(group);
-    });
-
-    this.groups = groups;
-  }
-
-  private _calculateGroupsHeight(group: ITimelineGroup): void {
-    group.height = (group.items && group.items.length || 1) * this.rowHeight;
-  }
-
-  private _sortGroupItems(group: ITimelineGroup): void {
+  private _sortItems(group: ITimelineItem): void {
     (group.items ?? []).sort((a, b) => {
       return new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? 1 : -1;
     });
@@ -329,7 +297,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   private _recalculateLeftPositionForDateMarker(): void {
     const countOfColumns = this._getDivisionCalculator().getDurationInDivisions(this.scaleStartDate, new Date());
 
-    this.timelineMarkerLeft = countOfColumns * this.columnWidth;
+    this.dateMarkerLeftPosition = countOfColumns * this.columnWidth;
   }
 
   private _getNumberOfColumnsOccupiedByItem(item: ITimelineItem): number {
@@ -367,8 +335,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   fitToContent(): void {
-    const startDate = new Date(this._getFirstItem().startDate);
-    const endDate = new Date(this._getLastItem().endDate);
+    const startDate = new Date(this._getFirstItem(true).startDate);
+    const endDate = new Date(this._getLastItem(true).endDate);
     let chosenZoom = this._zooms[this._getMinZoomIndex()];
     let averageTime: number;
 
@@ -406,11 +374,15 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 }
 
-function forEachTimelineGroup(groups: ITimelineGroup[], handler: (group: ITimelineGroup) => void): void {
-  (groups || []).forEach(group => {
-    handler(group);
-    if (group.groups) {
-      forEachTimelineGroup(group.groups, handler);
-    }
-  });
+function forEachItem(items: ITimelineItem[], handler: (item: ITimelineItem, parent?: ITimelineItem) => void): void {
+  function iterateAll(items: ITimelineItem[], parent: ITimelineItem | null): void {
+    (items || []).forEach(item => {
+      handler(item, parent);
+      if (item.items) {
+        iterateAll(item.items, item);
+      }
+    });
+  }
+
+  iterateAll(items, null);
 }

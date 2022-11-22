@@ -15,19 +15,13 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   canResizeLeft: boolean;
   canResizeRight: boolean;
   canDrag: boolean;
+  expanded?: boolean;
+  height?: number;
+  items?: ITimelineItem<Meta>[];
   width?: number;
   left?: number;
   meta?: Meta;
   onUpdate?: () => void;
-}
-
-export interface ITimelineGroup<ItemMeta = any, Meta = any> extends IIdObject {
-  name: string;
-  expanded: boolean;
-  height?: number;
-  items?: ITimelineItem<ItemMeta>[];
-  groups?: ITimelineGroup[];
-  meta?: Meta;
 }
 
 export interface ITimelineState {

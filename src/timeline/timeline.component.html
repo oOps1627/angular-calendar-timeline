@@ -1,110 +1,121 @@
 <div #timeline (scroll)='onScroll($event)' class='wrapper'>
-    <div class='groups-panel-wrapper'>
-        <div class='header'>
-            {{ groupsTitle}}
-        </div>
+  <div class='groups-panel-wrapper'>
+    <div class='header'>
+      {{ groupsTitle}}
+    </div>
 
-        <div class='groups-panel'
-             mwlResizable
-             (resizing)='handleGroupsPanelResize($event)'
-             [resizeSnapGrid]='{right: true}'
-             [style.minWidth.px]='groupsPanelWidth'>
+    <div class='groups-panel'
+         mwlResizable
+         (resizing)='handleGroupsPanelResize($event)'
+         [resizeSnapGrid]='{right: true}'
+         [style.minWidth.px]='groupsPanelWidth'>
 
-            <ng-container *ngFor='let group of groups; trackBy: trackById; let first = first'
-                          [ngTemplateOutlet]='groupIterationTemplate'
-                          [ngTemplateOutletContext]='{group: group, first: first, depth: 0}'>
-            </ng-container>
+      <ng-container *ngFor='let group of items; trackBy: trackById; let first = first'
+                    [ngTemplateOutlet]='groupIterationTemplate'
+                    [ngTemplateOutletContext]='{group: group, first: first, depth: 0}'>
+      </ng-container>
 
-            <ng-template #groupIterationTemplate let-group='group' let-first='first' let-depth='depth'>
-                <div>
-                    <div [class.first-item]='first'
-                         [style.height.px]='group.height'
-                         [style.width.px]='groupsPanelWidth'
-                         [class.can-collapse]='group.groups && group.groups.length'
-                         (click)='handleGroupClick(group)'
-                         class='group-list__item'>
+      <ng-template #groupIterationTemplate let-group='group' let-first='first' let-depth='depth'>
+        <div>
+          <div [class.first-item]='first'
+               [style.height.px]='rowHeight'
+               [style.width.px]='groupsPanelWidth'
+               [class.can-collapse]='group.items && group.items.length'
+               (click)='toggleExpand(group)'
+               class='group-list__item'>
 
-                        <div [style.marginLeft.px]='depth * 15' class='d-flex align-items-center position-relative'>
-                            <i class='icon-arrow-down'
-                               [class.collapsed]='!group.expanded'>
-                            </i>
+            <div [style.marginLeft.px]='depth * 15' class='d-flex align-items-center position-relative'>
+              <i class='icon-arrow-down'
+                 [class.collapsed]='!group.expanded'>
+              </i>
 
-                            <span class='group-name' title="{{group.name}}">
+              <span class='group-name' title="{{group.name}}">
                             {{group.name}}
                         </span>
-                        </div>
-                    </div>
-
-                    <div *ngIf='group.expanded'>
-                        <ng-container *ngFor='let innerGroup of (group.groups || []); trackBy: trackById;'
-                                      [ngTemplateOutletContext]='{group: innerGroup, first: false, depth: depth + 1}'
-                                      [ngTemplateOutlet]='groupIterationTemplate'
-                        ></ng-container>
-                    </div>
-                </div>
-            </ng-template>
-        </div>
-    </div>
-
-    <div class='wrapper-data'>
-        <app-timeline-scale-header
-            [zoom]='zoom'
-            [scale]='scale'
-            [columnWidth]='columnWidth'
-        ></app-timeline-scale-header>
-
-        <ng-container *ngIf='items && items.length'>
-            <div *ngFor='let date of scale?.columns; index as i'
-                 [style.left.px]='columnWidth * (i + 1)'
-                 class='canvas-line'>
             </div>
+          </div>
+
+          <div *ngIf='group.expanded'>
+            <ng-container *ngFor='let innerGroup of (group.items || []); trackBy: trackById;'
+                          [ngTemplateOutletContext]='{group: innerGroup, first: false, depth: depth + 1}'
+                          [ngTemplateOutlet]='groupIterationTemplate'
+            ></ng-container>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class='wrapper-data'>
+    <app-timeline-scale-header
+      [zoom]='zoom'
+      [scale]='scale'
+      [columnWidth]='columnWidth'
+    ></app-timeline-scale-header>
+
+    <ng-container *ngIf='items && items.length'>
+      <div *ngFor='let date of scale?.columns; index as i'
+           [style.left.px]='columnWidth * (i + 1)'
+           class='canvas-line'>
+      </div>
+    </ng-container>
+
+    <app-timeline-date-marker
+      [isEmpty]='items && !items.length'
+      [left]='dateMarkerLeftPosition'
+    ></app-timeline-date-marker>
+
+    <div class='timeline-content'>
+      <ng-container *ngFor='let group of items; trackBy: trackById;'>
+        <ng-container [ngTemplateOutlet]='itemTemplate'
+                      [ngTemplateOutletContext]='{$implicit: group}'
+        ></ng-container>
+
+        <ng-container [ngTemplateOutlet]='itemsIterationTemplate'
+                      [ngTemplateOutletContext]='{$implicit: group}'
+        ></ng-container>
+      </ng-container>
+
+      <ng-template #itemTemplate let-item let-first="first" let-last="last">
+        <div [class.first-item]='first'
+             [class.last-item]='last'
+             class='group-line' [style.height.px]='rowHeight'>
+          <app-timeline-item class='task'
+                             (cdkDragEnded)='onItemDropped($event, item)'
+                             (dblclick)='itemDblClickHandler(item)'
+                             (resizeEnd)='onItemResizeEnd($event, item)'
+                             (resizeStart)='onItemResizeStart($event)'
+                             [cdkDragDisabled]='isItemResizingStarted || !item.canDrag'
+                             [enableGhostResize]='true'
+                             [item]='item'
+                             [style.left.px]='item?.left'
+                             [style.width.px]='item?.width'
+                             [contentTemplate]='itemContentTemplate'
+                             cdkDrag
+                             cdkDragBoundary='.group-line'
+                             cdkDragLockAxis='x'
+                             ghostElementPositioning='absolute'
+                             mwlResizable
+          ></app-timeline-item>
+        </div>
+      </ng-template>
+
+      <ng-template #itemsIterationTemplate let-group>
+        <ng-container *ngIf='group.expanded'>
+          <div *ngFor='let item of (group.items || []); trackBy: trackById; let first = first; let last = last'>
+            <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{
+              $implicit: item, first: first, last: last
+            }"></ng-container>
+          </div>
         </ng-container>
 
-        <app-timeline-date-marker
-            [isEmpty]='items && !items.length'
-            [left]='timelineMarkerLeft'
-        ></app-timeline-date-marker>
-
-        <div class='timeline-content'>
-            <ng-container *ngFor='let group of groups; trackBy: trackById;'>
-                <ng-container [ngTemplateOutlet]='itemsIterationTemplate'
-                              [ngTemplateOutletContext]='{$implicit: group}'
-                ></ng-container>
-            </ng-container>
-
-            <ng-template #itemsIterationTemplate let-group>
-                <div *ngFor='let item of (group.items || []); trackBy: trackById; let first = first; let last = last'>
-                    <div [class.first-item]='first' [class.last-item]='last'
-                         class='group-line' [style.height.px]='rowHeight'>
-                        <app-timeline-item class='task'
-                                           (cdkDragEnded)='onItemDropped($event, item)'
-                                           (dblclick)='itemDblClickHandler(item)'
-                                           (resizeEnd)='onItemResizeEnd($event, item)'
-                                           (resizeStart)='onItemResizeStart($event)'
-                                           [cdkDragDisabled]='isItemResizingStarted || !item.canDrag'
-                                           [enableGhostResize]='true'
-                                           [item]='item'
-                                           [style.left.px]='item?.left'
-                                           [style.width.px]='item?.width'
-                                           [contentTemplate]='itemContentTemplate'
-                                           cdkDrag
-                                           cdkDragBoundary='.group-line'
-                                           cdkDragLockAxis='x'
-                                           ghostElementPositioning='absolute'
-                                           mwlResizable
-                        ></app-timeline-item>
-                    </div>
-                </div>
-
-                <ng-container *ngIf='group.expanded'>
-                    <ng-container *ngFor='let innerGroup of (group.groups || []); trackBy: trackById;'
-                                  [ngTemplateOutlet]='itemsIterationTemplate'
-                                  [ngTemplateOutletContext]='{$implicit: innerGroup}'
-                    ></ng-container>
-                </ng-container>
-            </ng-template>
-        </div>
+        <ng-container *ngFor='let innerGroup of (group.items || []); trackBy: trackById;'
+                      [ngTemplateOutlet]='itemsIterationTemplate'
+                      [ngTemplateOutletContext]='{$implicit: innerGroup}'
+        ></ng-container>
+      </ng-template>
     </div>
+  </div>
 </div>
 
 
