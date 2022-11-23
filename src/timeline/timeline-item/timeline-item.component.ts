@@ -9,5 +9,5 @@ import { ITimelineItem } from '../models';
 })
 export class TimelineItemComponent {
     @Input() item: ITimelineItem | undefined;
-    @Input() contentTemplate: TemplateRef<any> | undefined;
+    @Input() contentTemplate: TemplateRef<{$implicit: ITimelineItem}> | undefined;
 }
