@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { TimelineComponent } from '../timeline.component';
+import { Component } from '@angular/core';
 import { DefaultZooms } from "../zooms";
+import { ZoomService } from "../zoom.service";
 
 @Component({
     selector: 'app-timeline-zoom',
@@ -8,26 +8,27 @@ import { DefaultZooms } from "../zooms";
     styleUrls: ['./timeline-zoom.component.scss'],
 })
 export class TimelineZoomComponent {
-    @Input() timeline: TimelineComponent;
+    constructor(private _zoomService: ZoomService) {
+    }
 
     zoomIn(): void {
-       this.timeline.zoomIn();
+       this._zoomService.zoomIn();
     }
 
     zoomOut(): void {
-        this.timeline.zoomOut();
+        this._zoomService.zoomOut();
     }
 
     onSliderChange(index: number): void {
-        this.timeline.changeZoom({zoom: DefaultZooms[index]});
+        this._zoomService.changeZoom(DefaultZooms[index]);
     }
 
     scrollToToday(): void {
-        this.timeline.zoomFullIn();
+        this._zoomService.zoomFullIn();
     }
 
     zoomAndFitToContent(): void {
-        this.timeline.fitToContent();
+        this._zoomService.fitToContent();
     }
 }
 

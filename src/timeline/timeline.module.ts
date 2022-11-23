@@ -12,13 +12,14 @@ import {
   ITimelineDivisionsCalculatorFactory,
   DIVISIONS_CALCULATOR_FACTORY, TimelineDivisionsCalculatorFactory
 } from "./divisions-calculator/divisions-calculator-factory";
-import { ITimelineZoom} from "./models";
+import { ITimelineZoom } from "./models";
 import { DefaultZooms, ZOOMS } from "./zooms";
 import {
   IScaleGeneratorsFactory,
   SCALE_GENERATORS_FACTORY,
   ScaleGeneratorsFactory
 } from "./scale-generator/scale-generators-factory";
+import { ZoomService } from "./zoom.service";
 
 interface ITimelineModuleInitializationProviders {
   divisionsCalculatorFactory?: () => ITimelineDivisionsCalculatorFactory;
@@ -44,9 +45,12 @@ interface ITimelineModuleInitializationProviders {
     TimelineComponent,
     TimelineZoomComponent,
   ],
+  providers: [
+    ZoomService,
+  ]
 })
 export class TimelineModule {
-  static initialize(config?: ITimelineModuleInitializationProviders): ModuleWithProviders<TimelineModule> {
+  static forChild(config?: ITimelineModuleInitializationProviders): ModuleWithProviders<TimelineModule> {
     return {
       ngModule: TimelineModule,
       providers: [
