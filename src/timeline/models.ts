@@ -26,7 +26,7 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
 
 export interface ITimelineState {
   zoom?: ITimelineZoom;
-  currentDate?: string;
+  currentDate?: Date;
 }
 
 export enum  TimelineDivisionType {

@@ -13,6 +13,8 @@ export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGener
     const currentDate = new Date(startDate);
     const endTime = endDate.getTime();
     const data: IScale = {
+      startDate,
+      endDate,
       headerGroups: [],
       columns: [],
     };

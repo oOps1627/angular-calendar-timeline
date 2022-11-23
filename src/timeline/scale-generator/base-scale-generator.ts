@@ -12,13 +12,15 @@ export abstract class BaseScaleGenerator implements Pick<IScaleGenerator, 'getSt
 
   public getStartDateByFirstItem(firstItem: ITimelineItem): Date {
     const now = Date.now();
+    const firstItemDate = new Date(firstItem?.startDate ?? now);
 
-    return this._addEmptySpaceBefore(new Date(firstItem.startDate).getTime() < now ? firstItem.startDate : now);
+    return this._addEmptySpaceBefore(firstItemDate.getTime() < now ? firstItemDate : now);
   }
 
   public getEndDateByLastItem(lastItem: ITimelineItem): Date {
     const now = Date.now();
+    const lastItemDate = new Date(lastItem?.endDate ?? now);
 
-    return this._addEmptySpaceAfter(new Date(lastItem.endDate).getTime() < now ? now : lastItem.endDate);
+    return this._addEmptySpaceAfter(lastItemDate.getTime() < now ? now : lastItemDate);
   }
 }

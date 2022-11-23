@@ -50,12 +50,11 @@
     <app-timeline-scale-header
       [zoom]='zoom'
       [scale]='scale'
-      [columnWidth]='columnWidth'
     ></app-timeline-scale-header>
 
     <ng-container *ngIf='items && items.length'>
       <div *ngFor='let date of scale?.columns; index as i'
-           [style.left.px]='columnWidth * (i + 1)'
+           [style.left.px]='zoom.columnWidth * (i + 1)'
            class='canvas-line'>
       </div>
     </ng-container>

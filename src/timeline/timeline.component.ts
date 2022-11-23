@@ -39,8 +39,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   currentDate: Date = new Date();
   dateMarkerLeftPosition = 0;
   zoom: ITimelineZoom = this._zooms[this._getMaxZoomIndex()];
-  scaleStartDate: Date = new Date();
-  scaleEndDate: Date | undefined;
   scale: IScale | undefined;
   isItemResizingStarted = false;
 
@@ -61,7 +59,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input()
   set items(items) {
     this._items = items;
-    forEachItem(items, (item: ITimelineItem) => this._sortItems(item));
+    this._sortItems();
     this.redraw();
     this.scrollToDate(this.currentDate);
   }
@@ -72,10 +70,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   get timelineNativeElement(): HTMLElement | undefined {
     return this.timelineElement?.nativeElement;
-  }
-
-  get columnWidth(): number {
-    return this.zoom.columnWidth;
   }
 
   get visibleScaleWidth(): number {
@@ -110,25 +104,23 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this._ignoreNextScrollEvent = false;
   }
 
-  changeZoom(data: { zoom?: ITimelineZoom, date?: Date, emitStateChange?: boolean }): void {
-    if (!data.zoom || this.zoom.index === data.zoom.index && !data.date)
+  changeZoom(data: Partial<ITimelineState>): void {
+    if (!data.zoom || this.zoom.index === data.zoom.index && !data.currentDate)
       return;
 
     this.zoom = data.zoom;
     this.redraw();
-    this.scrollToDate(data.date ? data.date : this.currentDate);
+    this.scrollToDate(data.currentDate ? data.currentDate : this.currentDate);
 
-    if (data.emitStateChange) {
-      this.stateChange.emit(this.getState());
-    }
+    this.stateChange.emit(this.getState());
   }
 
   scrollToDate(date: Date): void {
     if (!this.timelineElement || !date)
       return;
 
-    const duration = this._getDivisionCalculator().getDurationInDivisions(this.scaleStartDate, date);
-    const scrollLeft = (duration * this.columnWidth) - (this.visibleScaleWidth / 2);
+    const duration = this._getDivisionCalculator().getDurationInDivisions(this.scale.startDate, date);
+    const scrollLeft = (duration * this.zoom.columnWidth) - (this.visibleScaleWidth / 2);
     this.currentDate = date;
     this._ignoreNextScrollEvent = true;
 
@@ -138,9 +130,9 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   redraw(): void {
-    this.scaleStartDate = this.scaleGenerator.getStartDateByFirstItem(this._getFirstItem());
-    this.scaleEndDate = this.scaleGenerator.getEndDateByLastItem(this._getLastItem());
-    this.scale = this.scaleGenerator.generateScale(this.scaleStartDate, this.scaleEndDate);
+    const scaleStartDate = this.scaleGenerator.getStartDateByFirstItem(this._getItemWithOldestStartDate());
+    const scaleEndDate = this.scaleGenerator.getEndDateByLastItem(this._getItemWithNewestEndDate());
+    this.scale = this.scaleGenerator.generateScale(scaleStartDate, scaleEndDate);
 
     this._calculateItemsPosition();
     this._recalculateLeftPositionForDateMarker();
@@ -151,15 +143,15 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   getCurrentDate(): Date {
     const currentScrollLeft = this.timelineNativeElement?.scrollLeft ?? 0;
     const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
-    const columns = Math.round(scrollLeftToCenterScreen / this.columnWidth);
+    const columns = Math.round(scrollLeftToCenterScreen / this.zoom.columnWidth);
 
-    return this._getDivisionCalculator().addDivisionToDate(this.scaleStartDate, columns);
+    return this._getDivisionCalculator().addDivisionToDate(this.scale.startDate, columns);
   }
 
   onItemDropped(event: CdkDragEnd, item: ITimelineItem): void {
     if (!this.isItemResizingStarted) {
       const divisionCalculator = this._getDivisionCalculator();
-      const transferColumns = Math.round(event.distance.x / this.columnWidth);
+      const transferColumns = Math.round(event.distance.x / this.zoom.columnWidth);
       const newStartDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
       const newEndDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
       const oldStartDate = item.startDate;
@@ -194,14 +186,14 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     const {left, right} = event.edges;
 
     if (left) {
-      const countOfColumnsMoved = Math.round(left as number / this.columnWidth);
+      const countOfColumnsMoved = Math.round(left as number / this.zoom.columnWidth);
       const newStartDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), countOfColumnsMoved);
       if (newStartDate.getTime() > new Date(item.endDate).getTime()) {
         return;
       }
       item.startDate = newStartDate.toISOString();
     } else {
-      const countOfColumnsMoved = Math.round(right as number / this.columnWidth);
+      const countOfColumnsMoved = Math.round(right as number / this.zoom.columnWidth);
       const newEndDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), countOfColumnsMoved);
       if (newEndDate.getTime() < new Date(item.startDate).getTime()) {
         return;
@@ -242,16 +234,16 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   private _calculateItemLeftOffset(item: ITimelineItem): number {
     if (!item.startDate || !item.endDate)
       return 0;
-    return this._getItemNumberOfColumnsOffsetFromStart(item) * this.columnWidth;
+    return this._getItemNumberOfColumnsOffsetFromStart(item) * this.zoom.columnWidth;
   }
 
   private _calculateItemWidth(item: ITimelineItem): number {
     if (!item.startDate || !item.endDate)
       return 0;
-    return this._getNumberOfColumnsOccupiedByItem(item) * this.columnWidth;
+    return this._getNumberOfColumnsOccupiedByItem(item) * this.zoom.columnWidth;
   }
 
-  private _getFirstItem(onlyVisible = false): ITimelineItem {
+  private _getItemWithOldestStartDate(onlyVisible = false): ITimelineItem {
     let firstItem = this._items[0];
 
     forEachItem(this._items, (item, parent) => {
@@ -266,7 +258,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return firstItem;
   }
 
-  private _getLastItem(onlyVisible = false): ITimelineItem {
+  private _getItemWithNewestEndDate(onlyVisible = false): ITimelineItem {
     let lastItem = this._items[0];
 
     forEachItem(this._items, (item, parent) => {
@@ -284,20 +276,22 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   getState(): ITimelineState {
     return {
       zoom: this.zoom,
-      currentDate: this.currentDate.toISOString(),
+      currentDate: this.currentDate,
     };
   }
 
-  private _sortItems(group: ITimelineItem): void {
-    (group.items ?? []).sort((a, b) => {
-      return new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? 1 : -1;
+  private _sortItems(): void {
+    forEachItem(this._items, (item: ITimelineItem) => () => {
+      (item.items ?? []).sort((a, b) => {
+        return new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? 1 : -1;
+      });
     });
   }
 
   private _recalculateLeftPositionForDateMarker(): void {
-    const countOfColumns = this._getDivisionCalculator().getDurationInDivisions(this.scaleStartDate, new Date());
+    const countOfColumns = this._getDivisionCalculator().getDurationInDivisions(this.scale.startDate, new Date());
 
-    this.dateMarkerLeftPosition = countOfColumns * this.columnWidth;
+    this.dateMarkerLeftPosition = countOfColumns * this.zoom.columnWidth;
   }
 
   private _getNumberOfColumnsOccupiedByItem(item: ITimelineItem): number {
@@ -305,7 +299,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private _getItemNumberOfColumnsOffsetFromStart(item: ITimelineItem): number {
-    return this._getDivisionCalculator().getUniqueDivisionsCountBetweenDates(this.scaleStartDate, new Date(item.startDate)) - 1;
+    return this._getDivisionCalculator().getUniqueDivisionsCountBetweenDates(this.scale.startDate, new Date(item.startDate)) - 1;
   }
 
   zoomFullIn(): void {
@@ -334,9 +328,15 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this.changeZoom({zoom: this._zooms[newZoomIndex]});
   }
 
-  fitToContent(): void {
-    const startDate = new Date(this._getFirstItem(true).startDate);
-    const endDate = new Date(this._getLastItem(true).endDate);
+  fitToContent(paddings = 15): void {
+    const firstItem = this._getItemWithOldestStartDate(true);
+    const lastItem = this._getItemWithNewestEndDate(true);
+
+    if (!firstItem || !lastItem)
+      return;
+
+    const startDate = new Date(firstItem.startDate);
+    const endDate = new Date(lastItem.endDate);
     let chosenZoom = this._zooms[this._getMinZoomIndex()];
     let averageTime: number;
 
@@ -344,8 +344,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       const currentZoom = this._zooms[i];
       const divisionCalculator = this._divisionsCalculatorFactory.getDivisionCalculator(currentZoom.division);
       const countOfColumns = divisionCalculator.getUniqueDivisionsCountBetweenDates(startDate, endDate);
-
-      const paddings = 15;
 
       if (countOfColumns * currentZoom.columnWidth < (this.visibleScaleWidth - paddings * 2)) {
         chosenZoom = currentZoom;
@@ -355,7 +353,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
     }
 
-    this.changeZoom({zoom: chosenZoom, date: new Date(averageTime)});
+    this.changeZoom({zoom: chosenZoom, currentDate: new Date(averageTime)});
   }
 
   protected _getDivisionCalculator(): ITimelineDivisionCalculator {

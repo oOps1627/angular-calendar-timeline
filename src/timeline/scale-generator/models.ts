@@ -16,6 +16,8 @@ export interface IScaleHeaderGroup extends IIdObject {
 }
 
 export interface IScale {
+  startDate: Date;
+  endDate: Date;
   headerGroups: IScaleHeaderGroup[];
   columns: IScaleColumn[];
 }

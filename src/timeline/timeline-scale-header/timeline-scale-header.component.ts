@@ -10,7 +10,6 @@ import { IScale, IScaleColumn, IScaleHeaderGroup } from '../scale-generator/mode
 })
 export class TimelineScaleHeaderComponent {
   @Input() zoom: ITimelineZoom | undefined;
-  @Input() columnWidth: number = 0;
   @Input() scale: IScale;
 
   get headerGroups(): IScaleHeaderGroup[] {
@@ -22,10 +21,10 @@ export class TimelineScaleHeaderComponent {
   }
 
   getColumnName(column: IScaleColumn): string {
-    if (this.columnWidth < 65 && column.shortName)
+    if (this.zoom.columnWidth < 65 && column.shortName)
       return column.shortName;
 
-    if (this.columnWidth > 180 && column.longName)
+    if (this.zoom.columnWidth > 180 && column.longName)
       return column.longName;
 
     return column.name;

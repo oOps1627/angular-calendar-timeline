@@ -12,6 +12,8 @@ export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGen
     const currentDate = new Date(startDate);
     const endTime = endDate.getTime();
     const data: IScale = {
+      startDate,
+      endDate,
       headerGroups: [],
       columns: [],
     };

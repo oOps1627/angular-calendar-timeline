@@ -9,7 +9,12 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
 
   @DatesCacheDecorator()
   generateScale(startDate: Date, endDate: Date): IScale {
-    const data: IScale = {headerGroups: [], columns: []};
+    const data: IScale = {
+      startDate,
+      endDate,
+      headerGroups: [],
+      columns: []
+    };
     const currentWeek = new Date(startDate);
     const endTime = endDate.getTime();
     let weekNumber = 0;
