@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, TemplateRef } from '@angular/core';
 
 @Component({
     selector: 'app-timeline-date-marker',
@@ -6,5 +6,7 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./timeline-date-marker.component.scss'],
 })
 export class TimelineDateMarkerComponent {
-    @Input() left: number = 0;
+    @Input() leftPosition: number = 0;
+    @Input() headerHeight: number;
+    @Input() customTemplate: TemplateRef<{ leftPosition: number }> | undefined;
 }

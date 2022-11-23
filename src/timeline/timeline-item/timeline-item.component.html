@@ -1,4 +1,4 @@
-<div class="content-template" *ngIf="contentTemplate; else nameTemplate">
+<div class="item-custom-template" *ngIf="contentTemplate; else nameTemplate">
     <ng-container [ngTemplateOutlet]="contentTemplate"
                   [ngTemplateOutletContext]="{$implicit: item}"
     ></ng-container>

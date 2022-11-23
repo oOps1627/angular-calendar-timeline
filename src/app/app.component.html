@@ -1,13 +1,15 @@
 <div>
   <app-timeline-zoom></app-timeline-zoom>
 
-  <app-timeline #timelineComponent
-                [rowHeight]='38'
-                [groupsTitle]="'portfolio'"
-                [items]='items'
-                [groupsPanelWidth]='256'
-                [itemContentTemplate]='itemContentTemplate'>
-  </app-timeline>
+ <div class="timeline-wrapper">
+   <app-timeline #timelineComponent
+                 [rowHeight]='88'
+                 [panelLabel]="'Label'"
+                 [items]='items'
+                 [groupsPanelWidth]='256'
+                 [itemContentTemplate]='itemContentTemplate'>
+   </app-timeline>
+ </div>
 </div>
 
 <ng-template #itemContentTemplate let-item>

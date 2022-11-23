@@ -1,6 +1,10 @@
-<div [ngStyle]="{'left': left + 'px'}"
-     class='date-marker'>
-  <div class='wrapper-block'>
-    <div class='triangle-down'></div>
-  </div>
-</div>
+<ng-container *ngIf="customTemplate; else defaultDateMarkerTemplate"
+              [ngTemplateOutlet]="customTemplate"
+              [ngTemplateOutletContext]="{left: leftPosition}">
+</ng-container>
+
+<ng-template #defaultDateMarkerTemplate>
+  <div [style.left.px]="leftPosition"
+       [style.height]="'calc(100% - ' + headerHeight + 'px)'"
+       class='date-marker'></div>
+</ng-template>

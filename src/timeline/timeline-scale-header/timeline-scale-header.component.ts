@@ -9,6 +9,7 @@ import { IScale, IScaleColumn, IScaleHeaderGroup } from '../scale-generator/mode
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineScaleHeaderComponent {
+  @Input() height: number;
   @Input() zoom: ITimelineZoom | undefined;
   @Input() scale: IScale;
 

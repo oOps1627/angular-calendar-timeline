@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, HostListener,
   Inject,
   Input,
   OnDestroy,
@@ -45,12 +45,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @ViewChild('timeline') timelineElement: ElementRef<HTMLElement> | undefined;
 
   @Input() updateItemHandler: ((updatedItem: ITimelineItem, onError?: () => void) => void) = () => null;
-  @Input() groupsTitle: string = '';
+  @Input() panelLabel: string = '';
   @Input() rowHeight: number = 45;
+  @Input() headerHeight: number = 60;
   @Input() groupsPanelWidth: number = 160;
   @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
   @Input() itemContentTemplate: TemplateRef<{$implicit: ITimelineItem}> | undefined;
-  @Input() dateMarkerTemplate: TemplateRef<{ left: number }>;
+  @Input() dateMarkerTemplate: TemplateRef<{ leftPosition: number }> | undefined;
 
   @Input()
   set items(items) {
@@ -63,12 +64,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this._items;
   }
 
-  get timelineNativeElement(): HTMLElement | undefined {
-    return this.timelineElement?.nativeElement;
-  }
-
   get visibleScaleWidth(): number {
-    return this.timelineNativeElement ? this.timelineNativeElement.clientWidth - this.groupsPanelWidth : 0;
+    return this._elementRef.nativeElement.clientWidth - this.groupsPanelWidth;
   }
 
   get scaleGenerator(): IScaleGenerator {
@@ -83,6 +80,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
               private _zoomService: ZoomService,
               @Inject(DIVISIONS_CALCULATOR_FACTORY) private _divisionsCalculatorFactory: TimelineDivisionsCalculatorFactory,
               @Inject(SCALE_GENERATORS_FACTORY) private _scaleGeneratorsFactory: IScaleGeneratorsFactory,
+              @Inject(ElementRef) private _elementRef: ElementRef,
               @Inject(PLATFORM_ID) private _platformId: object) {
   }
 
@@ -103,6 +101,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  @HostListener('scroll', ['$event'])
   onScroll(event: Event): void {
     this._cdr.markForCheck();
     if (!this._ignoreNextScrollEvent) {
@@ -112,15 +111,12 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   attachCameraToCurrentDate(): void {
-    if (!this.timelineElement)
-      return;
-
     const duration = this._getDivisionCalculator().getDurationInDivisions(this.scale.startDate, this.currentDate);
     const scrollLeft = (duration * this.zoom.columnWidth) - (this.visibleScaleWidth / 2);
     this._ignoreNextScrollEvent = true;
 
-    if (this.timelineNativeElement) {
-      this.timelineNativeElement.scrollLeft = scrollLeft < 0 ? 0 : scrollLeft;
+    if (this._elementRef.nativeElement) {
+      this._elementRef.nativeElement.scrollLeft = scrollLeft < 0 ? 0 : scrollLeft;
     }
   }
 
@@ -134,7 +130,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   getCurrentDate(): Date {
-    const currentScrollLeft = this.timelineNativeElement?.scrollLeft ?? 0;
+    const currentScrollLeft = this._elementRef.nativeElement.scrollLeft ?? 0;
     const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
     const columns = Math.round(scrollLeftToCenterScreen / this.zoom.columnWidth);
 
