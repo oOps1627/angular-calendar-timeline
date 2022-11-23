@@ -48,8 +48,9 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input() groupsTitle: string = '';
   @Input() rowHeight: number = 45;
   @Input() groupsPanelWidth: number = 160;
-  @Input() itemContentTemplate: TemplateRef<any> | undefined;
   @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
+  @Input() itemContentTemplate: TemplateRef<any> | undefined;
+  @Input() dateMarkerTemplate: TemplateRef<{ left: number }>;
 
   @Input()
   set items(items) {

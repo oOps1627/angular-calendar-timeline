@@ -59,10 +59,15 @@
       </div>
     </ng-container>
 
-    <app-timeline-date-marker
-      [isEmpty]='items && !items.length'
-      [left]='dateMarkerLeftPosition'
-    ></app-timeline-date-marker>
+    <ng-container *ngIf="dateMarkerTemplate; else defaultDateMarkerTemplate"
+                  [ngTemplateOutlet]="dateMarkerTemplate"
+                  [ngTemplateOutletContext]="{left: dateMarkerLeftPosition}">
+    </ng-container>
+
+    <ng-template #defaultDateMarkerTemplate>
+      <app-timeline-date-marker [left]='dateMarkerLeftPosition'
+      ></app-timeline-date-marker>
+    </ng-template>
 
     <div class='timeline-content'>
       <ng-container *ngFor='let group of items; trackBy: trackById;'>

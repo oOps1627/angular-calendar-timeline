@@ -6,6 +6,5 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./timeline-date-marker.component.scss'],
 })
 export class TimelineDateMarkerComponent {
-    @Input() isEmpty: boolean = false;
     @Input() left: number = 0;
 }
