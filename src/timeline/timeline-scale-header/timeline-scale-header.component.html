@@ -8,7 +8,7 @@
   <div class='columns'>
     <div *ngFor='let column of columns; trackBy: trackById'>
       <div class='column' [style.width.px]='zoom.columnWidth'>
-        {{getColumnName(column)}}
+        {{column[columnNameMode] || column.name}}
       </div>
     </div>
   </div>
