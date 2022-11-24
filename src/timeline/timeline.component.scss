@@ -9,25 +9,26 @@
 }
 
 .panel-wrapper {
-  height: fit-content;
-  flex-grow: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: sticky;
   left: 0;
   z-index: 10;
+  background-color: #F6F6F8;
 }
 
 .panel-label {
   display: flex;
   align-items: center;
-  background-color: #F6F6F8;
   color: #738c99;
   width: 100%;
   position: sticky;
   top: 0;
   left: 0;
   z-index: 100;
+  flex-shrink: 0;
+  background-color: #F6F6F8;
 
   &:after {
     content: "";
@@ -42,7 +43,6 @@
 
 .panel {
   height: fit-content;
-  background-color: #F6F6F8;
 
   .panel-group {
     background-color: #F6F6F8;
@@ -90,7 +90,8 @@
 
 .content-wrapper {
   position: relative;
- height: fit-content;
+  height: fit-content;
+  min-height: 100%;
 }
 
 .column-separators {
