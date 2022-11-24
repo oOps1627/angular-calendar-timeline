@@ -15,16 +15,16 @@ export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGener
     const data: IScale = {
       startDate,
       endDate,
-      headerGroups: [],
+      groups: [],
       columns: [],
     };
 
     while (currentDate.getTime() < endTime) {
       const daysInCurrentMonth = DateHelpers.getDaysInMonth(currentDate);
-      data.headerGroups.push({
+      data.groups.push({
         id: generateDateId(currentDate),
         name: this.localDatePipe.transform(currentDate, 'LLLL') ?? '',
-        columnsCount: daysInCurrentMonth,
+        columnsInGroup: daysInCurrentMonth,
         date: new Date(currentDate),
       });
 

@@ -14,14 +14,14 @@ export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGen
     const data: IScale = {
       startDate,
       endDate,
-      headerGroups: [],
+      groups: [],
       columns: [],
     };
     while (currentDate.getTime() <= endTime) {
-      data.headerGroups.push({
+      data.groups.push({
         id: generateDateId(currentDate),
         name: String(currentDate.getFullYear()),
-        columnsCount: 12,
+        columnsInGroup: 12,
         date: new Date(currentDate)
       });
       for (let i = 1; i <= 12; i++) {

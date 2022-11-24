@@ -14,9 +14,10 @@
 
 .groups {
   display: flex;
-  height: 60%;
+  flex-grow: 3;
 
   .group {
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,9 +40,10 @@
 
 .columns {
   display: flex;
-  height: 40%;
+  flex-grow: 2;
 
   .column {
+    height: 100%;
     position: relative;
     display: flex;
     justify-content: center;

@@ -9,17 +9,17 @@ export interface IScaleColumn extends IIdObject {
   longName?: string;
 }
 
-export interface IScaleHeaderGroup extends IIdObject {
+export interface IScaleGroup extends IIdObject {
   name: string;
-  columnsCount: number;
+  columnsInGroup: number;
   date: Date;
 }
 
 export interface IScale {
   startDate: Date;
   endDate: Date;
-  headerGroups: IScaleHeaderGroup[];
   columns: IScaleColumn[];
+  groups?: IScaleGroup[];
 }
 
 export interface IScaleGenerator {

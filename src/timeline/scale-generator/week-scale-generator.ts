@@ -12,7 +12,7 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
     const data: IScale = {
       startDate,
       endDate,
-      headerGroups: [],
+      groups: [],
       columns: []
     };
     const currentWeek = new Date(startDate);
@@ -22,10 +22,10 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
     // TODO: translate
     const weekName = 'week';
 
-    data.headerGroups.push({
+    data.groups.push({
       id: generateDateId(currentWeek),
       name: `${this.localDatePipe.transform(currentWeek, 'LLLL y')}`,
-      columnsCount: (DateHelpers.getLastDayOfMonth(currentWeek).getDate() - currentWeek.getDate() + 1) / 7,
+      columnsInGroup: (DateHelpers.getLastDayOfMonth(currentWeek).getDate() - currentWeek.getDate() + 1) / 7,
       date: new Date(currentWeek)
     });
 
@@ -35,11 +35,11 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
       } else {
         weekNumber = 1;
         monthNumber = currentWeek.getMonth();
-        data.headerGroups.push({
+        data.groups.push({
           id: generateDateId(currentWeek),
           date: new Date(currentWeek),
           name: `${this.localDatePipe.transform(currentWeek, 'LLLL y')}`,
-          columnsCount: DateHelpers.getLastDayOfMonth(currentWeek).getDate() / 7,
+          columnsInGroup: DateHelpers.getLastDayOfMonth(currentWeek).getDate() / 7,
         });
       }
 
@@ -53,12 +53,12 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
       currentWeek.setDate(currentWeek.getDate() + 7);
     }
 
-    const lastGroup = data.headerGroups[data.headerGroups.length - 1];
+    const lastGroup = data.groups[data.groups.length - 1];
 
     if (lastGroup.date.getMonth() !== currentWeek.getMonth()) {
-      lastGroup.columnsCount = (DateHelpers.getLastDayOfMonth(lastGroup.date).getDate() + currentWeek.getDate() - 1) / 7;
+      lastGroup.columnsInGroup = (DateHelpers.getLastDayOfMonth(lastGroup.date).getDate() + currentWeek.getDate() - 1) / 7;
     } else {
-      lastGroup.columnsCount = currentWeek.getDate() / 7;
+      lastGroup.columnsInGroup = currentWeek.getDate() / 7;
     }
 
     return data;

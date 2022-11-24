@@ -1,7 +1,7 @@
 <div class='wrapper' [style.height.px]="height">
-  <div class='groups'>
+  <div class='groups' *ngIf="headerGroups.length">
     <div *ngFor='let group of headerGroups; trackBy: trackById; index as i'
-         [style.width.px]='zoom.columnWidth * group.columnsCount' class='group'>
+         [style.width.px]='zoom.columnWidth * group.columnsInGroup' class='group'>
       <div>{{group.name}}</div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IIdObject, ITimelineZoom } from '../models';
-import { IScale, IScaleColumn, IScaleHeaderGroup } from '../scale-generator/models';
+import { IScale, IScaleColumn, IScaleGroup } from '../scale-generator/models';
 
 @Component({
   selector: 'app-timeline-scale-header',
@@ -13,8 +13,8 @@ export class TimelineScaleHeaderComponent {
   @Input() zoom: ITimelineZoom | undefined;
   @Input() scale: IScale;
 
-  get headerGroups(): IScaleHeaderGroup[] {
-    return this.scale?.headerGroups ?? [];
+  get headerGroups(): IScaleGroup[] {
+    return this.scale?.groups ?? [];
   }
 
   get columns(): IScaleColumn[] {
