@@ -1,6 +1,6 @@
-import { ITimelineDivisionCalculator } from "./models";
+import { IDivisionAdaptor } from "./models";
 
-export abstract class BaseDivisionsCalculator implements ITimelineDivisionCalculator {
+export abstract class BaseDivisionsAdaptor implements IDivisionAdaptor {
   protected abstract _setDateToStartOfDivision(date: Date): Date;
   protected abstract _setDateToEndOfDivision(date: Date): Date;
 

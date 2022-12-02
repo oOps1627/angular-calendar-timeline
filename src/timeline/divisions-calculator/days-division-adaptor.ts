@@ -1,10 +1,10 @@
-import { ITimelineDivisionCalculator } from './models';
+import { IDivisionAdaptor } from './models';
 import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers } from "../date-helpers";
-import { BaseDivisionsCalculator } from "./base-divisions-calculator";
+import { BaseDivisionsAdaptor } from "./base-divisions-adaptor";
 import { TimeInMilliseconds } from "../models";
 
-export class TimelineDaysDivisionCalculator extends BaseDivisionsCalculator implements ITimelineDivisionCalculator {
+export class TimelineDaysDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
     const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());

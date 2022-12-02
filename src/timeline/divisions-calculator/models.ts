@@ -1,4 +1,4 @@
-export interface ITimelineDivisionCalculator {
+export interface IDivisionAdaptor {
     getTimeInDivisionsCenter(startDate: Date, endDate: Date): number;
 
     getUniqueDivisionsCountBetweenDates(startDate: Date, endDate: Date): number;

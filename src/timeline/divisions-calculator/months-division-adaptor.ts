@@ -1,9 +1,9 @@
-import { ITimelineDivisionCalculator } from './models';
+import { IDivisionAdaptor } from './models';
 import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers } from "../date-helpers";
-import { BaseDivisionsCalculator } from "./base-divisions-calculator";
+import { BaseDivisionsAdaptor } from "./base-divisions-adaptor";
 
-export class TimelineMonthsDivisionCalculator extends BaseDivisionsCalculator implements ITimelineDivisionCalculator {
+export class TimelineMonthsDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   protected _setDateToStartOfDivision(date: Date): Date {
     const start = new Date(date);
     start.setDate(1);

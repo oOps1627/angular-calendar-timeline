@@ -9,9 +9,9 @@ import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-dat
 import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
 import { TimelineZoomComponent } from "./timeline-zoom/timeline-zoom.component";
 import {
-  ITimelineDivisionsCalculatorFactory,
-  DIVISIONS_CALCULATOR_FACTORY, TimelineDivisionsCalculatorFactory
-} from "./divisions-calculator/divisions-calculator-factory";
+  ITimelineDivisionsAdaptorsFactory,
+  DIVISIONS_ADAPTORS_FACTORY, TimelineDivisionsAdaptorsFactory
+} from "./divisions-calculator/divisions-adaptors-factory";
 import { ITimelineZoom } from "./models";
 import { DefaultZooms, ZOOMS } from "./zooms";
 import {
@@ -22,7 +22,7 @@ import {
 import { ZoomService } from "./zoom.service";
 
 interface ITimelineModuleInitializationProviders {
-  divisionsCalculatorFactory?: () => ITimelineDivisionsCalculatorFactory;
+  divisionsCalculatorFactory?: () => ITimelineDivisionsAdaptorsFactory;
   scaleGeneratorsFactory?: () => IScaleGeneratorsFactory;
   zooms?: ITimelineZoom[];
 }
@@ -55,9 +55,9 @@ export class TimelineModule {
       ngModule: TimelineModule,
       providers: [
         {
-          provide: DIVISIONS_CALCULATOR_FACTORY,
+          provide: DIVISIONS_ADAPTORS_FACTORY,
           useFactory: () => {
-            return (config?.divisionsCalculatorFactory() && config.divisionsCalculatorFactory()) ?? new TimelineDivisionsCalculatorFactory();
+            return (config?.divisionsCalculatorFactory() && config.divisionsCalculatorFactory()) ?? new TimelineDivisionsAdaptorsFactory();
           }
         },
         {

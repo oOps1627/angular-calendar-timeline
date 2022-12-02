@@ -19,11 +19,11 @@ import { interval } from 'rxjs';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { startWith } from 'rxjs/operators';
 import {
-  DIVISIONS_CALCULATOR_FACTORY,
-  TimelineDivisionsCalculatorFactory
-} from './divisions-calculator/divisions-calculator-factory';
+  DIVISIONS_ADAPTORS_FACTORY,
+  TimelineDivisionsAdaptorsFactory
+} from './divisions-calculator/divisions-adaptors-factory';
 import { IScale, IScaleGenerator } from './scale-generator/models';
-import { ITimelineDivisionCalculator } from './divisions-calculator/models';
+import { IDivisionAdaptor } from './divisions-calculator/models';
 import { isPlatformBrowser } from "@angular/common";
 import { ZoomService } from "./zoom.service";
 
@@ -72,13 +72,17 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this._scaleGeneratorsFactory.getGenerator(this.zoom);
   }
 
+  get divisionAdaptor(): IDivisionAdaptor {
+    return this._divisionsAdaptorsFactory.getAdaptor(this.zoom.division);
+  }
+
   get zoom(): ITimelineZoom {
     return this._zoomService.zoom;
   }
 
   constructor(private _cdr: ChangeDetectorRef,
               private _zoomService: ZoomService,
-              @Inject(DIVISIONS_CALCULATOR_FACTORY) private _divisionsCalculatorFactory: TimelineDivisionsCalculatorFactory,
+              @Inject(DIVISIONS_ADAPTORS_FACTORY) private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsFactory,
               @Inject(SCALE_GENERATORS_FACTORY) private _scaleGeneratorsFactory: IScaleGeneratorsFactory,
               @Inject(ElementRef) private _elementRef: ElementRef,
               @Inject(PLATFORM_ID) private _platformId: object) {
@@ -110,7 +114,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   attachCameraToCurrentDate(): void {
-    const duration = this._getDivisionCalculator().getDurationInDivisions(this.scale.startDate, this.currentDate);
+    const duration = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, this.currentDate);
     const scrollLeft = (duration * this.zoom.columnWidth) - (this.visibleScaleWidth / 2);
     this._ignoreNextScrollEvent = true;
 
@@ -133,12 +137,12 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
     const columns = Math.round(scrollLeftToCenterScreen / this.zoom.columnWidth);
 
-    return this._getDivisionCalculator().addDivisionToDate(this.scale.startDate, columns);
+    return this.divisionAdaptor.addDivisionToDate(this.scale.startDate, columns);
   }
 
   onItemDropped(event: CdkDragEnd, item: ITimelineItem): void {
     if (!this.isItemResizingStarted) {
-      const divisionCalculator = this._getDivisionCalculator();
+      const divisionCalculator = this.divisionAdaptor;
       const transferColumns = Math.round(event.distance.x / this.zoom.columnWidth);
       const newStartDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
       const newEndDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
@@ -167,7 +171,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   onItemResizeEnd(event: ResizeEvent, item: ITimelineItem): void {
     this.isItemResizingStarted = false;
-    const divisionCalculator = this._getDivisionCalculator();
+    const divisionCalculator = this.divisionAdaptor;
     const oldStartDate = item.startDate;
     const oldEndDate = item.endDate;
     const {left, right} = event.edges;
@@ -284,16 +288,16 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private _recalculateLeftPositionForDateMarker(): void {
-    const countOfColumns = this._getDivisionCalculator().getDurationInDivisions(this.scale.startDate, new Date());
+    const countOfColumns = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, new Date());
     this.dateMarkerLeftPosition = countOfColumns * this.zoom.columnWidth;
   }
 
   private _getNumberOfColumnsOccupiedByItem(item: ITimelineItem): number {
-    return this._getDivisionCalculator().getUniqueDivisionsCountBetweenDates(new Date(item.startDate), new Date(item.endDate));
+    return this.divisionAdaptor.getUniqueDivisionsCountBetweenDates(new Date(item.startDate), new Date(item.endDate));
   }
 
   private _getItemNumberOfColumnsOffsetFromStart(item: ITimelineItem): number {
-    return this._getDivisionCalculator().getUniqueDivisionsCountBetweenDates(this.scale.startDate, new Date(item.startDate)) - 1;
+    return this.divisionAdaptor.getUniqueDivisionsCountBetweenDates(this.scale.startDate, new Date(item.startDate)) - 1;
   }
 
   private _fitToContent(paddings: number): void {
@@ -306,19 +310,15 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     const startDate = new Date(firstItem.startDate);
     const endDate = new Date(lastItem.endDate);
     const zoom = this._zoomService._calculateOptimalZoom(startDate, endDate, this.visibleScaleWidth, paddings);
-    const divisionCalculator = this._divisionsCalculatorFactory.getDivisionCalculator(zoom.division);
+    const divisionAdaptor = this._divisionsAdaptorsFactory.getAdaptor(zoom.division);
 
-    this.currentDate = new Date(divisionCalculator.getTimeInDivisionsCenter(startDate, endDate));
+    this.currentDate = new Date(divisionAdaptor.getTimeInDivisionsCenter(startDate, endDate));
 
     if (this._zoomService.isZoomActive(zoom)) {
       this.attachCameraToCurrentDate();
     } else {
       this._zoomService.changeZoom(zoom);
     }
-  }
-
-  protected _getDivisionCalculator(): ITimelineDivisionCalculator {
-    return this._divisionsCalculatorFactory.getDivisionCalculator(this.zoom.division);
   }
 
   ngOnDestroy(): void {

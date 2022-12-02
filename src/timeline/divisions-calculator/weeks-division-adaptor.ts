@@ -1,10 +1,10 @@
-import { ITimelineDivisionCalculator } from './models';
+import { IDivisionAdaptor } from './models';
 import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers } from "../date-helpers";
-import { BaseDivisionsCalculator } from "./base-divisions-calculator";
+import { BaseDivisionsAdaptor } from "./base-divisions-adaptor";
 import { TimeInMilliseconds } from "../models";
 
-export class TimelineWeeksDivisionCalculator extends BaseDivisionsCalculator implements ITimelineDivisionCalculator {
+export class TimelineWeeksDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
     const monday = DateHelpers.getFirstDayOfWeek(start);

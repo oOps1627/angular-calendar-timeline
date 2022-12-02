@@ -1,10 +1,10 @@
-import { TimelineMonthsDivisionCalculator } from './months-division-calculator';
+import { TimelineMonthsDivisionAdaptor } from './months-division-adaptor';
 
-describe('TimelineMonthsDivisionCalculator', () => {
-  let divisionCalculator: TimelineMonthsDivisionCalculator;
+describe('TimelineMonthsDivisionAdaptor', () => {
+  let divisionCalculator: TimelineMonthsDivisionAdaptor;
 
   beforeEach(() => {
-    divisionCalculator = new TimelineMonthsDivisionCalculator();
+    divisionCalculator = new TimelineMonthsDivisionAdaptor();
   });
 
   it('Midway time between between 18.11.2022 and 19.11.2022 should be 15.11.2022', () => {
@@ -44,28 +44,28 @@ describe('TimelineMonthsDivisionCalculator', () => {
   it('Count of unique months between 30.12.2021 and 31.01.2022 should be 1', () => {
     const firstDate = new Date(2022, 11, 30);
     const secondDate = new Date(2022, 11, 31);
-    const countOfDays = divisionCalculator.getUniqueDivisionsCountBetweenDates(firstDate, secondDate);
-    expect(countOfDays).toEqual(1);
+    const countOfMonths = divisionCalculator.getUniqueDivisionsCountBetweenDates(firstDate, secondDate);
+    expect(countOfMonths).toEqual(1);
   });
 
   it('Time duration in months between 01.01.2022 and 01.02.2022 should be close to 1', () => {
     const firstDate = new Date(2022, 0, 1, 0, 0, 0, 0);
     const secondDate = new Date(2022, 1, 1, 0, 0, 0, 0);
-    const countOfDays = divisionCalculator.getDurationInDivisions(firstDate, secondDate);
-    expect(countOfDays).toBeCloseTo(1);
+    const countOfMonths = divisionCalculator.getDurationInDivisions(firstDate, secondDate);
+    expect(countOfMonths).toBeCloseTo(1);
   });
 
   it('Time duration in months between 01.01.2022 and 01.05.2022 should be close to 4', () => {
     const firstDate = new Date(2022, 0, 1, 0, 0, 0, 0);
     const secondDate = new Date(2022, 4, 1, 0, 0, 0, 0);
-    const countOfDays = divisionCalculator.getDurationInDivisions(firstDate, secondDate);
-    expect(countOfDays).toBeCloseTo(4);
+    const countOfMonths = divisionCalculator.getDurationInDivisions(firstDate, secondDate);
+    expect(countOfMonths).toBeCloseTo(4);
   });
 
   it('Time duration in months between 31.12.2021 and 29.01.2022 should be less then 1', () => {
     const firstDate = new Date(2021, 11, 31);
     const secondDate = new Date(2022, 0, 1);
-    const countOfDays = divisionCalculator.getDurationInDivisions(firstDate, secondDate);
-    expect(countOfDays).toBeLessThan(1);
+    const countOfMonths = divisionCalculator.getDurationInDivisions(firstDate, secondDate);
+    expect(countOfMonths).toBeLessThan(1);
   });
 });

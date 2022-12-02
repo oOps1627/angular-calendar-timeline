@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@angular/core";
 import {
-  DIVISIONS_CALCULATOR_FACTORY,
-  TimelineDivisionsCalculatorFactory
-} from "./divisions-calculator/divisions-calculator-factory";
+  DIVISIONS_ADAPTORS_FACTORY,
+  TimelineDivisionsAdaptorsFactory
+} from "./divisions-calculator/divisions-adaptors-factory";
 import { ZOOMS } from "./zooms";
 import { ITimelineZoom } from "./models";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
@@ -19,7 +19,7 @@ export class ZoomService {
   }
 
   constructor(
-    @Inject(DIVISIONS_CALCULATOR_FACTORY) private _divisionsCalculatorFactory: TimelineDivisionsCalculatorFactory,
+    @Inject(DIVISIONS_ADAPTORS_FACTORY) private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsFactory,
     @Inject(ZOOMS) private _zooms: ITimelineZoom[]
   ) {
     this.zoom$ = this._zoomSubject.asObservable();
@@ -71,7 +71,7 @@ export class ZoomService {
 
     for (let i = this._getMaxZoomIndex(); i >= this._getMinZoomIndex(); i--) {
       const currentZoom = this._zooms[i];
-      const divisionCalculator = this._divisionsCalculatorFactory.getDivisionCalculator(currentZoom.division);
+      const divisionCalculator = this._divisionsAdaptorsFactory.getAdaptor(currentZoom.division);
       const countOfColumns = divisionCalculator.getUniqueDivisionsCountBetweenDates(startDate, endDate);
 
       if (countOfColumns * currentZoom.columnWidth < (visibleWidth - paddings * 2)) {
