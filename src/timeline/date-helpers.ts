@@ -28,7 +28,10 @@ export class DateHelpers {
   }
 
   static getLastDayOfWeek(date: DateInput): Date {
-    return new Date(new Date(date).setDate(DateHelpers.getFirstDayOfWeek(date).getDate() + 6))
+    date = new Date(date);
+    const first = date.getDate() - date.getDay() + 6;
+
+    return new Date(new Date(date).setDate(first));
   }
 
   static setDayBeginningTime(day: Date): Date {

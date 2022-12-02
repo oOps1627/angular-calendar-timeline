@@ -2,21 +2,20 @@ import { ITimelineDivisionCalculator } from './models';
 import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers } from "../date-helpers";
 import { BaseDivisionsCalculator } from "./base-divisions-calculator";
+import { TimeInMilliseconds } from "../models";
 
 export class TimelineWeeksDivisionCalculator extends BaseDivisionsCalculator implements ITimelineDivisionCalculator {
-  readonly millisecondsInWeek = 86400000 * 7;
-
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
-    const monday = DateHelpers.setDayBeginningTime(DateHelpers.getFirstDayOfWeek(start));
-    const last = DateHelpers.setDayEndingTime(DateHelpers.getLastDayOfWeek(end));
+    const monday = DateHelpers.getFirstDayOfWeek(start);
+    const last = DateHelpers.getLastDayOfWeek(end);
 
-    return Math.abs(this.getDurationInDivisions(monday, last));
+    return Math.round(this.getDurationInDivisions(monday, last));
   }
 
   @DatesCacheDecorator()
   getDurationInDivisions(startDate: Date, endDate: Date): number {
-    return Math.abs((startDate.getTime() - endDate.getTime()) / this.millisecondsInWeek);
+    return Math.abs((startDate.getTime() - endDate.getTime()) / TimeInMilliseconds.Week);
   }
 
   addDivisionToDate(date: Date, weeks: number): Date {

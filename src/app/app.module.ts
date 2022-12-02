@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { TimelineModule } from "../timeline/timeline.module";
 import { RouterModule } from "@angular/router";
+import { registerLocaleData } from "@angular/common";
 
 @NgModule({
   declarations: [

@@ -14,7 +14,7 @@ import {
 import { IScaleGeneratorsFactory, SCALE_GENERATORS_FACTORY } from './scale-generator/scale-generators-factory';
 import { ResizeEvent } from 'angular-resizable-element';
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import { IIdObject, ITimelineItem, ITimelineState, ITimelineZoom, } from './models';
+import { IIdObject, ITimelineItem, ITimelineState, ITimelineZoom, TimeInMilliseconds, } from './models';
 import { interval } from 'rxjs';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { startWith } from 'rxjs/operators';
@@ -44,13 +44,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('timeline') timelineElement: ElementRef<HTMLElement> | undefined;
 
-  @Input() updateItemHandler: ((updatedItem: ITimelineItem, onError?: () => void) => void) = () => null;
+  @Input() updateItemHandler: ((updatedItem: ITimelineItem, onError: () => void) => void) = () => null;
   @Input() panelLabel: string = '';
   @Input() rowHeight: number = 45;
   @Input() headerHeight: number = 60;
   @Input() groupsPanelWidth: number = 160;
   @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
-  @Input() itemContentTemplate: TemplateRef<{$implicit: ITimelineItem}> | undefined;
+  @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;
   @Input() dateMarkerTemplate: TemplateRef<{ leftPosition: number }> | undefined;
 
   @Input()
@@ -94,8 +94,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       .subscribe(() => this.redraw());
 
     if (isPlatformBrowser(this._platformId)) {
-      const oneMinute = 1000 * 60;
-      interval(oneMinute)
+      interval(TimeInMilliseconds.Minute)
         .pipe(startWith(''), untilDestroyed(this))
         .subscribe(() => this._recalculateLeftPositionForDateMarker());
     }
@@ -180,6 +179,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
     if (left) {
       const newStartDate = calculateNewDate(<number>left, new Date(item.startDate));
+
       if (newStartDate.getTime() > new Date(item.endDate).getTime()) {
         return;
       }
@@ -223,14 +223,12 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   private _updateItemPosition(item: ITimelineItem): void {
     item.width = this._calculateItemWidth(item);
     item.left = this._calculateItemLeftOffset(item);
-    if (item.onUpdate) {
-      item.onUpdate();
-    }
   }
 
   private _calculateItemLeftOffset(item: ITimelineItem): number {
     if (!item.startDate || !item.endDate)
       return 0;
+
     return this._getItemNumberOfColumnsOffsetFromStart(item) * this.zoom.columnWidth;
   }
 
@@ -287,7 +285,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   private _recalculateLeftPositionForDateMarker(): void {
     const countOfColumns = this._getDivisionCalculator().getDurationInDivisions(this.scale.startDate, new Date());
-
     this.dateMarkerLeftPosition = countOfColumns * this.zoom.columnWidth;
   }
 

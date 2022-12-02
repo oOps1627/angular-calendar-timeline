@@ -21,7 +21,6 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   width?: number;
   left?: number;
   meta?: Meta;
-  onUpdate?: () => void;
 }
 
 export interface ITimelineState {
@@ -33,5 +32,11 @@ export enum  TimelineDivisionType {
   Month,
   Week,
   Day
+}
+
+export enum TimeInMilliseconds {
+  Minute = 1000 * 60,
+  Day = 86400000,
+  Week = TimeInMilliseconds.Day * 7
 }
 

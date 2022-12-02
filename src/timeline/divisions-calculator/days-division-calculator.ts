@@ -2,21 +2,20 @@ import { ITimelineDivisionCalculator } from './models';
 import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers } from "../date-helpers";
 import { BaseDivisionsCalculator } from "./base-divisions-calculator";
+import { TimeInMilliseconds } from "../models";
 
 export class TimelineDaysDivisionCalculator extends BaseDivisionsCalculator implements ITimelineDivisionCalculator {
-  readonly millisecondsInDay = 86400000;
-
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
     const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
     const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
 
-    return Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / this.millisecondsInDay)) + 1;
+    return Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / TimeInMilliseconds.Day)) + 1;
   }
 
   @DatesCacheDecorator()
   getDurationInDivisions(startDate: Date, endDate: Date): number {
-    return Math.abs((startDate.getTime() - endDate.getTime()) / this.millisecondsInDay);
+    return Math.abs((startDate.getTime() - endDate.getTime()) / TimeInMilliseconds.Day);
   }
 
   addDivisionToDate(date: Date, days: number): Date {

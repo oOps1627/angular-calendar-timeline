@@ -38,7 +38,7 @@ export class TimelineMonthsDivisionCalculator extends BaseDivisionsCalculator im
   addDivisionToDate(date: Date, months: number): Date {
     const newDate = new Date(date);
     newDate.setMonth(date.getMonth() + months);
-    const days = DateHelpers.monthsToDays(months % 1);
+    const days = DateHelpers.getDaysInMonth(newDate) * (months % 1);
     newDate.setDate(newDate.getDate() + days);
     newDate.setHours(newDate.getHours() + ((days % 1) * 24));
 
