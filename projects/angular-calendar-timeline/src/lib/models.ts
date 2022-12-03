@@ -23,20 +23,9 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   meta?: Meta;
 }
 
-export interface ITimelineState {
-  zoom?: ITimelineZoom;
-  currentDate?: Date;
-}
-
 export enum  TimelineDivisionType {
   Month,
   Week,
   Day
-}
-
-export enum TimeInMilliseconds {
-  Minute = 1000 * 60,
-  Day = 86400000,
-  Week = TimeInMilliseconds.Day * 7
 }
 

@@ -11,21 +11,22 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { IScaleGeneratorsFactory, SCALE_GENERATORS_FACTORY } from './scale-generator/scale-generators-factory';
+import { IScaleGeneratorsManager, SCALE_GENERATORS_FACTORY } from './scale-generator/scale-generators-manager';
 import { ResizeEvent } from 'angular-resizable-element';
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import { IIdObject, ITimelineItem, ITimelineState, ITimelineZoom, TimeInMilliseconds, } from './models';
+import { IIdObject, ITimelineItem, ITimelineZoom, } from './models';
 import { interval } from 'rxjs';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { startWith } from 'rxjs/operators';
 import {
-  DIVISIONS_ADAPTORS_FACTORY,
-  TimelineDivisionsAdaptorsFactory
+  DIVISIONS_ADAPTORS_MANAGER,
+  TimelineDivisionsAdaptorsManager
 } from './divisions-calculator/divisions-adaptors-factory';
 import { IScale, IScaleGenerator } from './scale-generator/models';
-import { IDivisionAdaptor } from './divisions-calculator/models';
 import { isPlatformBrowser } from "@angular/common";
 import { ZoomService } from "./zoom.service";
+import { TimeInMilliseconds } from "./date-helpers";
+import { IDivisionAdaptor } from "./divisions-calculator/base-divisions-adaptor";
 
 @Component({
   selector: 'app-timeline',
@@ -45,6 +46,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @ViewChild('timeline') timelineElement: ElementRef<HTMLElement> | undefined;
 
   @Input() updateItemHandler: ((updatedItem: ITimelineItem, onError: () => void) => void) = () => null;
+  @Input() locale: string = 'en';
   @Input() panelLabel: string = '';
   @Input() rowHeight: number = 45;
   @Input() headerHeight: number = 60;
@@ -82,8 +84,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   constructor(private _cdr: ChangeDetectorRef,
               private _zoomService: ZoomService,
-              @Inject(DIVISIONS_ADAPTORS_FACTORY) private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsFactory,
-              @Inject(SCALE_GENERATORS_FACTORY) private _scaleGeneratorsFactory: IScaleGeneratorsFactory,
+              @Inject(DIVISIONS_ADAPTORS_MANAGER) private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsManager,
+              @Inject(SCALE_GENERATORS_FACTORY) private _scaleGeneratorsFactory: IScaleGeneratorsManager,
               @Inject(ElementRef) private _elementRef: ElementRef,
               @Inject(PLATFORM_ID) private _platformId: object) {
   }
@@ -270,13 +272,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     });
 
     return lastItem;
-  }
-
-  getState(): ITimelineState {
-    return {
-      zoom: this.zoom,
-      currentDate: this.currentDate,
-    };
   }
 
   private _sortItems(): void {

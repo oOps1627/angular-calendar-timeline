@@ -15,6 +15,7 @@ export class TimelineScaleHeaderComponent {
   @Input() scale: IScale;
   @Input() columnsFormatter: IScaleColumnFormatter;
   @Input() groupsFormatter: IScaleGroupFormatter;
+  @Input() locale: string;
   @Input() zoom: ITimelineZoom;
 
   get headerGroups(): IScaleGroup[] {

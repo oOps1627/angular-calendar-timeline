@@ -9,21 +9,21 @@ import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-dat
 import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
 import { TimelineZoomComponent } from "./timeline-zoom/timeline-zoom.component";
 import {
-  ITimelineDivisionsAdaptorsFactory,
-  DIVISIONS_ADAPTORS_FACTORY, TimelineDivisionsAdaptorsFactory
+  ITimelineDivisionsAdaptorsManager,
+  DIVISIONS_ADAPTORS_MANAGER, TimelineDivisionsAdaptorsManager
 } from "./divisions-calculator/divisions-adaptors-factory";
 import { ITimelineZoom } from "./models";
 import { DefaultZooms, ZOOMS } from "./zooms";
 import {
-  IScaleGeneratorsFactory,
+  IScaleGeneratorsManager,
   SCALE_GENERATORS_FACTORY,
-  ScaleGeneratorsFactory
-} from "./scale-generator/scale-generators-factory";
+  ScaleGeneratorsManager
+} from "./scale-generator/scale-generators-manager";
 import { ZoomService } from "./zoom.service";
 
 interface ITimelineModuleInitializationProviders {
-  divisionsCalculatorFactory?: () => ITimelineDivisionsAdaptorsFactory;
-  scaleGeneratorsFactory?: () => IScaleGeneratorsFactory;
+  divisionsCalculatorFactory?: () => ITimelineDivisionsAdaptorsManager;
+  scaleGeneratorsFactory?: () => IScaleGeneratorsManager;
   zooms?: ITimelineZoom[];
 }
 
@@ -55,15 +55,15 @@ export class TimelineModule {
       ngModule: TimelineModule,
       providers: [
         {
-          provide: DIVISIONS_ADAPTORS_FACTORY,
+          provide: DIVISIONS_ADAPTORS_MANAGER,
           useFactory: () => {
-            return (config?.divisionsCalculatorFactory() && config.divisionsCalculatorFactory()) ?? new TimelineDivisionsAdaptorsFactory();
+            return (config?.divisionsCalculatorFactory() && config.divisionsCalculatorFactory()) ?? new TimelineDivisionsAdaptorsManager();
           }
         },
         {
           provide: SCALE_GENERATORS_FACTORY,
           useFactory: () => {
-            return (config?.scaleGeneratorsFactory && config.scaleGeneratorsFactory()) ?? new ScaleGeneratorsFactory();
+            return (config?.scaleGeneratorsFactory && config.scaleGeneratorsFactory()) ?? new ScaleGeneratorsManager();
           }
         },
         {

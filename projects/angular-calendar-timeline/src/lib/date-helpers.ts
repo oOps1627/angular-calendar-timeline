@@ -1,6 +1,10 @@
 import { DateInput } from "./scale-generator/models";
 
 export class DateHelpers {
+  static generateDateId(date: Date): string {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
+  }
+
   static getLastDayOfMonth(date: DateInput): Date {
     const dateWithLastDayOfMonth = new Date(date);
     dateWithLastDayOfMonth.setMonth(dateWithLastDayOfMonth.getMonth() + 1);
@@ -47,15 +51,10 @@ export class DateHelpers {
 
     return day;
   }
+}
 
-  static daysToMonths(days: number): number {
-    // 400 years have 146097 days (taking into account leap year rules)
-    // 400 years have 12 months === 4800
-    return days * 4800 / 146097;
-  }
-
-  static monthsToDays(months: number): number {
-    // the reverse of daysToMonths
-    return months * 146097 / 4800;
-  }
+export enum TimeInMilliseconds {
+  Minute = 1000 * 60,
+  Day = 86400000,
+  Week = TimeInMilliseconds.Day * 7
 }

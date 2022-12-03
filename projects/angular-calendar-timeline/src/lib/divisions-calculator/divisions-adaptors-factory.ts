@@ -1,17 +1,17 @@
 import { TimelineDivisionType } from '../models';
-import { IDivisionAdaptor } from './models';
 import { TimelineDaysDivisionAdaptor } from './days-division-adaptor';
 import { TimelineWeeksDivisionAdaptor } from './weeks-division-adaptor';
 import { TimelineMonthsDivisionAdaptor } from './months-division-adaptor';
 import { InjectionToken } from "@angular/core";
+import { IDivisionAdaptor } from "./base-divisions-adaptor";
 
-export interface ITimelineDivisionsAdaptorsFactory<Division = TimelineDivisionType> {
+export interface ITimelineDivisionsAdaptorsManager<Division = TimelineDivisionType> {
   getAdaptor(division: Division): IDivisionAdaptor;
 }
 
-export const DIVISIONS_ADAPTORS_FACTORY = new InjectionToken<ITimelineDivisionsAdaptorsFactory>('DivisionsAdaptorsFactory');
+export const DIVISIONS_ADAPTORS_MANAGER = new InjectionToken<ITimelineDivisionsAdaptorsManager>('DivisionsAdaptorsFactory');
 
-export class TimelineDivisionsAdaptorsFactory implements ITimelineDivisionsAdaptorsFactory {
+export class TimelineDivisionsAdaptorsManager implements ITimelineDivisionsAdaptorsManager {
     private calculatorsDictionary = {
         [TimelineDivisionType.Day]: new TimelineDaysDivisionAdaptor(),
         [TimelineDivisionType.Week]: new TimelineWeeksDivisionAdaptor(),

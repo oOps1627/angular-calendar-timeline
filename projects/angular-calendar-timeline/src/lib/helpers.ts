@@ -1,6 +1,4 @@
-export function generateDateId(date: Date): string {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
-}
+import { DateHelpers } from "./date-helpers";
 
 export function DatesCacheDecorator(): Function {
     return function(target: any, methodName: string, descriptor: PropertyDescriptor) {
@@ -11,7 +9,7 @@ export function DatesCacheDecorator(): Function {
         const originalMethod = descriptor.value;
 
         descriptor.value = function(...args: Date[]) {
-            const cacheKey = `${methodName}-${[...args].map(date => generateDateId(date)).join('-')}`;
+            const cacheKey = `${methodName}-${[...args].map(date => DateHelpers.generateDateId(date)).join('-')}`;
 
             if (target.__datesCache.has(cacheKey)) {
                 return target.__datesCache.get(cacheKey);

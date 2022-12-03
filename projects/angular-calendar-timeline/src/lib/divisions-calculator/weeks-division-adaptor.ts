@@ -1,8 +1,6 @@
-import { IDivisionAdaptor } from './models';
 import { DatesCacheDecorator } from '../helpers';
-import { DateHelpers } from "../date-helpers";
-import { BaseDivisionsAdaptor } from "./base-divisions-adaptor";
-import { TimeInMilliseconds } from "../models";
+import { DateHelpers, TimeInMilliseconds } from "../date-helpers";
+import { BaseDivisionsAdaptor, IDivisionAdaptor } from "./base-divisions-adaptor";
 
 export class TimelineWeeksDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   @DatesCacheDecorator()

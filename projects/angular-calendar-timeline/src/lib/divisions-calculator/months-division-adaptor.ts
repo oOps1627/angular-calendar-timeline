@@ -1,7 +1,6 @@
-import { IDivisionAdaptor } from './models';
 import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers } from "../date-helpers";
-import { BaseDivisionsAdaptor } from "./base-divisions-adaptor";
+import { BaseDivisionsAdaptor, IDivisionAdaptor } from "./base-divisions-adaptor";
 
 export class TimelineMonthsDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   protected _setDateToStartOfDivision(date: Date): Date {

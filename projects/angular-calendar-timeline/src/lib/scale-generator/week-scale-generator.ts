@@ -1,4 +1,4 @@
-import { DatesCacheDecorator, generateDateId } from '../helpers';
+import { DatesCacheDecorator } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScale, IScaleGenerator } from './models';
 import { DateHelpers } from "../date-helpers";
@@ -26,7 +26,7 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
     let monthNumber = currentWeek.getMonth();
 
     data.groups.push({
-      id: generateDateId(currentWeek),
+      id: DateHelpers.generateDateId(currentWeek),
       date: new Date(currentWeek),
       columnsInGroup: (DateHelpers.getLastDayOfMonth(currentWeek).getDate() - currentWeek.getDate() + 1) / 7,
     });
@@ -38,14 +38,14 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
         weekNumber = 1;
         monthNumber = currentWeek.getMonth();
         data.groups.push({
-          id: generateDateId(currentWeek),
+          id: DateHelpers.generateDateId(currentWeek),
           date: new Date(currentWeek),
           columnsInGroup: DateHelpers.getLastDayOfMonth(currentWeek).getDate() / 7,
         });
       }
 
       data.columns.push({
-        id: generateDateId(currentWeek),
+        id: DateHelpers.generateDateId(currentWeek),
         date: currentWeek,
         index: weekNumber,
       });

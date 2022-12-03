@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
 import {
-  DIVISIONS_ADAPTORS_FACTORY,
-  TimelineDivisionsAdaptorsFactory
+  DIVISIONS_ADAPTORS_MANAGER,
+  TimelineDivisionsAdaptorsManager
 } from "./divisions-calculator/divisions-adaptors-factory";
 import { ZOOMS } from "./zooms";
 import { ITimelineZoom } from "./models";
@@ -19,7 +19,7 @@ export class ZoomService {
   }
 
   constructor(
-    @Inject(DIVISIONS_ADAPTORS_FACTORY) private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsFactory,
+    @Inject(DIVISIONS_ADAPTORS_MANAGER) private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsManager,
     @Inject(ZOOMS) private _zooms: ITimelineZoom[]
   ) {
     this.zoom$ = this._zoomSubject.asObservable();

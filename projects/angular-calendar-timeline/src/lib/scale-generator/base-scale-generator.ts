@@ -1,11 +1,7 @@
-import { DatePipe } from "@angular/common";
 import { DateInput, IScaleGenerator } from "./models";
 import { ITimelineItem } from "../models";
 
 export abstract class BaseScaleGenerator implements Pick<IScaleGenerator, 'getStartDateByFirstItem' | 'getEndDateByLastItem'> {
-  // TODO: locale
-  protected datePipe = new DatePipe('en');
-
   protected abstract _addEmptySpaceBefore(startDate: DateInput): Date;
 
   protected abstract _addEmptySpaceAfter(endDate: DateInput): Date;

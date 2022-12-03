@@ -1,6 +1,6 @@
-import { DatesCacheDecorator, generateDateId } from '../helpers';
+import { DatesCacheDecorator } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
-import { DateInput, IScale, IScaleGenerator } from './models';
+import { DateInput, IScale, IScaleColumn, IScaleGenerator, IScaleGroup } from './models';
 import { DateHelpers } from "../date-helpers";
 import { MonthScaleColumnFormatter } from "../formatters/scale-column-formatters";
 import { MonthScaleGroupFormatter } from "../formatters/scale-group-formatters";
@@ -16,32 +16,46 @@ export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGen
   generateScale(startDate: Date, endDate: Date): IScale {
     const currentDate = new Date(startDate);
     const endTime = endDate.getTime();
-    const data: IScale = {
+    const scale: IScale = {
       startDate,
       endDate,
       groups: [],
       columns: [],
     };
-    while (currentDate.getTime() <= endTime) {
-      data.groups.push({
-        id: generateDateId(currentDate),
-        columnsInGroup: 12,
-        date: new Date(currentDate)
-      });
-      for (let i = 1; i <= 12; i++) {
-        const monthDate = new Date(currentDate);
-        monthDate.setMonth(i - 1);
 
-        data.columns.push({
-          id: generateDateId(monthDate),
-          index: i,
-          date: currentDate,
-        });
+    while (currentDate.getTime() <= endTime) {
+      const group = this._generateGroup(currentDate);
+      scale.groups.push(group);
+
+      for (let i = 1; i <= group.columnsInGroup; i++) {
+        const monthDate = new Date(currentDate).setMonth(i - 1);
+        scale.columns.push(this._generateColumn(monthDate));
       }
+
       currentDate.setFullYear(currentDate.getFullYear() + 1);
     }
 
-    return data;
+    return scale;
+  }
+
+  protected _generateGroup(date: DateInput): IScaleGroup {
+    date = new Date(date);
+
+    return {
+      id: DateHelpers.generateDateId(date),
+      columnsInGroup: 12,
+      date: date
+    }
+  }
+
+  protected _generateColumn(date: DateInput): IScaleColumn {
+    date = new Date(date);
+
+    return {
+      id: DateHelpers.generateDateId(date),
+      index: date.getMonth() + 1,
+      date: date,
+    }
   }
 
   protected _addEmptySpaceBefore(startDate: DateInput): Date {

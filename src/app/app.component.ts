@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { ITimelineItem } from "angular-calendar-timeline";
+import { registerLocaleData } from "@angular/common";
+import localeUk from "@angular/common/locales/uk";
+
+registerLocaleData(localeUk);
 
 @Component({
   selector: 'app-root',
@@ -7,6 +11,8 @@ import { ITimelineItem } from "angular-calendar-timeline";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  locale = 'uk';
+
   items: ITimelineItem[] = [
     {
       startDate: '2021-07-08T00:00:00',
