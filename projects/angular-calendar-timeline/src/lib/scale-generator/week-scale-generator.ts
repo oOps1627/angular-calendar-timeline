@@ -2,12 +2,12 @@ import { DatesCacheDecorator } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScale, IScaleGenerator } from './models';
 import { DateHelpers } from "../date-helpers";
-import { WeekScaleColumnFormatter } from "../formatters/scale-column-formatters";
-import { WeekScaleGroupFormatter } from "../formatters/scale-group-formatters";
+import { WEEK_SCALE_FORMATTER } from "../formatters/week-scale-formatter";
+import { Injectable } from "@angular/core";
 
-export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
-  columnsFormatter = new WeekScaleColumnFormatter();
-  groupsFormatter = new WeekScaleGroupFormatter();
+@Injectable()
+export class DefaultWeekScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
+  formatter = this._injector.get(WEEK_SCALE_FORMATTER);
 
   protected readonly countOfWeeksAfterLastItem = 24;
   protected readonly countOfWeeksBeforeFirstItem = 4;
@@ -75,3 +75,6 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
     return new Date(lastDayOfWeek.setDate(lastDayOfWeek.getDate() + this.countOfWeeksAfterLastItem * 7));
   }
 }
+
+@Injectable()
+export class WeekScaleGenerator extends DefaultWeekScaleGenerator {}

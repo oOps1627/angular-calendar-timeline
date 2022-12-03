@@ -2,7 +2,7 @@ import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers, TimeInMilliseconds } from "../date-helpers";
 import { BaseDivisionsAdaptor, IDivisionAdaptor } from "./base-divisions-adaptor";
 
-export class TimelineDaysDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
+export class DaysDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
     const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());

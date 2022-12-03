@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { IIdObject, ITimelineZoom } from '../models';
 import { IScale, IScaleColumn, IScaleGroup } from '../scale-generator/models';
-import { IScaleColumnFormatter } from "../formatters/scale-column-formatters";
-import { IScaleGroupFormatter } from "../formatters/scale-group-formatters";
+import { IScaleFormatter } from "../formatters/scale-formatter.interface";
 
 @Component({
   selector: 'app-timeline-scale-header',
@@ -12,10 +11,13 @@ import { IScaleGroupFormatter } from "../formatters/scale-group-formatters";
 })
 export class TimelineScaleHeaderComponent {
   @Input() height: number;
+
   @Input() scale: IScale;
-  @Input() columnsFormatter: IScaleColumnFormatter;
-  @Input() groupsFormatter: IScaleGroupFormatter;
+
+  @Input() formatter: IScaleFormatter;
+
   @Input() locale: string;
+
   @Input() zoom: ITimelineZoom;
 
   get headerGroups(): IScaleGroup[] {

@@ -1,10 +1,10 @@
-import { TimelineMonthsDivisionAdaptor } from './months-division-adaptor';
+import { MonthsDivisionAdaptor } from './months-division-adaptor';
 
 describe('TimelineMonthsDivisionAdaptor', () => {
-  let divisionCalculator: TimelineMonthsDivisionAdaptor;
+  let divisionCalculator: MonthsDivisionAdaptor;
 
   beforeEach(() => {
-    divisionCalculator = new TimelineMonthsDivisionAdaptor();
+    divisionCalculator = new MonthsDivisionAdaptor();
   });
 
   it('Midway time between between 18.11.2022 and 19.11.2022 should be 15.11.2022', () => {

@@ -3,7 +3,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, HostListener,
+  ElementRef,
+  HostListener,
   Inject,
   Input,
   OnDestroy,
@@ -11,17 +12,14 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { IScaleGeneratorsManager, SCALE_GENERATORS_FACTORY } from './scale-generator/scale-generators-manager';
+import { ScaleGeneratorsManager } from './scale-generator/scale-generators-manager';
 import { ResizeEvent } from 'angular-resizable-element';
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { IIdObject, ITimelineItem, ITimelineZoom, } from './models';
 import { interval } from 'rxjs';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { startWith } from 'rxjs/operators';
-import {
-  DIVISIONS_ADAPTORS_MANAGER,
-  TimelineDivisionsAdaptorsManager
-} from './divisions-calculator/divisions-adaptors-factory';
+import { TimelineDivisionsAdaptorsManager } from './divisions-calculator/divisions-adaptors-factory';
 import { IScale, IScaleGenerator } from './scale-generator/models';
 import { isPlatformBrowser } from "@angular/common";
 import { ZoomService } from "./zoom.service";
@@ -36,23 +34,35 @@ import { IDivisionAdaptor } from "./divisions-calculator/base-divisions-adaptor"
 })
 export class TimelineComponent implements AfterViewInit, OnDestroy {
   currentDate: Date = new Date();
+
   dateMarkerLeftPosition = 0;
+
   scale: IScale | undefined;
+
   isItemResizingStarted = false;
 
   private _ignoreNextScrollEvent = false;
+
   private _items: ITimelineItem[] = [];
 
   @ViewChild('timeline') timelineElement: ElementRef<HTMLElement> | undefined;
 
   @Input() updateItemHandler: ((updatedItem: ITimelineItem, onError: () => void) => void) = () => null;
+
   @Input() locale: string = 'en';
+
   @Input() panelLabel: string = '';
+
   @Input() rowHeight: number = 45;
+
   @Input() headerHeight: number = 60;
+
   @Input() groupsPanelWidth: number = 160;
+
   @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
+
   @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;
+
   @Input() dateMarkerTemplate: TemplateRef<{ leftPosition: number }> | undefined;
 
   @Input()
@@ -84,17 +94,14 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   constructor(private _cdr: ChangeDetectorRef,
               private _zoomService: ZoomService,
-              @Inject(DIVISIONS_ADAPTORS_MANAGER) private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsManager,
-              @Inject(SCALE_GENERATORS_FACTORY) private _scaleGeneratorsFactory: IScaleGeneratorsManager,
+              private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsManager,
+              private _scaleGeneratorsFactory: ScaleGeneratorsManager,
               @Inject(ElementRef) private _elementRef: ElementRef,
               @Inject(PLATFORM_ID) private _platformId: object) {
+    this._zoomService._registerComponent(this);
   }
 
   ngAfterViewInit() {
-    this._zoomService._fitToContent$.asObservable()
-      .pipe(untilDestroyed(this))
-      .subscribe((options) => this._fitToContent(options.paddings));
-
     this._zoomService.zoom$
       .pipe(untilDestroyed(this))
       .subscribe(() => this.redraw());
@@ -106,17 +113,17 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @HostListener('scroll', ['$event'])
-  onScroll(event: Event): void {
-    this._cdr.markForCheck();
-    if (!this._ignoreNextScrollEvent) {
-      this.currentDate = this.getCurrentDate();
-    }
-    this._ignoreNextScrollEvent = false;
+  redraw(): void {
+    this._generateScale();
+    this._calculateItemsPosition();
+    this._recalculateLeftPositionForDateMarker();
+    this._ignoreNextScrollEvent = true;
+    this.attachCameraToDate(this.currentDate);
+    this._cdr.detectChanges();
   }
 
-  attachCameraToCurrentDate(): void {
-    const duration = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, this.currentDate);
+  attachCameraToDate(date: Date): void {
+    const duration = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, date);
     const scrollLeft = (duration * this.zoom.columnWidth) - (this.visibleScaleWidth / 2);
     this._ignoreNextScrollEvent = true;
 
@@ -125,16 +132,47 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  redraw(): void {
-    this._generateScale();
-    this._calculateItemsPosition();
-    this._recalculateLeftPositionForDateMarker();
-    this._ignoreNextScrollEvent = true;
-    this.attachCameraToCurrentDate();
-    this._cdr.detectChanges();
+  fitToContent(paddings: number): void {
+    const firstItem = this._getItemWithOldestStartDate(true);
+    const lastItem = this._getItemWithNewestEndDate(true);
+
+    if (!firstItem || !lastItem)
+      return;
+
+    const startDate = new Date(firstItem.startDate);
+    const endDate = new Date(lastItem.endDate);
+    const zoom = this._zoomService._calculateOptimalZoom(startDate, endDate, this.visibleScaleWidth, paddings);
+    const divisionAdaptor = this._divisionsAdaptorsFactory.getAdaptor(zoom.division);
+
+    this.currentDate = new Date(divisionAdaptor.getTimeInDivisionsCenter(startDate, endDate));
+
+    if (this._zoomService.isZoomActive(zoom)) {
+      this.attachCameraToDate(this.currentDate);
+    } else {
+      this._zoomService.changeZoom(zoom);
+    }
   }
 
-  getCurrentDate(): Date {
+  toggleExpand(item: ITimelineItem): void {
+    item.expanded = !item.expanded;
+  }
+
+  /**
+   * @hidden
+   */
+  @HostListener('scroll', ['$event'])
+  _onScroll(event: Event): void {
+    this._cdr.markForCheck();
+    if (!this._ignoreNextScrollEvent) {
+      this.currentDate = this._getCurrentDate();
+    }
+    this._ignoreNextScrollEvent = false;
+  }
+
+  /**
+   * @hidden
+   */
+  _getCurrentDate(): Date {
     const currentScrollLeft = this._elementRef.nativeElement.scrollLeft ?? 0;
     const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
     const columns = Math.round(scrollLeftToCenterScreen / this.zoom.columnWidth);
@@ -142,7 +180,10 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this.divisionAdaptor.addDivisionToDate(this.scale.startDate, columns);
   }
 
-  onItemDropped(event: CdkDragEnd, item: ITimelineItem): void {
+  /**
+   * @hidden
+   */
+  _onItemDropped(event: CdkDragEnd, item: ITimelineItem): void {
     if (!this.isItemResizingStarted) {
       const divisionCalculator = this.divisionAdaptor;
       const transferColumns = Math.round(event.distance.x / this.zoom.columnWidth);
@@ -163,15 +204,24 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  trackById(index: number, item: IIdObject): number | string {
+  /**
+   * @hidden
+   */
+  _trackById(index: number, item: IIdObject): number | string {
     return item.id;
   }
 
-  onItemResizeStart(event: ResizeEvent): void {
+  /**
+   * @hidden
+   */
+  _onItemResizeStart(event: ResizeEvent): void {
     this.isItemResizingStarted = true;
   }
 
-  onItemResizeEnd(event: ResizeEvent, item: ITimelineItem): void {
+  /**
+   * @hidden
+   */
+  _onItemResizeEnd(event: ResizeEvent, item: ITimelineItem): void {
     this.isItemResizingStarted = false;
     const divisionCalculator = this.divisionAdaptor;
     const oldStartDate = item.startDate;
@@ -206,11 +256,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  toggleExpand(item: ITimelineItem): void {
-    item.expanded = !item.expanded;
-  }
-
-  handleGroupsPanelResize(event: ResizeEvent) {
+  _handleGroupsPanelResize(event: ResizeEvent) {
     if (event.rectangle.width) {
       this.groupsPanelWidth = event.rectangle.width;
     }
@@ -284,6 +330,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   private _recalculateLeftPositionForDateMarker(): void {
     const countOfColumns = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, new Date());
+
     this.dateMarkerLeftPosition = countOfColumns * this.zoom.columnWidth;
   }
 
@@ -293,27 +340,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   private _getItemNumberOfColumnsOffsetFromStart(item: ITimelineItem): number {
     return this.divisionAdaptor.getUniqueDivisionsCountBetweenDates(this.scale.startDate, new Date(item.startDate)) - 1;
-  }
-
-  private _fitToContent(paddings: number): void {
-    const firstItem = this._getItemWithOldestStartDate(true);
-    const lastItem = this._getItemWithNewestEndDate(true);
-
-    if (!firstItem || !lastItem)
-      return;
-
-    const startDate = new Date(firstItem.startDate);
-    const endDate = new Date(lastItem.endDate);
-    const zoom = this._zoomService._calculateOptimalZoom(startDate, endDate, this.visibleScaleWidth, paddings);
-    const divisionAdaptor = this._divisionsAdaptorsFactory.getAdaptor(zoom.division);
-
-    this.currentDate = new Date(divisionAdaptor.getTimeInDivisionsCenter(startDate, endDate));
-
-    if (this._zoomService.isZoomActive(zoom)) {
-      this.attachCameraToCurrentDate();
-    } else {
-      this._zoomService.changeZoom(zoom);
-    }
   }
 
   ngOnDestroy(): void {

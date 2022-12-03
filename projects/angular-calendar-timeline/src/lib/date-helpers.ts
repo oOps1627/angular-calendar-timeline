@@ -47,7 +47,7 @@ export class DateHelpers {
 
   static setDayEndingTime(day: Date): Date {
     day = new Date(day);
-    day.setHours(24, 0, 0, 0);
+    day.setHours(23, 59, 59, 999);
 
     return day;
   }

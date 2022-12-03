@@ -2,7 +2,7 @@ import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers, TimeInMilliseconds } from "../date-helpers";
 import { BaseDivisionsAdaptor, IDivisionAdaptor } from "./base-divisions-adaptor";
 
-export class TimelineWeeksDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
+export class WeeksDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
     const monday = DateHelpers.getFirstDayOfWeek(start);

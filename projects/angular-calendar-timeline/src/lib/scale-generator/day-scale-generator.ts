@@ -2,15 +2,15 @@ import { DatesCacheDecorator } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScale, IScaleColumn, IScaleGenerator, IScaleGroup } from './models';
 import { DateHelpers } from "../date-helpers";
-import { DayScaleColumnFormatter } from "../formatters/scale-column-formatters";
-import { DayScaleGroupFormatter } from "../formatters/scale-group-formatters";
+import { DAY_SCALE_FORMATTER } from "../formatters/day-scale-formatter";
+import { Injectable } from "@angular/core";
 
-export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
-  columnsFormatter = new DayScaleColumnFormatter();
-  groupsFormatter = new DayScaleGroupFormatter();
+@Injectable()
+export class DefaultDayScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
+  formatter = this._injector.get(DAY_SCALE_FORMATTER);
 
-  private readonly countOfMonthsAfterLastItem = 5;
-  private readonly countOfMonthsBeforeFirstItem = 1;
+  protected readonly countOfMonthsAfterLastItem = 5;
+  protected readonly countOfMonthsBeforeFirstItem = 1;
 
   @DatesCacheDecorator()
   generateScale(startDate: Date, endDate: Date): IScale {
@@ -60,6 +60,7 @@ export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGener
   protected _addEmptySpaceBefore(startDate: DateInput): Date {
     startDate = new Date(startDate);
     startDate.setDate(1);
+    startDate = DateHelpers.setDayBeginningTime(startDate);
     startDate.setMonth(startDate.getMonth() - this.countOfMonthsBeforeFirstItem);
 
     return startDate;
@@ -69,4 +70,8 @@ export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGener
     endDate = new Date(endDate);
     return new Date(DateHelpers.getLastDayOfMonth(endDate).setMonth(endDate.getMonth() + this.countOfMonthsAfterLastItem));
   }
+}
+
+@Injectable()
+export class DayScaleGenerator extends DefaultDayScaleGenerator {
 }

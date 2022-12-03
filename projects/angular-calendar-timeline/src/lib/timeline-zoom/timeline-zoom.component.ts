@@ -24,8 +24,8 @@ export class TimelineZoomComponent {
     }
 
     scrollToToday(): void {
-      // TODO: fix autoscroll
         this._zoomService.zoomFullIn();
+        this._zoomService.attachCameraToDate(new Date());
     }
 
     zoomAndFitToContent(): void {

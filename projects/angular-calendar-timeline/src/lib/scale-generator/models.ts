@@ -1,6 +1,5 @@
 import { IIdObject, ITimelineItem } from "../models";
-import { IScaleColumnFormatter } from "../formatters/scale-column-formatters";
-import { IScaleGroupFormatter } from "../formatters/scale-group-formatters";
+import { IScaleFormatter } from "../formatters/scale-formatter.interface";
 
 export type DateInput = Date | string | number;
 
@@ -22,9 +21,7 @@ export interface IScale {
 }
 
 export interface IScaleGenerator {
-  columnsFormatter: IScaleColumnFormatter;
-
-  groupsFormatter?: IScaleGroupFormatter;
+  formatter: IScaleFormatter;
 
   generateScale(startDate: Date, endDate: Date): IScale;
 

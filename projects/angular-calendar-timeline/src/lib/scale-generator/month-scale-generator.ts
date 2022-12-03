@@ -2,15 +2,15 @@ import { DatesCacheDecorator } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScale, IScaleColumn, IScaleGenerator, IScaleGroup } from './models';
 import { DateHelpers } from "../date-helpers";
-import { MonthScaleColumnFormatter } from "../formatters/scale-column-formatters";
-import { MonthScaleGroupFormatter } from "../formatters/scale-group-formatters";
+import { MONTH_SCALE_FORMATTER } from "../formatters/month-scale-formatter";
+import { Injectable } from "@angular/core";
 
-export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
-  columnsFormatter = new MonthScaleColumnFormatter();
-  groupsFormatter = new MonthScaleGroupFormatter();
+@Injectable()
+export class DefaultMonthScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
+  formatter = this._injector.get(MONTH_SCALE_FORMATTER);
 
-  private readonly countOfYearsAfterLastItem = 4;
-  private readonly countOfYearsBeforeFirstItem = 1;
+  protected readonly countOfYearsAfterLastItem = 4;
+  protected readonly countOfYearsBeforeFirstItem = 1;
 
   @DatesCacheDecorator()
   generateScale(startDate: Date, endDate: Date): IScale {
@@ -75,3 +75,6 @@ export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGen
     return newDate;
   }
 }
+
+@Injectable()
+export class MonthScaleGenerator extends DefaultMonthScaleGenerator {}

@@ -2,7 +2,7 @@ import { DatesCacheDecorator } from '../helpers';
 import { DateHelpers } from "../date-helpers";
 import { BaseDivisionsAdaptor, IDivisionAdaptor } from "./base-divisions-adaptor";
 
-export class TimelineMonthsDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
+export class MonthsDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
   protected _setDateToStartOfDivision(date: Date): Date {
     const start = new Date(date);
     start.setDate(1);
