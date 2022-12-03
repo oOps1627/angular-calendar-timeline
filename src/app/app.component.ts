@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ITimelineItem } from "../timeline/models";
+import { ITimelineItem } from "angular-calendar-timeline";
 
 @Component({
   selector: 'app-root',

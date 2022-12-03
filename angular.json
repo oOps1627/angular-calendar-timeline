@@ -105,6 +105,37 @@
           }
         }
       }
+    },
+    "angular-calendar-timeline": {
+      "projectType": "library",
+      "root": "projects/angular-calendar-timeline",
+      "sourceRoot": "projects/angular-calendar-timeline/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/angular-calendar-timeline/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/angular-calendar-timeline/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/angular-calendar-timeline/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/angular-calendar-timeline/src/test.ts",
+            "tsConfig": "projects/angular-calendar-timeline/tsconfig.spec.json",
+            "karmaConfig": "projects/angular-calendar-timeline/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "calendar-timeline"
