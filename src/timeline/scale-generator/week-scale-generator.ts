@@ -2,10 +2,15 @@ import { DatesCacheDecorator, generateDateId } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScale, IScaleGenerator } from './models';
 import { DateHelpers } from "../date-helpers";
+import { WeekScaleColumnFormatter } from "../formatters/scale-column-formatters";
+import { WeekScaleGroupFormatter } from "../formatters/scale-group-formatters";
 
 export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
-  private readonly countOfWeeksAfterLastItem = 24;
-  private readonly countOfWeeksBeforeFirstItem = 4;
+  columnsFormatter = new WeekScaleColumnFormatter();
+  groupsFormatter = new WeekScaleGroupFormatter();
+
+  protected readonly countOfWeeksAfterLastItem = 24;
+  protected readonly countOfWeeksBeforeFirstItem = 4;
 
   @DatesCacheDecorator()
   generateScale(startDate: Date, endDate: Date): IScale {
@@ -19,14 +24,11 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
     const endTime = endDate.getTime();
     let weekNumber = 0;
     let monthNumber = currentWeek.getMonth();
-    // TODO: translate
-    const weekName = 'week';
 
     data.groups.push({
       id: generateDateId(currentWeek),
-      name: `${this.localDatePipe.transform(currentWeek, 'LLLL y')}`,
+      date: new Date(currentWeek),
       columnsInGroup: (DateHelpers.getLastDayOfMonth(currentWeek).getDate() - currentWeek.getDate() + 1) / 7,
-      date: new Date(currentWeek)
     });
 
     while (currentWeek.getTime() < endTime) {
@@ -38,7 +40,6 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
         data.groups.push({
           id: generateDateId(currentWeek),
           date: new Date(currentWeek),
-          name: `${this.localDatePipe.transform(currentWeek, 'LLLL y')}`,
           columnsInGroup: DateHelpers.getLastDayOfMonth(currentWeek).getDate() / 7,
         });
       }
@@ -46,8 +47,7 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
       data.columns.push({
         id: generateDateId(currentWeek),
         date: currentWeek,
-        shortName: String(weekNumber),
-        name: `${weekName} ${weekNumber}`,
+        index: weekNumber,
       });
 
       currentWeek.setDate(currentWeek.getDate() + 7);
@@ -75,4 +75,3 @@ export class WeekScaleGenerator extends BaseScaleGenerator implements IScaleGene
     return new Date(lastDayOfWeek.setDate(lastDayOfWeek.getDate() + this.countOfWeeksAfterLastItem * 7));
   }
 }
-

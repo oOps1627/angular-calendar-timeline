@@ -2,8 +2,13 @@ import { DatesCacheDecorator, generateDateId } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScale, IScaleGenerator } from './models';
 import { DateHelpers } from "../date-helpers";
+import { MonthScaleColumnFormatter } from "../formatters/scale-column-formatters";
+import { MonthScaleGroupFormatter } from "../formatters/scale-group-formatters";
 
 export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
+  columnsFormatter = new MonthScaleColumnFormatter();
+  groupsFormatter = new MonthScaleGroupFormatter();
+
   private readonly countOfYearsAfterLastItem = 4;
   private readonly countOfYearsBeforeFirstItem = 1;
 
@@ -20,7 +25,6 @@ export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGen
     while (currentDate.getTime() <= endTime) {
       data.groups.push({
         id: generateDateId(currentDate),
-        name: String(currentDate.getFullYear()),
         columnsInGroup: 12,
         date: new Date(currentDate)
       });
@@ -30,9 +34,7 @@ export class MonthScaleGenerator extends BaseScaleGenerator implements IScaleGen
 
         data.columns.push({
           id: generateDateId(monthDate),
-          shortName: String(i),
-          name: this.localDatePipe.transform(monthDate, 'LLL') ?? '',
-          longName: this.localDatePipe.transform(monthDate, 'LLLL') ?? '',
+          index: i,
           date: currentDate,
         });
       }

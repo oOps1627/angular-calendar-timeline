@@ -2,13 +2,13 @@
   <div class='groups' *ngIf="headerGroups.length">
     <div *ngFor='let group of headerGroups; trackBy: trackById; index as i'
          [style.width.px]='zoom.columnWidth * group.columnsInGroup' class='group'>
-      <div>{{group.name}}</div>
+      <div>{{groupsFormatter.transform(group)}}</div>
     </div>
   </div>
   <div class='columns'>
     <div *ngFor='let column of columns; trackBy: trackById'>
       <div class='column' [style.width.px]='zoom.columnWidth'>
-        {{column[columnNameMode] || column.name}}
+        {{columnsFormatter.transform(column, zoom.columnWidth)}}
       </div>
     </div>
   </div>

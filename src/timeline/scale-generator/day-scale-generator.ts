@@ -2,8 +2,12 @@ import { DatesCacheDecorator, generateDateId } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScale, IScaleColumn, IScaleGenerator } from './models';
 import { DateHelpers } from "../date-helpers";
+import { DayScaleColumnFormatter } from "../formatters/scale-column-formatters";
+import { DayScaleGroupFormatter } from "../formatters/scale-group-formatters";
 
 export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
+  columnsFormatter = new DayScaleColumnFormatter();
+  groupsFormatter = new DayScaleGroupFormatter();
 
   private readonly countOfMonthsAfterLastItem = 5;
   private readonly countOfMonthsBeforeFirstItem = 1;
@@ -23,7 +27,6 @@ export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGener
       const daysInCurrentMonth = DateHelpers.getDaysInMonth(currentDate);
       data.groups.push({
         id: generateDateId(currentDate),
-        name: this.localDatePipe.transform(currentDate, 'LLLL') ?? '',
         columnsInGroup: daysInCurrentMonth,
         date: new Date(currentDate),
       });
@@ -44,9 +47,7 @@ export class DayScaleGenerator extends BaseScaleGenerator implements IScaleGener
     return {
       id: generateDateId(date),
       date: date,
-      name: this.localDatePipe.transform(date, 'EEE dd/MM') ?? '',
-      shortName: this.localDatePipe.transform(date, 'dd') ?? '',
-      longName: this.localDatePipe.transform(date, 'EEEE dd/MM') ?? '',
+      index: date.getDate(),
     };
   }
 

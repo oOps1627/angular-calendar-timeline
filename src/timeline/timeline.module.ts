@@ -33,7 +33,7 @@ interface ITimelineModuleInitializationProviders {
     TimelineItemComponent,
     TimelineDateMarkerComponent,
     TimelineScaleHeaderComponent,
-    TimelineZoomComponent
+    TimelineZoomComponent,
   ],
   imports: [
     CommonModule,

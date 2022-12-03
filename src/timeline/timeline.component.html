@@ -46,6 +46,8 @@
 <div class='content-wrapper'>
   <app-timeline-scale-header
     [height]="headerHeight"
+    [columnsFormatter]="scaleGenerator.columnsFormatter"
+    [groupsFormatter]="scaleGenerator.groupsFormatter"
     [zoom]='zoom'
     [scale]='scale'
   ></app-timeline-scale-header>

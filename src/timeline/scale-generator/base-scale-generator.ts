@@ -4,7 +4,7 @@ import { ITimelineItem } from "../models";
 
 export abstract class BaseScaleGenerator implements Pick<IScaleGenerator, 'getStartDateByFirstItem' | 'getEndDateByLastItem'> {
   // TODO: locale
-  protected localDatePipe = new DatePipe('en');
+  protected datePipe = new DatePipe('en');
 
   protected abstract _addEmptySpaceBefore(startDate: DateInput): Date;
 
