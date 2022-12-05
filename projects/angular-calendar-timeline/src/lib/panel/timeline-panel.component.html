@@ -3,38 +3,44 @@
      (resizing)='handleResize($event)'
      [resizeEdges]="{right: true}"
      [resizeCursorPrecision]="5"
-     [style.minWidth.px]='width'>
+     [style.width.px]='width'>
 
   <div class='label' [style.height.px]="headerHeight">
     {{label}}
   </div>
 
-  <ng-container *ngFor='let group of items; trackBy: trackById; let first = first'
-                [ngTemplateOutlet]='groupIterationTemplate'
-                [ngTemplateOutletContext]='{group: group, first: first, depth: 0}'>
+  <ng-container *ngFor='let item of items; trackBy: trackById; let index = index'
+                [ngTemplateOutlet]='itemsIterationTemplate'
+                [ngTemplateOutletContext]='{item: item, index: index, depth: 0}'>
   </ng-container>
 
-  <ng-template #groupIterationTemplate let-group='group' let-first='first' let-depth='depth'>
-    <div [class.first-item]='first'
-         [style.height.px]='rowHeight'
-         [style.width.px]='width'
-         [class.can-collapse]='group.items && group.items.length'
-         class='panel-item'>
+  <ng-template #itemsIterationTemplate let-item='item' let-index='index' let-depth='depth'>
+    <ng-container [ngTemplateOutlet]='itemTemplate || defaultItemTemplate'
+                  [ngTemplateOutletContext]='{item: item, index: index, depth: depth, locale: locale}'>
+    </ng-container>
 
-      <div [style.marginLeft.px]='depth * 15' (click)='toggleExpand(group)' class='item-content'>
-        <div class='collapse-icon'
-             [class.collapsed]='!group.expanded'>
-        </div>
-
-        <span class='item-name' title="{{group.name}}">{{group.name}}</span>
-      </div>
-    </div>
-
-    <div *ngIf='group.expanded'>
-      <ng-container *ngFor='let innerGroup of (group.items || []); trackBy: trackById;'
-                    [ngTemplateOutletContext]='{group: innerGroup, first: false, depth: depth + 1}'
-                    [ngTemplateOutlet]='groupIterationTemplate'
+    <div *ngIf='item.expanded'>
+      <ng-container *ngFor='let innerItem of (item.items || []); trackBy: trackById;  let index = index'
+                    [ngTemplateOutletContext]='{item: innerItem, index: index, depth: depth + 1}'
+                    [ngTemplateOutlet]='itemsIterationTemplate'
       ></ng-container>
     </div>
   </ng-template>
 </div>
+
+<ng-template #defaultItemTemplate let-item='item' let-index='index' let-depth='depth'>
+  <div [class.first-item]='index === 0'
+       [style.height.px]='rowHeight'
+       [style.width.px]='width'
+       [class.can-collapse]='item.items && item.items.length'
+       class='panel-item'>
+
+    <div [style.marginLeft.px]='depth * 15' (click)='toggleExpand(item)' class='item-content'>
+      <div class='collapse-icon'
+           [class.collapsed]='!item.expanded'>
+      </div>
+
+      <span class='item-name' title="{{item.name}}">{{item.name}}</span>
+    </div>
+  </div>
+</ng-template>

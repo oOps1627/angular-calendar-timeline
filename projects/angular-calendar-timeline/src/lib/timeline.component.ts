@@ -59,6 +59,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   @Input() panelWidth: number = 160;
 
+  @Input() panelItemTemplate: TemplateRef<{item: ITimelineItem, index: number, depth: number, locale: string}>
+
   @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
 
   @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;

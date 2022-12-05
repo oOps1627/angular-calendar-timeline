@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, TemplateRef } from "@angular/core";
 import { IIdObject, ITimelineItem } from "angular-calendar-timeline";
 import { ResizeEvent } from "angular-resizable-element";
 
@@ -18,6 +18,10 @@ export class TimelinePanelComponent {
 
   @Input() rowHeight: number;
 
+  @Input() locale: string;
+
+  @Input() itemTemplate: TemplateRef<{item: ITimelineItem, index: number, depth: number, locale: string}>
+
   @Output() widthChanged = new EventEmitter<number>();
 
   trackById(index: number, item: IIdObject): number | string {
@@ -25,8 +29,10 @@ export class TimelinePanelComponent {
   }
 
   handleResize(event: ResizeEvent) {
-    if (event.rectangle.width) {
-      this.width = event.rectangle.width;
+    const newWidth = event.rectangle.width;
+
+    if (newWidth) {
+      this.width = newWidth < 50 ? 50 : newWidth;
       this.widthChanged.emit(this.width);
     }
   }

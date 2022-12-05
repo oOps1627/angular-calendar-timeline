@@ -35,6 +35,10 @@
   white-space: nowrap;
   box-sizing: border-box;
 
+  &.first-item {
+    border-top: #D5DBDC 1px solid;
+  }
+
   &.can-collapse {
     .collapse-icon {
       display: inline-block !important;
@@ -48,6 +52,7 @@
   .item-content {
     display: inline-flex;
     align-items: center;
+    box-sizing: border-box;
 
     .collapse-icon {
       border: solid #8FA3AD;
@@ -69,10 +74,6 @@
       white-space: nowrap;
       overflow: hidden;
       width: auto;
-    }
-
-    &.first-item {
-      border-top: #D5DBDC 1px solid;
     }
   }
 }
