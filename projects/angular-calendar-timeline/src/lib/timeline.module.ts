@@ -20,6 +20,7 @@ import { MONTH_SCALE_FORMATTER, MonthScaleFormatter } from "./formatters/month-s
 import { DayScaleGenerator } from "./scale-generator/day-scale-generator";
 import { WeekScaleGenerator } from "./scale-generator/week-scale-generator";
 import { MonthScaleGenerator } from "./scale-generator/month-scale-generator";
+import { TimelinePanelComponent } from "./panel/timeline-panel.component";
 
 interface ITimelineModuleInitializationProviders {
   /**
@@ -77,6 +78,7 @@ interface ITimelineModuleInitializationProviders {
     TimelineDateMarkerComponent,
     TimelineScaleHeaderComponent,
     TimelineZoomComponent,
+    TimelinePanelComponent
   ],
   imports: [
     CommonModule,

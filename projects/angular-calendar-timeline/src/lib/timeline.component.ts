@@ -51,13 +51,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   @Input() locale: string = 'en';
 
-  @Input() panelLabel: string = '';
-
   @Input() rowHeight: number = 45;
 
   @Input() headerHeight: number = 60;
 
-  @Input() groupsPanelWidth: number = 160;
+  @Input() panelLabel: string = '';
+
+  @Input() panelWidth: number = 160;
 
   @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
 
@@ -77,7 +77,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   get visibleScaleWidth(): number {
-    return this._elementRef.nativeElement.clientWidth - this.groupsPanelWidth;
+    return this._elementRef.nativeElement.clientWidth - this.panelWidth;
   }
 
   get scaleGenerator(): IScaleGenerator {
@@ -151,10 +151,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     } else {
       this._zoomService.changeZoom(zoom);
     }
-  }
-
-  toggleExpand(item: ITimelineItem): void {
-    item.expanded = !item.expanded;
   }
 
   /**
@@ -254,12 +250,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       item.endDate = oldEndDate;
       this._updateItemPosition(item);
     });
-  }
-
-  _handleGroupsPanelResize(event: ResizeEvent) {
-    if (event.rectangle.width) {
-      this.groupsPanelWidth = event.rectangle.width;
-    }
   }
 
   private _generateScale(): void {
