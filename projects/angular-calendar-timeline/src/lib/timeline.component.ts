@@ -25,6 +25,7 @@ import { isPlatformBrowser } from "@angular/common";
 import { ZoomService } from "./zoom.service";
 import { TimeInMilliseconds } from "./date-helpers";
 import { IDivisionAdaptor } from "./divisions-calculator/base-divisions-adaptor";
+import { ItemsBuilder } from "./items-builder/items-builder";
 
 @Component({
   selector: 'app-timeline',
@@ -41,9 +42,9 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   isItemResizingStarted = false;
 
-  private _ignoreNextScrollEvent = false;
+  itemsBuilder = new ItemsBuilder();
 
-  private _items: ITimelineItem[] = [];
+  private _ignoreNextScrollEvent = false;
 
   @ViewChild('timeline') timelineElement: ElementRef<HTMLElement> | undefined;
 
@@ -69,13 +70,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   @Input()
   set items(items) {
-    this._items = items;
-    this._sortItems();
+    this.itemsBuilder.setItems(items);
     this.redraw();
-  }
-
-  get items() {
-    return this._items;
   }
 
   get visibleScaleWidth(): number {
@@ -135,8 +131,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   fitToContent(paddings: number): void {
-    const firstItem = this._getItemWithOldestStartDate(true);
-    const lastItem = this._getItemWithNewestEndDate(true);
+    const firstItem = this.itemsBuilder.getFirstItem(true);
+    const lastItem = this.itemsBuilder.getLastItem(true);
 
     if (!firstItem || !lastItem)
       return;
@@ -255,13 +251,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private _generateScale(): void {
-    const scaleStartDate = this.scaleGenerator.getStartDateByFirstItem(this._getItemWithOldestStartDate());
-    const scaleEndDate = this.scaleGenerator.getEndDateByLastItem(this._getItemWithNewestEndDate());
+    const scaleStartDate = this.scaleGenerator.getStartDateByFirstItem(this.itemsBuilder.getFirstItem(false));
+    const scaleEndDate = this.scaleGenerator.getEndDateByLastItem(this.itemsBuilder.getLastItem(false));
     this.scale = this.scaleGenerator.generateScale(scaleStartDate, scaleEndDate);
   }
 
   private _calculateItemsPosition(): void {
-    forEachItem(this._items, (item) => this._updateItemPosition(item));
+    this.itemsBuilder.forEach((item) => this._updateItemPosition(item));
   }
 
   private _updateItemPosition(item: ITimelineItem): void {
@@ -282,44 +278,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this._getNumberOfColumnsOccupiedByItem(item) * this.zoom.columnWidth;
   }
 
-  private _getItemWithOldestStartDate(onlyVisible = false): ITimelineItem {
-    let firstItem = this._items[0];
-
-    forEachItem(this._items, (item, parent) => {
-      if (onlyVisible && (parent && !parent?.expanded))
-        return;
-
-      if (new Date(firstItem.startDate).getTime() > new Date(item.startDate).getTime()) {
-        firstItem = item;
-      }
-    });
-
-    return firstItem;
-  }
-
-  private _getItemWithNewestEndDate(onlyVisible = false): ITimelineItem {
-    let lastItem = this._items[0];
-
-    forEachItem(this._items, (item, parent) => {
-      if (onlyVisible && (parent && !parent?.expanded))
-        return;
-
-      if (new Date(lastItem.endDate).getTime() < new Date(item.endDate).getTime()) {
-        lastItem = item;
-      }
-    });
-
-    return lastItem;
-  }
-
-  private _sortItems(): void {
-    forEachItem(this._items, (item: ITimelineItem) => () => {
-      (item.items ?? []).sort((a, b) => {
-        return new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? 1 : -1;
-      });
-    });
-  }
-
   private _recalculateLeftPositionForDateMarker(): void {
     const countOfColumns = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, new Date());
 
@@ -336,17 +294,4 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
   }
-}
-
-function forEachItem(items: ITimelineItem[], handler: (item: ITimelineItem, parent: ITimelineItem | null) => void): void {
-  function iterateAll(items: ITimelineItem[], parent: ITimelineItem | null): void {
-    (items || []).forEach(item => {
-      handler(item, parent);
-      if (item.items) {
-        iterateAll(item.items, item);
-      }
-    });
-  }
-
-  iterateAll(items, null);
 }

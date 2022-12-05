@@ -4,7 +4,7 @@
   [itemTemplate]="panelItemTemplate"
   [label]="panelLabel"
   [headerHeight]="headerHeight"
-  [items]="items"
+  [items]="itemsBuilder.items"
   [locale]="locale"
   [rowHeight]="rowHeight">
 </timeline-panel>
@@ -18,7 +18,7 @@
     [locale]="locale"
   ></app-timeline-scale-header>
 
-  <div class="column-separators" *ngIf='items && items.length'>
+  <div class="column-separators" *ngIf='!itemsBuilder.isEmpty()'>
     <div *ngFor='let date of scale?.columns; index as i'
          [style.left.px]='zoom.columnWidth * (i + 1)'
          [style.height]="'calc(100% - ' + headerHeight + 'px)'"
@@ -32,7 +32,7 @@
   ></app-timeline-date-marker>
 
   <div class='timeline-items'>
-    <ng-container *ngFor='let group of items; trackBy: _trackById;'>
+    <ng-container *ngFor='let group of itemsBuilder.items; trackBy: _trackById;'>
       <ng-container [ngTemplateOutlet]='itemTemplate'
                     [ngTemplateOutletContext]='{$implicit: group}'
       ></ng-container>
