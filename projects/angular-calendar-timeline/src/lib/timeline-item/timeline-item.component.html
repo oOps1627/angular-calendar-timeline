@@ -1,20 +1,34 @@
-<div class="item-custom-template" *ngIf="contentTemplate; else nameTemplate">
+<div class="timeline-item"
+     cdkDrag
+     cdkDragBoundary='.item-row'
+     cdkDragLockAxis='x'
+     ghostElementPositioning='absolute'
+     mwlResizable
+     (cdkDragEnded)='onItemDropped($event)'
+     (resizeEnd)='onItemResizeEnd($event)'
+     (resizeStart)='onItemResizeStart($event)'
+     [cdkDragDisabled]='isItemResizingStarted || !item.canDrag'
+     [enableGhostResize]='true'
+     [style.left.px]='item?._left'
+     [style.width.px]='item?._width'>
+  <div class="item-custom-template" *ngIf="contentTemplate; else nameTemplate">
     <ng-container [ngTemplateOutlet]="contentTemplate"
                   [ngTemplateOutletContext]="{$implicit: item}"
     ></ng-container>
-</div>
+  </div>
 
-<ng-template #nameTemplate>
+  <ng-template #nameTemplate>
     {{item.name}}
-</ng-template>
+  </ng-template>
 
-<div *ngIf='item.canResizeLeft'
-     [resizeEdges]='{ left: true }'
-     class='resize-handle-left'
-     mwlResizeHandle
-></div>
-<div *ngIf='item.canResizeRight'
-     [resizeEdges]='{ right: true }'
-     class='resize-handle-right'
-     mwlResizeHandle
-></div>
+  <div *ngIf='item.canResizeLeft'
+       [resizeEdges]='{ left: true }'
+       class='resize-handle-left'
+       mwlResizeHandle
+  ></div>
+  <div *ngIf='item.canResizeRight'
+       [resizeEdges]='{ right: true }'
+       class='resize-handle-right'
+       mwlResizeHandle
+  ></div>
+</div>

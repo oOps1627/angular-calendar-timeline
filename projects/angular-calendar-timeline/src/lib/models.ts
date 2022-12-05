@@ -4,23 +4,45 @@ export interface IIdObject {
 
 export interface ITimelineZoom<Division = TimelineDivisionType> {
   division: Division;
+
   columnWidth: number;
+
   index: number;
 }
 
 export interface ITimelineItem<Meta = any> extends IIdObject {
   name: string;
+
   startDate: string;
+
   endDate: string;
+
   canResizeLeft: boolean;
+
   canResizeRight: boolean;
+
   canDrag: boolean;
+
   expanded?: boolean;
-  height?: number;
+
   items?: ITimelineItem<Meta>[];
-  width?: number;
-  left?: number;
+
   meta?: Meta;
+
+  /**
+   * @hidden
+   */
+  _width?: number;
+
+  /**
+   * @hidden
+   */
+  _left?: number;
+
+  /**
+   * @hidden
+   */
+  _redraw?(): void;
 }
 
 export enum  TimelineDivisionType {

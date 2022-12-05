@@ -1,5 +1,11 @@
-:host {
-    display: block;
+
+.timeline-item {
+  height: 32px;
+  font-size: 12px;
+  position: absolute;
+  cursor: pointer;
+  border-radius: 2px;
+  background-color: #24affe;
 }
 
 .item-custom-template {
@@ -8,71 +14,31 @@
   position: relative;
 }
 
-.rectangle {
-    position: relative;
-    top: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 300px;
-    height: 150px;
-    background-color: #fd4140;
-    border: solid 1px #121621;
-    color: #121621;
-    margin: auto;
-}
-
 mwlResizable {
-    box-sizing: border-box; // required for the enableGhostResize option to work
-}
-
-.resize-handle-top,
-.resize-handle-bottom {
-    position: absolute;
-    height: 5px;
-    cursor: row-resize;
-    width: 100%;
-}
-
-.resize-handle-top {
-    top: 0;
-}
-
-.resize-handle-bottom {
-    bottom: 0;
-}
-
-
-.item-component:hover .resize-handle-left {
-    opacity: 1;
-    transition: opacity .3s;
-}
-
-.item-component:hover .resize-handle-right {
-    opacity: 1;
-    transition: opacity .3s;
+  box-sizing: border-box; // required for the enableGhostResize option to work
 }
 
 .resize-handle-left,
 .resize-handle-right {
-    position: absolute;
-    height: 100%;
-    cursor: col-resize;
-    width: 5px;
-    background-color: #E2E9EE;
-    opacity: 0;
+  position: absolute;
+  height: 100%;
+  cursor: col-resize;
+  width: 5px;
+  background-color: #E2E9EE;
+  opacity: 0;
+  transition: opacity .3s;
 
-    &:hover {
-        opacity: 1;
-    }
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .resize-handle-left {
-    left: 0;
-    top: 0;
+  left: 0;
+  top: 0;
 }
 
 .resize-handle-right {
-    right: 0;
-    top: 0;
+  right: 0;
+  top: 0;
 }

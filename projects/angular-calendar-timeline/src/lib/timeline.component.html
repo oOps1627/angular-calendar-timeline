@@ -42,26 +42,14 @@
       ></ng-container>
     </ng-container>
 
-    <ng-template #itemTemplate let-item let-first="first" let-last="last">
-      <div [class.first-item]='first'
-           [class.last-item]='last'
-           class='item-row' [style.height.px]='rowHeight'>
-        <app-timeline-item class='timeline-item'
-                           (cdkDragEnded)='_onItemDropped($event, item)'
-                           (dblclick)='itemDblClickHandler(item)'
-                           (resizeEnd)='_onItemResizeEnd($event, item)'
-                           (resizeStart)='_onItemResizeStart($event)'
-                           [cdkDragDisabled]='isItemResizingStarted || !item.canDrag'
-                           [enableGhostResize]='true'
-                           [item]='item'
-                           [style.left.px]='item?.left'
-                           [style.width.px]='item?.width'
+    <ng-template #itemTemplate let-item>
+      <div [style.height.px]='rowHeight'
+           class='item-row'>
+
+        <app-timeline-item [item]='item'
+                           (itemResized)="_onItemResizeEnd($event.event, $event.item)"
+                           (itemMoved)="_onItemDropped($event.event, $event.item)"
                            [contentTemplate]='itemContentTemplate'
-                           cdkDrag
-                           cdkDragBoundary='.item-row'
-                           cdkDragLockAxis='x'
-                           ghostElementPositioning='absolute'
-                           mwlResizable
         ></app-timeline-item>
       </div>
     </ng-template>

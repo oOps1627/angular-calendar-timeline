@@ -36,11 +36,9 @@ import { ItemsBuilder } from "./items-builder/items-builder";
 export class TimelineComponent implements AfterViewInit, OnDestroy {
   currentDate: Date = new Date();
 
-  dateMarkerLeftPosition = 0;
+  dateMarkerLeftPosition: number = 0;
 
   scale: IScale | undefined;
-
-  isItemResizingStarted = false;
 
   itemsBuilder = new ItemsBuilder();
 
@@ -60,9 +58,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   @Input() panelWidth: number = 160;
 
-  @Input() panelItemTemplate: TemplateRef<{item: ITimelineItem, index: number, depth: number, locale: string}>
-
-  @Input() itemDblClickHandler: (item: ITimelineItem) => void = () => null;
+  @Input() panelItemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
 
   @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;
 
@@ -113,7 +109,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   redraw(): void {
     this._generateScale();
-    this._calculateItemsPosition();
+    this._updateItemsPosition();
     this._recalculateLeftPositionForDateMarker();
     this._ignoreNextScrollEvent = true;
     this.attachCameraToDate(this.currentDate);
@@ -178,24 +174,22 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * @hidden
    */
   _onItemDropped(event: CdkDragEnd, item: ITimelineItem): void {
-    if (!this.isItemResizingStarted) {
-      const divisionCalculator = this.divisionAdaptor;
-      const transferColumns = Math.round(event.distance.x / this.zoom.columnWidth);
-      const newStartDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
-      const newEndDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
-      const oldStartDate = item.startDate;
-      const oldEndDate = item.endDate;
-      item.startDate = newStartDate.toISOString();
-      item.endDate = newEndDate.toISOString();
-      event.source._dragRef.reset();
-      this._updateItemPosition(item);
+    const divisionCalculator = this.divisionAdaptor;
+    const transferColumns = Math.round(event.distance.x / this.zoom.columnWidth);
+    const newStartDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
+    const newEndDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
+    const oldStartDate = item.startDate;
+    const oldEndDate = item.endDate;
+    item.startDate = newStartDate.toISOString();
+    item.endDate = newEndDate.toISOString();
+    event.source._dragRef.reset();
+    this._updateItemPosition(item);
 
-      this.updateItemHandler(item, () => {
-        item.startDate = oldStartDate;
-        item.endDate = oldEndDate;
-        this._updateItemPosition(item);
-      });
-    }
+    this.updateItemHandler(item, () => {
+      item.startDate = oldStartDate;
+      item.endDate = oldEndDate;
+      this._updateItemPosition(item);
+    });
   }
 
   /**
@@ -208,15 +202,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * @hidden
    */
-  _onItemResizeStart(event: ResizeEvent): void {
-    this.isItemResizingStarted = true;
-  }
-
-  /**
-   * @hidden
-   */
   _onItemResizeEnd(event: ResizeEvent, item: ITimelineItem): void {
-    this.isItemResizingStarted = false;
     const divisionCalculator = this.divisionAdaptor;
     const oldStartDate = item.startDate;
     const oldEndDate = item.endDate;
@@ -256,16 +242,17 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this.scale = this.scaleGenerator.generateScale(scaleStartDate, scaleEndDate);
   }
 
-  private _calculateItemsPosition(): void {
+  private _updateItemsPosition(): void {
     this.itemsBuilder.forEach((item) => this._updateItemPosition(item));
   }
 
   private _updateItemPosition(item: ITimelineItem): void {
-    item.width = this._calculateItemWidth(item);
-    item.left = this._calculateItemLeftOffset(item);
+    item._width = this._calculateItemWidth(item);
+    item._left = this._calculateItemLeftPosition(item);
+    item._redraw && item._redraw();
   }
 
-  private _calculateItemLeftOffset(item: ITimelineItem): number {
+  private _calculateItemLeftPosition(item: ITimelineItem): number {
     if (!item.startDate || !item.endDate)
       return 0;
 
