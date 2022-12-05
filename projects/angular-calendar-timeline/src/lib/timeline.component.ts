@@ -27,6 +27,7 @@ import { ZoomService } from "./zoom.service";
 import { TimeInMilliseconds } from "./date-helpers";
 import { IDivisionAdaptor } from "./divisions-calculator/base-divisions-adaptor";
 import { ItemsBuilder } from "./items-builder/items-builder";
+import { IItemsBuilder } from "./items-builder/items-builder.interface";
 
 @Component({
   selector: 'timeline-calendar',
@@ -41,13 +42,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   scale: IScale | undefined;
 
-  itemsBuilder = new ItemsBuilder();
+  itemsBuilder: IItemsBuilder = new ItemsBuilder();
 
-  private _ignoreNextScrollEvent = false;
+  private _ignoreNextScrollEvent: boolean = false;
 
   @ViewChild('timeline') timelineElement: ElementRef<HTMLElement> | undefined;
 
-  @Output() itemDatesChanged = new EventEmitter<ITimelineItem>();
+  @Output() itemDatesChanged: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
 
   @Input() locale: string = 'en';
 
@@ -68,7 +69,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input() dateMarkerTemplate: TemplateRef<{ leftPosition: number }> | undefined;
 
   @Input()
-  set items(items) {
+  set items(items: ITimelineItem[]) {
     this.itemsBuilder.setItems(items);
     this.redraw();
   }
