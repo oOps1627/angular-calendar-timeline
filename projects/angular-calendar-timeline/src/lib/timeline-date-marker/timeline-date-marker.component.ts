@@ -7,6 +7,8 @@ import { Component, Input, TemplateRef } from '@angular/core';
 })
 export class TimelineDateMarkerComponent {
     @Input() leftPosition: number = 0;
+
     @Input() headerHeight: number;
+
     @Input() customTemplate: TemplateRef<{ leftPosition: number }> | undefined;
 }
