@@ -53,6 +53,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   @Input() rowHeight: number = 45;
 
+  @Input() itemHeight: number = 39;
+
   @Input() headerHeight: number = 60;
 
   @Input() panelLabel: string = '';

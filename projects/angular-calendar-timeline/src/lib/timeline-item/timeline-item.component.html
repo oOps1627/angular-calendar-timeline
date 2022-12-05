@@ -9,6 +9,7 @@
      (resizeStart)='onItemResizeStart($event)'
      [cdkDragDisabled]='isItemResizingStarted || !item.canDrag'
      [enableGhostResize]='true'
+     [style.height.px]='height'
      [style.left.px]='item?._left'
      [style.width.px]='item?._width'>
   <div class="item-custom-template" *ngIf="contentTemplate; else nameTemplate">

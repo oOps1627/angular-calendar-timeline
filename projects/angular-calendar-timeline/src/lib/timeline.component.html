@@ -43,10 +43,9 @@
     </ng-container>
 
     <ng-template #itemTemplate let-item>
-      <div [style.height.px]='rowHeight'
-           class='item-row'>
-
+      <div [style.height.px]='rowHeight' class='item-row'>
         <app-timeline-item [item]='item'
+                           [height]="itemHeight"
                            (itemResized)="_onItemResizeEnd($event.event, $event.item)"
                            (itemMoved)="_onItemDropped($event.event, $event.item)"
                            [contentTemplate]='itemContentTemplate'

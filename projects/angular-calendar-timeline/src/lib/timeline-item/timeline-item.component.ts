@@ -30,6 +30,8 @@ export class TimelineItemComponent {
     }
   };
 
+  @Input() height;
+
   @Input() contentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;
 
   @Output() itemResized = new EventEmitter<{ event: ResizeEvent, item: ITimelineItem }>();

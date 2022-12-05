@@ -1,9 +1,10 @@
 
 .timeline-item {
-  height: 32px;
+  height: 100%;
   font-size: 12px;
-  position: absolute;
+  position: relative;
   cursor: pointer;
+  top: 0;
   border-radius: 2px;
   background-color: #24affe;
 }
