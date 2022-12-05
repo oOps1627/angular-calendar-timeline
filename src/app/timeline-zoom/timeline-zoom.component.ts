@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DefaultZooms } from "../zooms";
-import { ZoomService } from "../zoom.service";
+import { DefaultZooms } from "../../../projects/angular-calendar-timeline/src/lib/zooms";
+import { ZoomService } from "../../../projects/angular-calendar-timeline/src/lib/zoom.service";
 
 @Component({
     selector: 'app-timeline-zoom',

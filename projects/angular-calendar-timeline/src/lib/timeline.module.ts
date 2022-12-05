@@ -7,7 +7,6 @@ import { ResizableModule } from 'angular-resizable-element';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-date-marker.component';
 import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
-import { TimelineZoomComponent } from "./timeline-zoom/timeline-zoom.component";
 import { TimelineDivisionsAdaptorsManager } from "./divisions-calculator/divisions-adaptors-factory";
 import { ITimelineZoom } from "./models";
 import { DefaultZooms, ZOOMS } from "./zooms";
@@ -77,7 +76,6 @@ interface ITimelineModuleInitializationProviders {
     TimelineItemComponent,
     TimelineDateMarkerComponent,
     TimelineScaleHeaderComponent,
-    TimelineZoomComponent,
     TimelinePanelComponent
   ],
   imports: [
@@ -88,7 +86,6 @@ interface ITimelineModuleInitializationProviders {
   ],
   exports: [
     TimelineComponent,
-    TimelineZoomComponent,
   ],
   providers: [
     ZoomService,

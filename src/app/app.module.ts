@@ -3,10 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { RouterModule } from "@angular/router";
 import { TimelineModule } from "angular-calendar-timeline";
+import { TimelineZoomComponent } from "./timeline-zoom/timeline-zoom.component";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TimelineZoomComponent
   ],
   imports: [
     BrowserModule,
@@ -21,4 +23,5 @@ import { TimelineModule } from "angular-calendar-timeline";
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
