@@ -29,7 +29,7 @@ import { IDivisionAdaptor } from "./divisions-calculator/base-divisions-adaptor"
 import { ItemsBuilder } from "./items-builder/items-builder";
 
 @Component({
-  selector: 'app-timeline',
+  selector: 'timeline-calendar',
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

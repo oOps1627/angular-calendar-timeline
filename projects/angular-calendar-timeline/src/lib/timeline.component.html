@@ -10,13 +10,13 @@
 </timeline-panel>
 
 <div class='content-wrapper'>
-  <app-timeline-scale-header
+  <timeline-scale-header
     [height]="headerHeight"
     [formatter]="scaleGenerator.formatter"
     [zoom]='zoom'
     [scale]='scale'
     [locale]="locale"
-  ></app-timeline-scale-header>
+  ></timeline-scale-header>
 
   <div class="column-separators" *ngIf='!itemsBuilder.isEmpty()'>
     <div *ngFor='let date of scale?.columns; index as i'
@@ -26,10 +26,10 @@
     </div>
   </div>
 
-  <app-timeline-date-marker [headerHeight]="headerHeight"
-                            [leftPosition]='dateMarkerLeftPosition'
-                            [customTemplate]="dateMarkerTemplate"
-  ></app-timeline-date-marker>
+  <timeline-date-marker [headerHeight]="headerHeight"
+                        [leftPosition]='dateMarkerLeftPosition'
+                        [customTemplate]="dateMarkerTemplate"
+  ></timeline-date-marker>
 
   <div class='timeline-items'>
     <ng-container *ngFor='let group of itemsBuilder.items; trackBy: _trackById;'>

@@ -2,14 +2,14 @@
   <app-timeline-zoom></app-timeline-zoom>
 
  <div class="timeline-wrapper">
-   <app-timeline #timelineComponent
-                 [rowHeight]='88'
-                 [panelLabel]="'Label'"
-                 [items]='items'
-                 [panelWidth]='200'
-                 [locale]="'uk'"
-                 [itemContentTemplate]='itemContentTemplate'>
-   </app-timeline>
+   <timeline-calendar #timelineComponent
+                      [rowHeight]='88'
+                      [panelLabel]="'Label'"
+                      [items]='items'
+                      [panelWidth]='200'
+                      [locale]="'uk'"
+                      [itemContentTemplate]='itemContentTemplate'>
+   </timeline-calendar>
  </div>
 </div>
 

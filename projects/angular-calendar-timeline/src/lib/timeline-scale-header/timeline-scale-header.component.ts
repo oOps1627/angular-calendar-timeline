@@ -4,7 +4,7 @@ import { IScale, IScaleColumn, IScaleGroup } from '../scale-generator/models';
 import { IScaleFormatter } from "../formatters/scale-formatter.interface";
 
 @Component({
-  selector: 'app-timeline-scale-header',
+  selector: 'timeline-scale-header',
   templateUrl: 'timeline-scale-header.component.html',
   styleUrls: ['timeline-scale-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
