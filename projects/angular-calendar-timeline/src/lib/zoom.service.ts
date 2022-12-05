@@ -31,7 +31,7 @@ export class ZoomService {
   }
 
   /**
-   * Change zoom to one of the existed in zooms array
+   * Change zoom to one of the existing zooms
    */
   changeZoom(zoom: ITimelineZoom): void {
     if (!zoom || this.isZoomActive(zoom))
@@ -41,21 +41,21 @@ export class ZoomService {
   }
 
   /**
-   * Change zoom to max value
+   * Changes zoom to the max value
    */
   zoomFullIn(): void {
     this.changeZoom(this._zooms[this._getMaxZoomIndex()]);
   }
 
   /**
-   * Change zoom to min value
+   * Changes zoom to the min value
    */
   zoomFullOut(): void {
     this.changeZoom(this._zooms[this._getMinZoomIndex()]);
   }
 
   /**
-   * Change zoom for 1 step in
+   * Changes zoom for 1 step back
    */
   zoomIn(): void {
     let newZoomIndex = this.zoom.index + 1;
@@ -67,7 +67,7 @@ export class ZoomService {
   }
 
   /**
-   * Change zoom for 1 step out
+   * Changes zoom for 1 step forward
    */
   zoomOut(): void {
     let newZoomIndex = this.zoom.index - 1;
@@ -79,21 +79,21 @@ export class ZoomService {
   }
 
   /**
-   * Check is current zoom the same
+   * Checks if current zoom is the same
    */
   isZoomActive(zoom: ITimelineZoom): boolean {
     return this.zoom.index === zoom.index;
   }
 
   /**
-   * Automatically chooses most ... zoom and set camera to center of the items
+   * Automatically chooses the most optimal zoom and sets the camera to the center of the items
    */
   fitToContent(paddings = 15): void {
     this._component.fitToContent(paddings);
   }
 
   /**
-   * Set horizontal scroll to center of the date
+   * Sets horizontal scroll to the center of the date
    */
   attachCameraToDate(date: Date): void {
     this._component.attachCameraToDate(date);
