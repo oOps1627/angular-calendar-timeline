@@ -1,9 +1,10 @@
 .date-marker {
   position: absolute;
-  width: 1px;
+  width: 2px;
   height: 100%;
   background-color: #24affe;
   z-index: 2;
   display: flex;
   flex-direction: column;
+  transform: translateX(-50%);
 }
