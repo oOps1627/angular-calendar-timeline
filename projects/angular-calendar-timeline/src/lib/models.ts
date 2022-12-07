@@ -11,9 +11,9 @@ export interface ITimelineZoom<Division = TimelineDivisionType> {
 export interface ITimelineItem<Meta = any> extends IIdObject {
   name: string;
 
-  startDate: string;
+  startDate: Date;
 
-  endDate: string;
+  endDate: Date;
 
   canResizeLeft: boolean;
 
@@ -25,6 +25,9 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
 
   items?: ITimelineItem<Meta>[];
 
+  /**
+   * Here can be added some additional information about item.
+   */
   meta?: Meta;
 
   /**

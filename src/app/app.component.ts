@@ -15,8 +15,8 @@ export class AppComponent {
 
   items: ITimelineItem[] = [
     {
-      startDate: '2021-07-08T00:00:00',
-      endDate: '2021-07-09T00:00:00',
+      startDate: new Date('2021-07-08T00:00:00'),
+      endDate: new Date('2021-07-09T00:00:00'),
       id: 1,
       name: "FIRST",
       canResizeLeft: true,
@@ -24,8 +24,8 @@ export class AppComponent {
       canDrag: true
     },
     {
-      startDate: '2021-07-09T00:00:00',
-      endDate: '2021-07-19T00:00:00',
+      startDate: new Date('2021-07-09T00:00:00'),
+      endDate: new Date('2021-07-19T00:00:00'),
       id: 2,
       name: "Second",
       canResizeLeft: true,
@@ -33,8 +33,8 @@ export class AppComponent {
       canDrag: true,
       items: [
         {
-          startDate: '2021-07-09T00:00:00',
-          endDate: '2021-07-20T00:00:00',
+          startDate: new Date('2021-07-09T00:00:00'),
+          endDate: new Date('2021-07-20T00:00:00'),
           id: 3,
           name: "Inner",
           canResizeLeft: true,
@@ -42,8 +42,8 @@ export class AppComponent {
           canDrag: true,
           items: [
             {
-              startDate: '2021-07-19T00:00:00',
-              endDate: '2021-07-20T00:00:00',
+              startDate: new Date('2021-07-19T00:00:00'),
+              endDate: new Date('2021-07-20T00:00:00'),
               id: 7,
               name: "Inner inner",
               canResizeLeft: true,
@@ -53,8 +53,8 @@ export class AppComponent {
           ]
         },
         {
-          startDate: '2021-07-09T00:00:00',
-          endDate: '2021-07-20T00:00:00',
+          startDate: new Date('2021-07-09T00:00:00'),
+          endDate: new Date('2021-07-20T00:00:00'),
           id: 6,
           name: "Inner 2",
           canResizeLeft: true,
@@ -64,8 +64,8 @@ export class AppComponent {
       ]
     },
     {
-      startDate: '2021-08-09T00:00:00',
-      endDate: '2021-08-19T00:00:00',
+      startDate: new Date('2021-08-09T00:00:00'),
+      endDate: new Date('2021-08-19T00:00:00'),
       id: 4,
       name: "Third",
       canResizeLeft: true,
@@ -73,8 +73,8 @@ export class AppComponent {
       canDrag: true,
       items: [
         {
-          startDate: '2021-08-09T00:00:00',
-          endDate: '2021-08-20T00:00:00',
+          startDate: new Date('2021-08-09T00:00:00'),
+          endDate: new Date('2021-08-20T00:00:00'),
           id: 5,
           name: "Inner 3",
           canResizeLeft: true,

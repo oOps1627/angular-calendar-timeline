@@ -170,7 +170,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Change zoom to one of the existing zooms
+   * Change zoom to one of the existed
    */
   changeZoom(zoom: ITimelineZoom): void {
     this.zoomsBuilder.changeActiveZoom(zoom);
@@ -236,13 +236,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * @hidden
    */
-  _onItemDropped(event: CdkDragEnd, item: ITimelineItem): void {
+  _onItemMoved(event: CdkDragEnd, item: ITimelineItem): void {
     const divisionCalculator = this.divisionAdaptor;
     const transferColumns = Math.round(event.distance.x / this.zoom.columnWidth);
-    const newStartDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
-    const newEndDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
-    item.startDate = newStartDate.toISOString();
-    item.endDate = newEndDate.toISOString();
+    item.startDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
+    item.endDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
     event.source._dragRef.reset();
     this._updateItemPosition(item);
     this.itemDatesChanged.emit(item);
@@ -258,28 +256,22 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * @hidden
    */
-  _onItemResizeEnd(event: ResizeEvent, item: ITimelineItem): void {
-    const divisionCalculator = this.divisionAdaptor;
-    const {left, right} = event.edges;
-
+  _onItemResized(event: ResizeEvent, item: ITimelineItem): void {
     const calculateNewDate = (movedPx: number, oldDate: Date): Date => {
       const countOfColumnsMoved = Math.round(movedPx as number / this.zoom.columnWidth);
-      return divisionCalculator.addDivisionToDate(oldDate, countOfColumnsMoved);
+      return this.divisionAdaptor.addDivisionToDate(oldDate, countOfColumnsMoved);
     }
 
-    if (left) {
-      const newStartDate = calculateNewDate(<number>left, new Date(item.startDate));
-
-      if (newStartDate.getTime() > new Date(item.endDate).getTime()) {
-        return;
+    if (event.edges.left) {
+      const newStartDate = calculateNewDate(<number>event.edges.left, new Date(item.startDate));
+      if (newStartDate.getTime() <= new Date(item.endDate).getTime()) {
+        item.startDate = newStartDate;
       }
-      item.startDate = newStartDate.toISOString();
     } else {
-      const newEndDate = calculateNewDate(<number>right, new Date(item.endDate));
-      if (newEndDate.getTime() < new Date(item.startDate).getTime()) {
-        return;
+      const newEndDate = calculateNewDate(<number>event.edges.right, new Date(item.endDate));
+      if (newEndDate.getTime() >= new Date(item.startDate).getTime()) {
+        item.endDate = newEndDate;
       }
-      item.endDate = newEndDate.toISOString();
     }
 
     this._updateItemPosition(item);
