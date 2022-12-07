@@ -23,6 +23,7 @@
   z-index: 100;
   flex-shrink: 0;
   background-color: #F6F6F8;
+  border-bottom: #D5DBDC 1px solid;
 }
 
 
@@ -34,10 +35,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   box-sizing: border-box;
-
-  &.first-item {
-    border-top: #D5DBDC 1px solid;
-  }
 
   &.can-collapse {
     .collapse-icon {

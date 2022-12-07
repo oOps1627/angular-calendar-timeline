@@ -5,9 +5,7 @@
      [resizeCursorPrecision]="5"
      [style.width.px]='width'>
 
-  <div class='label' [style.height.px]="headerHeight">
-    {{label}}
-  </div>
+  <div class='label' [style.height.px]="headerHeight">{{label}}</div>
 
   <ng-container *ngFor='let item of items; trackBy: trackById; let index = index'
                 [ngTemplateOutlet]='itemsIterationTemplate'
@@ -29,8 +27,7 @@
 </div>
 
 <ng-template #defaultItemTemplate let-item='item' let-index='index' let-depth='depth'>
-  <div [class.first-item]='index === 0'
-       [style.height.px]='rowHeight'
+  <div [style.height.px]='rowHeight'
        [style.width.px]='width'
        [class.can-collapse]='item.items && item.items.length'
        class='panel-item'>

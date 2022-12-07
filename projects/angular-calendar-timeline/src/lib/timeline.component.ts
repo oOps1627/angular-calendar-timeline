@@ -12,7 +12,6 @@ import {
   Output,
   PLATFORM_ID,
   TemplateRef,
-  ViewChild,
 } from '@angular/core';
 import { ScaleGeneratorsManager } from './scale-generator/scale-generators-manager';
 import { ResizeEvent } from 'angular-resizable-element';
@@ -112,7 +111,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.zoomsBuilder.activeZoom$
       .pipe(untilDestroyed(this))
-      .subscribe(() => this.redraw())
+      .subscribe(() => this.redraw());
 
     if (isPlatformBrowser(this._platformId)) {
       interval(TimeInMilliseconds.Minute)
@@ -129,8 +128,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this._updateItemsPosition();
     this._recalculateDateMarkerPosition();
     this._ignoreNextScrollEvent = true;
-    this.attachCameraToDate(this.currentDate);
     this._cdr.detectChanges();
+    this.attachCameraToDate(this.currentDate);
   }
 
   /**
@@ -296,8 +295,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private _generateScale(): void {
-    const scaleStartDate = this.scaleGenerator.getStartDateByFirstItem(this.itemsBuilder.getFirstItem(false));
-    const scaleEndDate = this.scaleGenerator.getEndDateByLastItem(this.itemsBuilder.getLastItem(false));
+    const scaleStartDate = this.scaleGenerator.getStartDate(this.itemsBuilder);
+    const scaleEndDate = this.scaleGenerator.getEndDate(this.itemsBuilder);
     this.scale = this.scaleGenerator.generateScale(scaleStartDate, scaleEndDate);
   }
 

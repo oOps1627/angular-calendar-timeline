@@ -1,5 +1,6 @@
-import { IIdObject, ITimelineItem } from "../models";
+import { IIdObject } from "../models";
 import { IScaleFormatter } from "../formatters/scale-formatter.interface";
+import { IItemsBuilder } from "../items-builder/items-builder.interface";
 
 export type DateInput = Date | string | number;
 
@@ -25,7 +26,7 @@ export interface IScaleGenerator {
 
   generateScale(startDate: Date, endDate: Date): IScale;
 
-  getStartDateByFirstItem(firstItem: ITimelineItem): Date;
+  getStartDate(itemsBuilder: IItemsBuilder): Date;
 
-  getEndDateByLastItem(lastItem: ITimelineItem): Date;
+  getEndDate(itemsBuilder: IItemsBuilder): Date;
 }
