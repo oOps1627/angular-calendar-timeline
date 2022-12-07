@@ -1,13 +1,10 @@
 <div>
-  <app-timeline-zoom></app-timeline-zoom>
+  <app-timeline-zoom [timelineComponent]="timelineComponent"></app-timeline-zoom>
 
  <div class="timeline-wrapper">
    <timeline-calendar #timelineComponent
-                      [rowHeight]='60'
-                      [itemHeight]="55"
                       [panelLabel]="'Label'"
                       [items]='items'
-                      [panelWidth]='200'
                       [locale]="'uk'"
                       [itemContentTemplate]='itemContentTemplate'>
    </timeline-calendar>

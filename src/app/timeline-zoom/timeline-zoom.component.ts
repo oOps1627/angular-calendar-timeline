@@ -1,36 +1,35 @@
-import { Component } from '@angular/core';
-import { DefaultZooms } from "../../../projects/angular-calendar-timeline/src/lib/zooms";
-import { ZoomService } from "../../../projects/angular-calendar-timeline/src/lib/zoom.service";
+import { Component, Input } from '@angular/core';
+import { DefaultZooms } from "../../../projects/angular-calendar-timeline/src/lib/zooms-builder/zooms";
+import { TimelineComponent } from "../../../projects/angular-calendar-timeline/src/lib/timeline.component";
 
 @Component({
-    selector: 'app-timeline-zoom',
-    templateUrl: 'timeline-zoom.component.html',
-    styleUrls: ['./timeline-zoom.component.scss'],
+  selector: 'app-timeline-zoom',
+  templateUrl: 'timeline-zoom.component.html',
+  styleUrls: ['./timeline-zoom.component.scss'],
 })
 export class TimelineZoomComponent {
-    constructor(private _zoomService: ZoomService) {
-    }
+  @Input() timelineComponent: TimelineComponent;
 
-    zoomIn(): void {
-       this._zoomService.zoomIn();
-    }
+  zoomIn(): void {
+    this.timelineComponent.zoomIn();
+  }
 
-    zoomOut(): void {
-        this._zoomService.zoomOut();
-    }
+  zoomOut(): void {
+    this.timelineComponent.zoomOut();
+  }
 
-    onSliderChange(index: number): void {
-        this._zoomService.changeZoom(DefaultZooms[index]);
-    }
+  onSliderChange(index: number): void {
+    this.timelineComponent.changeZoom(DefaultZooms[index]);
+  }
 
-    scrollToToday(): void {
-        this._zoomService.zoomFullIn();
-        this._zoomService.attachCameraToDate(new Date());
-    }
+  scrollToToday(): void {
+    this.timelineComponent.zoomFullIn();
+    this.timelineComponent.attachCameraToDate(new Date());
+  }
 
-    zoomAndFitToContent(): void {
-        this._zoomService.fitToContent();
-    }
+  zoomAndFitToContent(): void {
+    this.timelineComponent.fitToContent(15);
+  }
 }
 
 

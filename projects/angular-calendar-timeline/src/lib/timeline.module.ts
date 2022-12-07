@@ -9,9 +9,7 @@ import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-dat
 import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
 import { TimelineDivisionsAdaptorsManager } from "./divisions-calculator/divisions-adaptors-factory";
 import { ITimelineZoom } from "./models";
-import { DefaultZooms, ZOOMS } from "./zooms";
 import { ScaleGeneratorsManager } from "./scale-generator/scale-generators-manager";
-import { ZoomService } from "./zoom.service";
 import { DAY_SCALE_FORMATTER, DayScaleFormatter, } from "./formatters/day-scale-formatter";
 import { IScaleFormatter } from "./formatters/scale-formatter.interface";
 import { WEEK_SCALE_FORMATTER, WeekScaleFormatter } from "./formatters/week-scale-formatter";
@@ -50,22 +48,22 @@ interface ITimelineModuleInitializationProviders {
   monthScaleGenerator?: Provider;
 
   /**
-   * List of zooms. Can be used custom array
+   * List of zooms.
    */
   zooms?: ITimelineZoom[];
 
   /**
-   * Text formatter for days mode in header
+   * Text formatter for header in days mode.
    */
   dayScaleFormatter?: IScaleFormatter;
 
   /**
-   * Text formatter for weeks mode in header
+   * Text formatter for header in weeks mode.
    */
   weekScaleFormatter?: IScaleFormatter;
 
   /**
-   * Text formatter for months mode in header
+   * Text formatter for header in months mode.
    */
   monthScaleFormatter?: IScaleFormatter;
 }
@@ -87,9 +85,6 @@ interface ITimelineModuleInitializationProviders {
   exports: [
     TimelineComponent,
   ],
-  providers: [
-    ZoomService,
-  ]
 })
 export class TimelineModule {
   static forChild(config?: ITimelineModuleInitializationProviders): ModuleWithProviders<TimelineModule> {
@@ -112,10 +107,6 @@ export class TimelineModule {
         {
           provide: MONTH_SCALE_FORMATTER,
           useValue: config?.monthScaleFormatter ?? new MonthScaleFormatter()
-        },
-        {
-          provide: ZOOMS,
-          useValue: config?.zooms ?? DefaultZooms,
         },
       ]
     }

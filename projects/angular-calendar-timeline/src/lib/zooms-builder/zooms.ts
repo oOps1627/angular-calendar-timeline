@@ -1,4 +1,4 @@
-import { ITimelineZoom, TimelineDivisionType } from "./models";
+import { ITimelineZoom, TimelineDivisionType } from "../models";
 import { InjectionToken } from "@angular/core";
 
 export const ZOOMS = new InjectionToken<ITimelineZoom[]>('Zooms');
@@ -25,7 +25,4 @@ export const DefaultZooms: ITimelineZoom[] = [
   {columnWidth: 140, division: TimelineDivisionType.Day},
   {columnWidth: 200, division: TimelineDivisionType.Day},
   {columnWidth: 240, division: TimelineDivisionType.Day},
-].map((item, index) => ({...item, index}));
-
-export const MinZoomIndex = 0;
-export const MaxZoomIndex = DefaultZooms.length - 1;
+];

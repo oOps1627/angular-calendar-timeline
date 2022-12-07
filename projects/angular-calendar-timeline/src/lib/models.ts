@@ -6,8 +6,6 @@ export interface ITimelineZoom<Division = TimelineDivisionType> {
   division: Division;
 
   columnWidth: number;
-
-  index: number;
 }
 
 export interface ITimelineItem<Meta = any> extends IIdObject {
