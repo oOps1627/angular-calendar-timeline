@@ -1,5 +1,5 @@
 import { IItemsBuilder } from "./items-builder.interface";
-import { ITimelineItem } from "angular-calendar-timeline";
+import { ITimelineItem } from "../models";
 
 export class ItemsBuilder implements IItemsBuilder {
   private _items: ITimelineItem[] = [];

@@ -1,15 +1,29 @@
 {
   "name": "calendar-timeline",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "A timeline for angular 13",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:copy-package-json": "copyfiles package.json projects/angular-calendar-timeline",
+    "build:lib": "ng build angular-calendar-timeline --configuration production"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
+    "angular-draggable-droppable": "4.5.0",
+    "angular-resizable-element": "^3.3.5",
+    "ngx-take-until-destroy": "^5.4.0",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@angular/core": "~13.0.0"
+  },
+  "devDependencies": {
+    "rxjs": "~7.4.0",
+    "zone.js": "~0.11.4",
     "@angular/animations": "~13.0.0",
     "@angular/cdk": "~13.0.0",
     "@angular/common": "~13.0.0",
@@ -19,14 +33,6 @@
     "@angular/platform-browser": "~13.0.0",
     "@angular/platform-browser-dynamic": "~13.0.0",
     "@angular/router": "~13.0.0",
-    "angular-draggable-droppable": "4.5.0",
-    "angular-resizable-element": "^3.3.5",
-    "ngx-take-until-destroy": "^5.4.0",
-    "rxjs": "~7.4.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.11.4"
-  },
-  "devDependencies": {
     "@angular-devkit/build-angular": "~13.0.3",
     "@angular/cli": "~13.0.3",
     "@angular/compiler-cli": "~13.0.0",
@@ -39,6 +45,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "ng-packagr": "^13.0.0",
-    "typescript": "~4.4.3"
+    "typescript": "~4.4.3",
+    "copyfiles": "^2.4.1"
   }
 }

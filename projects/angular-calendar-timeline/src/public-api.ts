@@ -3,5 +3,6 @@
  */
 
 export * from './lib/timeline.module';
+export * from './lib/timeline.component';
 export * from './lib/models';
 export { TimeInMilliseconds } from "./lib/date-helpers";

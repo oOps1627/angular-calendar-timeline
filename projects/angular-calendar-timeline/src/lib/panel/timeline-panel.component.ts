@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from "@angular/core";
-import { IIdObject, ITimelineItem } from "angular-calendar-timeline";
+import { IIdObject, ITimelineItem } from "../models";
 import { ResizeEvent } from "angular-resizable-element";
 
 @Component({

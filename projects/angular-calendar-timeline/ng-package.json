@@ -3,5 +3,13 @@
   "dest": "../../dist/angular-calendar-timeline",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "angular-draggable-droppable",
+    "angular-resizable-element",
+    "calendar-utils",
+    "positioning",
+    "tslib",
+    "ngx-take-until-destroy"
+  ]
 }

@@ -1,15 +1,16 @@
-import { IIdObject } from "../models";
 import { IScaleFormatter } from "../formatters/scale-formatter.interface";
 import { IItemsBuilder } from "../items-builder/items-builder.interface";
 
 export type DateInput = Date | string | number;
 
-export interface IScaleColumn extends IIdObject {
+export interface IScaleColumn {
+  id: string;
   date: Date;
   index: number;
 }
 
-export interface IScaleGroup extends IIdObject {
+export interface IScaleGroup {
+  id: string;
   columnsInGroup: number;
   date: Date;
 }

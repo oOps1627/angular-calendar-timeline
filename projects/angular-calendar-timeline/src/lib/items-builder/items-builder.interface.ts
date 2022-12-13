@@ -1,4 +1,4 @@
-import { ITimelineItem } from "angular-calendar-timeline";
+import { ITimelineItem } from "../models";
 
 export interface IItemsBuilder {
   readonly items: ITimelineItem[];
