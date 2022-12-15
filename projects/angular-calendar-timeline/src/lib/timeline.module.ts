@@ -2,7 +2,6 @@ import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimelineComponent } from './timeline.component';
 import { TimelineItemComponent } from './timeline-item/timeline-item.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ResizableModule } from 'angular-resizable-element';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-date-marker.component';
@@ -78,7 +77,6 @@ interface ITimelineModuleInitializationProviders {
   ],
   imports: [
     CommonModule,
-    DragDropModule,
     ResizableModule,
     DragAndDropModule,
   ],

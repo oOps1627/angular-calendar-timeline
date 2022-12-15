@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { ScaleGeneratorsManager } from './scale-generator/scale-generators-manager';
 import { ResizeEvent } from 'angular-resizable-element';
-import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { IIdObject, ITimelineItem, ITimelineZoom, } from './models';
 import { interval } from 'rxjs';
 import { untilDestroyed } from 'ngx-take-until-destroy';
@@ -29,6 +28,7 @@ import { ItemsBuilder } from "./items-builder/items-builder";
 import { IItemsBuilder } from "./items-builder/items-builder.interface";
 import { ZoomsBuilder } from "./zooms-builder/zooms-builder";
 import { DefaultZooms } from "./zooms-builder/zooms";
+import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
 
 @Component({
   selector: 'timeline-calendar',
@@ -236,12 +236,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * @hidden
    */
-  _onItemMoved(event: CdkDragEnd, item: ITimelineItem): void {
+  _onItemMoved(event: DragEndEvent, item: ITimelineItem): void {
     const divisionCalculator = this.divisionAdaptor;
-    const transferColumns = Math.round(event.distance.x / this.zoom.columnWidth);
+    const transferColumns = Math.round(event.x / this.zoom.columnWidth);
     item.startDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
     item.endDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
-    event.source._dragRef.reset();
     this._updateItemPosition(item);
     this.itemDatesChanged.emit(item);
   }

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { ITimelineItem } from '../models';
 import { ResizeEvent } from "angular-resizable-element";
-import { CdkDragEnd } from "@angular/cdk/drag-drop";
+import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
 
 @Component({
   selector: 'app-timeline-item',
@@ -36,7 +36,7 @@ export class TimelineItemComponent {
 
   @Output() itemResized = new EventEmitter<{ event: ResizeEvent, item: ITimelineItem }>();
 
-  @Output() itemMoved = new EventEmitter<{ event: CdkDragEnd, item: ITimelineItem }>();
+  @Output() itemMoved = new EventEmitter<{ event: DragEndEvent, item: ITimelineItem }>();
 
   get item(): ITimelineItem {
     return this._item;
@@ -50,11 +50,11 @@ export class TimelineItemComponent {
   }
 
   onItemResizeEnd(event: ResizeEvent): void {
-    this.isItemResizingStarted = false;
     this.itemResized.emit({event, item: this.item});
+    setTimeout(() =>  this.isItemResizingStarted = false);
   }
 
-  onItemDropped(event: CdkDragEnd): void {
+  onItemDropped(event: DragEndEvent): void {
     if (!this.isItemResizingStarted) {
       this.itemMoved.emit({event, item: this.item});
     }
