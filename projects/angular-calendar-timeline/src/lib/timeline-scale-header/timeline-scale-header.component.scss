@@ -4,7 +4,7 @@
   top: 0;
   display: flex;
   flex-direction: row;
-  color: #5E7989;
+  background: #F8F8F8;
 }
 
 .wrapper {
@@ -21,18 +21,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #F8F8F8;
-    border-bottom: 1px solid #D5DBDC;
+    border-bottom: 1px solid #d0d0d0;
     position: relative;
+    box-sizing: border-box;
+
+    &:first-child {
+      &:after {
+        display: none;
+      }
+    }
 
     &:after {
       content: "";
       position: absolute;
       width: 1px;
-      height: 24px;
-      left: calc(100% - 1px);
-      top: 7px;
-      background: #D5DBDC;
+      height: 100%;
+      box-sizing: border-box;
+      left: 0;
+      top: 0;
+      background: #d0d0d0;
     }
   }
 
@@ -41,7 +48,6 @@
 .columns {
   display: flex;
   flex-grow: 2;
-  background-color: #F6F6F8;
 
   .column {
     height: 100%;
@@ -49,15 +55,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #5E7989;
 
     &:after {
       content: "";
       width: 1px;
-      height: 12px;
-      left: calc(100% - 1px);
+      height: 100%;
+      left: 100%;
       position: absolute;
-      background: #D5DBDC;
+      background: #d0d0d0;
     }
   }
 }

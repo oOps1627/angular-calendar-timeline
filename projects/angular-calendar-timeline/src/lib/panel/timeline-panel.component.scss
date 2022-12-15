@@ -9,32 +9,32 @@
   position: sticky;
   left: 0;
   z-index: 10;
-  background-color: #F6F6F8;
+  background-color: #F8F8F8;
+  border-right: 1px solid #d0d0d0;
 }
 
 .label {
   display: flex;
+  justify-content: center;
   align-items: center;
-  color: #738c99;
   width: 100%;
   position: sticky;
   top: 0;
   left: 0;
   z-index: 100;
   flex-shrink: 0;
-  background-color: #F6F6F8;
-  border-bottom: #D5DBDC 1px solid;
+  border-bottom: #d0d0d0 1px solid;
 }
 
 
 .panel-item {
-  background-color: #F6F6F8;
-  border-bottom: #D5DBDC 1px solid;
+  border-bottom: #d0d0d0 1px solid;
   padding: 5px 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   box-sizing: border-box;
+  display: flex;
 
   &.can-collapse {
     .collapse-icon {
@@ -50,13 +50,14 @@
     display: inline-flex;
     align-items: center;
     box-sizing: border-box;
+    max-width: 100%;
 
     .collapse-icon {
-      border: solid #8FA3AD;
+      border: solid #5a5a5a;
       border-width: 0 2px 2px 0;
       display: none;
       padding: 2.5px;
-      margin-right: 5px;
+      margin-right: 8px;
       transform: rotate(45deg);
 
 
@@ -66,7 +67,6 @@
     }
 
     .item-name {
-      font-weight: 600;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

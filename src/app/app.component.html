@@ -5,12 +5,9 @@
    <timeline-calendar #timelineComponent
                       [panelLabel]="'Label'"
                       [items]='items'
-                      [locale]="'uk'"
-                      [itemContentTemplate]='itemContentTemplate'>
+                      [locale]="'uk'">
    </timeline-calendar>
  </div>
 </div>
 
-<ng-template #itemContentTemplate let-item>
-  {{item.name}}
-</ng-template>
+

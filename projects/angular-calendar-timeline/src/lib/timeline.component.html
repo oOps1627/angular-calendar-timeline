@@ -1,6 +1,9 @@
 <timeline-panel
   (widthChanged)="panelWidth = $event"
   [width]="panelWidth"
+  [maxWidth]="maxPanelWidth"
+  [minWidth]="minPanelWidth"
+  [resizable]="panelResizable"
   [itemTemplate]="panelItemTemplate"
   [label]="panelLabel"
   [headerHeight]="headerHeight"

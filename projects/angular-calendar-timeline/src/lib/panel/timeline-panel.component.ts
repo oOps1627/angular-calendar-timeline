@@ -10,13 +10,17 @@ import { IIdObject } from "../models/id-object";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelinePanelComponent {
-  readonly minPanelWidth = 50;
-
   @Input() items: ITimelineItem[];
 
   @Input() label: string;
 
   @Input() width: number;
+
+  @Input() resizable: boolean;
+
+  @Input() minWidth: number;
+
+  @Input() maxWidth: number;
 
   @Input() headerHeight: number;
 
@@ -24,7 +28,7 @@ export class TimelinePanelComponent {
 
   @Input() locale: string;
 
-  @Input() itemTemplate: TemplateRef<{item: ITimelineItem, index: number, depth: number, locale: string}>
+  @Input() itemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
 
   @Output() widthChanged = new EventEmitter<number>();
 
@@ -35,10 +39,11 @@ export class TimelinePanelComponent {
   handleResize(event: ResizeEvent) {
     const newWidth = event.rectangle.width;
 
-    if (newWidth) {
-      this.width = newWidth < this.minPanelWidth ? this.minPanelWidth : newWidth;
-      this.widthChanged.emit(this.width);
-    }
+    if (newWidth < this.minWidth || newWidth > this.maxWidth)
+      return;
+
+    this.width = newWidth;
+    this.widthChanged.emit(this.width);
   }
 
   toggleExpand(item: ITimelineItem): void {

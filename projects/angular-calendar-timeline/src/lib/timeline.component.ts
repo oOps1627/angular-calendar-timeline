@@ -38,7 +38,7 @@ import { ITimelineZoom, IIdObject, ITimelineItem } from "./models";
 })
 export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
-   * Indicates current shown date in the middle of the user`s screen.
+   * Indicates the current shown date in the middle of user`s screen.
    */
   currentDate: Date = new Date();
 
@@ -86,6 +86,21 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Width of left panel. By default is 160.
    */
   @Input() panelWidth: number = 160;
+
+  /**
+   * Minimal width of left panel. By default is 50.
+   */
+  @Input() minPanelWidth: number = 50;
+
+  /**
+   * Maximal width of left panel. By default is 400.
+   */
+  @Input() maxPanelWidth: number = 400;
+
+  /**
+   * Can resize panel. By default is true.
+   */
+  @Input() panelResizable: boolean = true;
 
   /**
    * Custom template for item in left panel.
