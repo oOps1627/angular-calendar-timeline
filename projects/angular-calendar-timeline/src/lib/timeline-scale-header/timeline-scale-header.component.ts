@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { IIdObject, ITimelineZoom } from '../models';
 import { IScale, IScaleColumn, IScaleGroup } from '../scale-generator/models';
 import { IScaleFormatter } from "../formatters/scale-formatter.interface";
+import { IIdObject } from "../models/id-object";
+import { ITimelineZoom } from "../models/zoom";
 
 @Component({
   selector: 'timeline-scale-header',

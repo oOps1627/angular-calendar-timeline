@@ -1,8 +1,8 @@
-import { TimelineDivisionType } from '../models';
 import { DaysDivisionAdaptor } from './days-division-adaptor';
 import { WeeksDivisionAdaptor } from './weeks-division-adaptor';
 import { MonthsDivisionAdaptor } from './months-division-adaptor';
 import { IDivisionAdaptor } from "./base-divisions-adaptor";
+import { TimelineDivisionType } from "../models";
 
 export interface ITimelineDivisionsAdaptorsManager<Division = TimelineDivisionType> {
   getAdaptor(division: Division): IDivisionAdaptor;

@@ -1,5 +1,5 @@
-import { ITimelineZoom, TimelineDivisionType } from "../models";
 import { InjectionToken } from "@angular/core";
+import { ITimelineZoom, TimelineDivisionType } from "../models/zoom";
 
 export const ZOOMS = new InjectionToken<ITimelineZoom[]>('Zooms');
 

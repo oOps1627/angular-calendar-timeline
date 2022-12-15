@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { ScaleGeneratorsManager } from './scale-generator/scale-generators-manager';
 import { ResizeEvent } from 'angular-resizable-element';
-import { IIdObject, ITimelineItem, ITimelineZoom, } from './models';
 import { interval } from 'rxjs';
 import { untilDestroyed } from 'ngx-take-until-destroy';
 import { startWith } from 'rxjs/operators';
@@ -29,6 +28,7 @@ import { IItemsBuilder } from "./items-builder/items-builder.interface";
 import { ZoomsBuilder } from "./zooms-builder/zooms-builder";
 import { DefaultZooms } from "./zooms-builder/zooms";
 import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
+import { ITimelineZoom, IIdObject, ITimelineItem } from "./models";
 
 @Component({
   selector: 'timeline-calendar',
@@ -37,6 +37,9 @@ import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directiv
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineComponent implements AfterViewInit, OnDestroy {
+  /**
+   * Indicates current shown date in the middle of the user`s screen.
+   */
   currentDate: Date = new Date();
 
   dateMarkerLeftPosition: number = 0;
@@ -49,54 +52,97 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   private _ignoreNextScrollEvent: boolean = false;
 
+  /**
+   * Emits event when startDate or endDate of some item was changed (resized, moved).
+   */
   @Output() itemDatesChanged: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
 
+  /**
+   * The locale used to format dates. By default is 'en'
+   */
   @Input() locale: string = 'en';
 
   /**
-   * Height of the each row.
+   * Height of the each row. By default is 40.
    */
   @Input() rowHeight: number = 40;
 
   /**
-   * Height of the each timeline item. Can't be bigger then 'rowHeight' property.
+   * Height of the each timeline item. Can't be bigger then 'rowHeight' property. By default is 30.
    */
   @Input() itemHeight: number = 30;
 
+  /**
+   * Height of top dates panel. By default is 60.
+   */
   @Input() headerHeight: number = 60;
 
+  /**
+   * The label of left panel. By default is empty.
+   */
   @Input() panelLabel: string = '';
 
+  /**
+   * Width of left panel. By default is 160.
+   */
   @Input() panelWidth: number = 160;
 
+  /**
+   * Custom template for item in left panel.
+   */
   @Input() panelItemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
 
+  /**
+   * Custom template for item in timeline.
+   */
   @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;
 
+  /**
+   * Custom template for marker that indicates current time.
+   */
   @Input() dateMarkerTemplate: TemplateRef<{ leftPosition: number }> | undefined;
 
+  /**
+   * Register array of custom zooms.
+   * Current zoom can be changed to any existed in this array by calling method "changeZoom()"
+   */
   @Input() set zooms(value: ITimelineZoom[]) {
     this.zoomsBuilder.setZooms(value);
   }
 
+  /**
+   * The items of timeline.
+   */
   @Input()
   set items(items: ITimelineItem[]) {
     this.itemsBuilder.setItems(items);
     this.redraw();
   }
 
+  /**
+   * Visible timeline width (container visible width - panel width = timeline visible width).
+   */
   get visibleScaleWidth(): number {
     return this._elementRef.nativeElement.clientWidth - this.panelWidth;
   }
 
+  /**
+   * Get scale generator depending on current zoom.
+   */
   get scaleGenerator(): IScaleGenerator {
     return this._scaleGeneratorsFactory.getGenerator(this.zoom);
   }
 
+  /**
+   * Get division adapter depending on current division type in zoom.
+   */
   get divisionAdaptor(): IDivisionAdaptor {
     return this._divisionsAdaptorsFactory.getAdaptor(this.zoom.division);
   }
 
+  /**
+   * Active zoom.
+   */
   get zoom(): ITimelineZoom {
     return this.zoomsBuilder.activeZoom;
   }
@@ -121,7 +167,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Update view
+   * Recalculate and update view.
    */
   redraw(): void {
     this._generateScale();
@@ -222,9 +268,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return possibleZoom;
   }
 
-  /**
-   * @hidden
-   */
   _getCurrentDate(): Date {
     const currentScrollLeft = this._elementRef.nativeElement.scrollLeft ?? 0;
     const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
@@ -233,9 +276,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this.divisionAdaptor.addDivisionToDate(this.scale.startDate, columns);
   }
 
-  /**
-   * @hidden
-   */
   _onItemMoved(event: DragEndEvent, item: ITimelineItem): void {
     const divisionCalculator = this.divisionAdaptor;
     const transferColumns = Math.round(event.x / this.zoom.columnWidth);
@@ -245,16 +285,10 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this.itemDatesChanged.emit(item);
   }
 
-  /**
-   * @hidden
-   */
   _trackById(index: number, item: IIdObject): number | string {
     return item.id;
   }
 
-  /**
-   * @hidden
-   */
   _onItemResized(event: ResizeEvent, item: ITimelineItem): void {
     const calculateNewDate = (movedPx: number, oldDate: Date): Date => {
       const countOfColumnsMoved = Math.round(movedPx as number / this.zoom.columnWidth);

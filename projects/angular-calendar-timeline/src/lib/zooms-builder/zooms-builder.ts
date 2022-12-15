@@ -1,5 +1,5 @@
-import { ITimelineZoom } from "../models";
 import { BehaviorSubject, Observable } from "rxjs";
+import { ITimelineZoom } from "../models/zoom";
 
 interface IIndexedZoom extends ITimelineZoom {
   index: number;

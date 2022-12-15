@@ -7,7 +7,6 @@ import { DragAndDropModule } from 'angular-draggable-droppable';
 import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-date-marker.component';
 import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
 import { TimelineDivisionsAdaptorsManager } from "./divisions-calculator/divisions-adaptors-factory";
-import { ITimelineZoom } from "./models";
 import { ScaleGeneratorsManager } from "./scale-generator/scale-generators-manager";
 import { DAY_SCALE_FORMATTER, DayScaleFormatter, } from "./formatters/day-scale-formatter";
 import { IScaleFormatter } from "./formatters/scale-formatter.interface";
@@ -17,6 +16,7 @@ import { DayScaleGenerator } from "./scale-generator/day-scale-generator";
 import { WeekScaleGenerator } from "./scale-generator/week-scale-generator";
 import { MonthScaleGenerator } from "./scale-generator/month-scale-generator";
 import { TimelinePanelComponent } from "./panel/timeline-panel.component";
+import { ITimelineZoom } from "./models/zoom";
 
 interface ITimelineModuleInitializationProviders {
   /**

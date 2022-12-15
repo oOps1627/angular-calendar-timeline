@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from "@angular/core";
-import { IIdObject, ITimelineItem } from "../models";
 import { ResizeEvent } from "angular-resizable-element";
+import { ITimelineItem } from "../models/item";
+import { IIdObject } from "../models/id-object";
 
 @Component({
   selector: 'timeline-panel',

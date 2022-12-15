@@ -7,9 +7,9 @@ import {
   Output,
   TemplateRef
 } from '@angular/core';
-import { ITimelineItem } from '../models';
 import { ResizeEvent } from "angular-resizable-element";
 import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
+import { ITimelineItem } from "../models/item";
 
 @Component({
   selector: 'app-timeline-item',
