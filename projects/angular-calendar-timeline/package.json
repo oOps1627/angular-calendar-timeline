@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "A timeline for angular 13",
   "homepage": "https://github.com/andriy_k/angular-calendar-timeline",
+  "author": "Andrii Krashivskyi",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andriy_k/angular-calendar-timeline"
@@ -14,7 +16,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:copy-package-json": "copyfiles package.json projects/angular-calendar-timeline",
-    "build:lib": "ng build angular-calendar-timeline --configuration production"
+    "build:lib": "ng build angular-calendar-timeline --configuration production",
+    "release:npm-publish": "npm publish dist/angular-calendar-timeline"
   },
   "private": false,
   "dependencies": {
