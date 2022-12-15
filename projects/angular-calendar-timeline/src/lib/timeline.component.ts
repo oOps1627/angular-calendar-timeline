@@ -54,10 +54,14 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   private _destroy$: Subject<void> = new Subject<void>();
 
   /**
-   * Emits event when startDate or endDate of some item was changed (resized, moved).
+   * Emits event when startDate and endDate of some item was changed by moving it.
    */
-  @Output() itemDatesChanged: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
+  @Output() itemMoved: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
 
+  /**
+   * Emits event when startDate or endDate of some item was changed by resizing it.
+   */
+  @Output() itemResized: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
   /**
    * Emits event when current zoom was changed.
    */
@@ -306,7 +310,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     item.startDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
     item.endDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
     this._updateItemPosition(item);
-    this.itemDatesChanged.emit(item);
+    this.itemMoved.emit(item);
   }
 
   _trackById(index: number, item: IIdObject): number | string {
@@ -332,7 +336,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
 
     this._updateItemPosition(item);
-    this.itemDatesChanged.emit(item);
+    this.itemResized.emit(item);
   }
 
   @HostListener('scroll', ['$event'])
