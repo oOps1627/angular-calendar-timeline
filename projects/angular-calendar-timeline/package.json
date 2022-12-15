@@ -2,6 +2,11 @@
   "name": "calendar-timeline",
   "version": "0.0.1",
   "description": "A timeline for angular 13",
+  "homepage": "https://github.com/andriy_k/angular-calendar-timeline",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andriy_k/angular-calendar-timeline"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
