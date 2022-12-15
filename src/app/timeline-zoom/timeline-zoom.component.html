@@ -1,21 +1,15 @@
-<div class='zoom-buttons'>
-    <button (click)='scrollToToday()'
-            class='today'>
-        {{ 'today'}}
-    </button>
-    <div class='zoom-group d-inline-flex'>
-        <button (click)='zoomOut()' class='reduce'>
-            ---
-        </button>
+<button (click)='scrollToToday()'
+        class='today'>
+  {{ 'today'}}
+</button>
 
-      <input type="text" #input (change)="onSliderChange(+input.value)">
+<div class='zoom-group'>
+  <button (click)='zoomOut()' class='reduce'>-</button>
 
-        <button (click)='zoomIn()' class='increase'>
-           +++
-        </button>
-    </div>
-    <button (click)='zoomAndFitToContent()'
-            class='center'>
-        Center
-    </button>
+  <button (click)='zoomIn()' class='increase'>+</button>
 </div>
+
+<button (click)='zoomAndFitToContent()'
+        class='center'>
+  Fit to content
+</button>

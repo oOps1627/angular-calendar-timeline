@@ -11,7 +11,9 @@ registerLocaleData(localeUk);
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  locale = 'uk';
+  label = 'Label';
+
+  locale = 'en';
 
   items: ITimelineItem[] = [
     {
