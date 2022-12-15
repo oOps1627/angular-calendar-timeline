@@ -1,13 +1,12 @@
 {
   "name": "calendar-timeline",
   "version": "0.0.3",
-  "description": "A timeline for angular 13",
-  "homepage": "https://github.com/andriy_k/angular-calendar-timeline",
+  "description": "A calendar timeline for angular 13.",
   "author": "Andrii Krashivskyi",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andriy_k/angular-calendar-timeline"
+    "url": "https://github.com/oOps1627/angular-calendar-timeline"
   },
   "scripts": {
     "ng": "ng",
@@ -23,7 +22,6 @@
   "dependencies": {
     "angular-draggable-droppable": "4.5.0",
     "angular-resizable-element": "^3.3.5",
-    "ngx-take-until-destroy": "^5.4.0",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {

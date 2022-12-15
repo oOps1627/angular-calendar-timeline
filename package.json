@@ -22,7 +22,6 @@
   "dependencies": {
     "angular-draggable-droppable": "4.5.0",
     "angular-resizable-element": "^3.3.5",
-    "ngx-take-until-destroy": "^5.4.0",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {

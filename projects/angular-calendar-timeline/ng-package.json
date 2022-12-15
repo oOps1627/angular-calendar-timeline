@@ -9,7 +9,6 @@
     "angular-resizable-element",
     "calendar-utils",
     "positioning",
-    "tslib",
-    "ngx-take-until-destroy"
+    "tslib"
   ]
 }

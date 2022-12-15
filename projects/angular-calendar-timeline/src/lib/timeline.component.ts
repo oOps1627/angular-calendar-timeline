@@ -15,8 +15,7 @@ import {
 } from '@angular/core';
 import { ScaleGeneratorsManager } from './scale-generator/scale-generators-manager';
 import { ResizeEvent } from 'angular-resizable-element';
-import { interval } from 'rxjs';
-import { untilDestroyed } from 'ngx-take-until-destroy';
+import { interval, Subject, takeUntil } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { TimelineDivisionsAdaptorsManager } from './divisions-calculator/divisions-adaptors-factory';
 import { IScale, IScaleGenerator } from './scale-generator/models';
@@ -51,6 +50,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   zoomsBuilder: ZoomsBuilder = new ZoomsBuilder(DefaultZooms);
 
   private _ignoreNextScrollEvent: boolean = false;
+
+  private _destroy$: Subject<void> = new Subject<void>();
 
   /**
    * Emits event when startDate or endDate of some item was changed (resized, moved).
@@ -171,12 +172,12 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.zoomsBuilder.activeZoom$
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntil(this._destroy$))
       .subscribe(() => this.redraw());
 
     if (isPlatformBrowser(this._platformId)) {
       interval(TimeInMilliseconds.Minute)
-        .pipe(startWith(''), untilDestroyed(this))
+        .pipe(startWith(''), takeUntil(this._destroy$))
         .subscribe(() => this._recalculateDateMarkerPosition());
     }
   }
@@ -375,5 +376,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }
