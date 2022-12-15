@@ -1,4 +1,4 @@
-import { ITimelineZoom } from "angular-calendar-timeline";
+import { ITimelineZoom } from "../models";
 import { BehaviorSubject, Observable } from "rxjs";
 
 interface IIndexedZoom extends ITimelineZoom {
