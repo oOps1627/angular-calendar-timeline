@@ -4,12 +4,12 @@ import { MonthsDivisionAdaptor } from './months-division-adaptor';
 import { IDivisionAdaptor } from "./base-divisions-adaptor";
 import { TimelineDivisionType } from "../models";
 
-export interface ITimelineDivisionsAdaptorsManager<Division = TimelineDivisionType> {
+export interface IDivisionsAdaptorsManager<Division = TimelineDivisionType> {
   getAdaptor(division: Division): IDivisionAdaptor;
 }
 
-export class DefaultTimelineDivisionsAdaptorsManager implements ITimelineDivisionsAdaptorsManager {
-    private calculatorsDictionary = {
+export class DefaultDivisionsAdaptorsManager implements IDivisionsAdaptorsManager {
+  protected calculatorsDictionary = {
         [TimelineDivisionType.Day]: new DaysDivisionAdaptor(),
         [TimelineDivisionType.Week]: new WeeksDivisionAdaptor(),
         [TimelineDivisionType.Month]: new MonthsDivisionAdaptor(),
@@ -20,6 +20,6 @@ export class DefaultTimelineDivisionsAdaptorsManager implements ITimelineDivisio
     }
 }
 
-export class TimelineDivisionsAdaptorsManager extends DefaultTimelineDivisionsAdaptorsManager {
+export class DivisionsAdaptorsManager extends DefaultDivisionsAdaptorsManager {
 }
 

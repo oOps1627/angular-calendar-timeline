@@ -17,7 +17,7 @@ import { ScaleGeneratorsManager } from './scale-generator/scale-generators-manag
 import { ResizeEvent } from 'angular-resizable-element';
 import { interval, Subject, takeUntil } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { TimelineDivisionsAdaptorsManager } from './divisions-calculator/divisions-adaptors-factory';
+import { DivisionsAdaptorsManager } from './divisions-calculator/divisions-adaptors-factory';
 import { IScale, IScaleGenerator } from './scale-generator/models';
 import { isPlatformBrowser } from "@angular/common";
 import { TimeInMilliseconds } from "./date-helpers";
@@ -172,8 +172,15 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return this.zoomsBuilder.activeZoom;
   }
 
+  /**
+   * Registered zooms list.
+   */
+  get zooms(): ITimelineZoom[] {
+    return this.zoomsBuilder.zooms;
+  }
+
   constructor(private _cdr: ChangeDetectorRef,
-              private _divisionsAdaptorsFactory: TimelineDivisionsAdaptorsManager,
+              private _divisionsAdaptorsFactory: DivisionsAdaptorsManager,
               private _scaleGeneratorsFactory: ScaleGeneratorsManager,
               @Inject(ElementRef) private _elementRef: ElementRef,
               @Inject(PLATFORM_ID) private _platformId: object) {

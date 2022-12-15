@@ -6,7 +6,7 @@ import { ResizableModule } from 'angular-resizable-element';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-date-marker.component';
 import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
-import { TimelineDivisionsAdaptorsManager } from "./divisions-calculator/divisions-adaptors-factory";
+import { DivisionsAdaptorsManager } from "./divisions-calculator/divisions-adaptors-factory";
 import { ScaleGeneratorsManager } from "./scale-generator/scale-generators-manager";
 import { DAY_SCALE_FORMATTER, DayScaleFormatter, } from "./formatters/day-scale-formatter";
 import { IScaleFormatter } from "./formatters/scale-formatter.interface";
@@ -18,7 +18,7 @@ import { MonthScaleGenerator } from "./scale-generator/month-scale-generator";
 import { TimelinePanelComponent } from "./panel/timeline-panel.component";
 import { ITimelineZoom } from "./models/zoom";
 
-interface ITimelineModuleInitializationProviders {
+interface ITimelineModuleInitializationConfig {
   /**
    * Provide it when you want to extend current timeline logic and add some new divisions.
    * Should be provided ScaleGeneratorsManager class with IScaleGeneratorsManager implementation.
@@ -27,7 +27,7 @@ interface ITimelineModuleInitializationProviders {
 
   /**
    * If you added some new division types, you should also add new custom calculation logic to this divisions.
-   * You can do it by providing new TimelineDivisionsAdaptorsManager class with ITimelineDivisionsAdaptorsManager implementation.
+   * You can do it by providing new DivisionsAdaptorsManager class with IDivisionsAdaptorsManager implementation.
    */
   divisionsAdaptorsManager?: Provider;
 
@@ -85,7 +85,7 @@ interface ITimelineModuleInitializationProviders {
   ],
 })
 export class TimelineModule {
-  static forChild(config?: ITimelineModuleInitializationProviders): ModuleWithProviders<TimelineModule> {
+  static forChild(config?: ITimelineModuleInitializationConfig): ModuleWithProviders<TimelineModule> {
     return {
       ngModule: TimelineModule,
       providers: [
@@ -93,7 +93,7 @@ export class TimelineModule {
         config?.dayScaleGenerator ?? DayScaleGenerator,
         config?.weekScaleGenerator ?? WeekScaleGenerator,
         config?.monthScaleGenerator ?? MonthScaleGenerator,
-        config?.divisionsAdaptorsManager ?? TimelineDivisionsAdaptorsManager,
+        config?.divisionsAdaptorsManager ?? DivisionsAdaptorsManager,
         {
           provide: DAY_SCALE_FORMATTER,
           useValue: config?.dayScaleFormatter ?? new DayScaleFormatter()

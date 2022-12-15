@@ -1,7 +1,7 @@
 export enum TimelineDivisionType {
-  Month,
-  Week,
-  Day
+  Month = 'Month',
+  Week = 'Week',
+  Day = 'Day'
 }
 
 export interface ITimelineZoom<Division = TimelineDivisionType> {

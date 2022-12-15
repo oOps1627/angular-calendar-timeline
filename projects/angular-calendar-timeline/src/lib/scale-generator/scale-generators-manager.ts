@@ -11,15 +11,15 @@ export interface IScaleGeneratorsManager {
 
 @Injectable()
 export class DefaultScaleGeneratorsManager implements IScaleGeneratorsManager {
-    private _generatorsDictionary = {
+    protected _generatorsDictionary = {
         [TimelineDivisionType.Day]: this._dayGenerator,
         [TimelineDivisionType.Week]: this._weekGenerator,
         [TimelineDivisionType.Month]: this._monthGenerator,
     };
 
-    constructor(@Inject(DayScaleGenerator) private _dayGenerator: IScaleGenerator,
-                @Inject(WeekScaleGenerator) private _weekGenerator: IScaleGenerator,
-                @Inject(MonthScaleGenerator) private _monthGenerator: IScaleGenerator,
+    constructor(@Inject(DayScaleGenerator) protected _dayGenerator: IScaleGenerator,
+                @Inject(WeekScaleGenerator) protected _weekGenerator: IScaleGenerator,
+                @Inject(MonthScaleGenerator) protected _monthGenerator: IScaleGenerator,
                 ) {
     }
 
