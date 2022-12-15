@@ -59,6 +59,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Output() itemDatesChanged: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
 
   /**
+   * Emits event when current zoom was changed.
+   */
+  @Output() zoomChanged: EventEmitter<ITimelineZoom> = new EventEmitter<ITimelineZoom>();
+
+  /**
    * The locale used to format dates. By default is 'en'
    */
   @Input() locale: string = 'en';
@@ -170,10 +175,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
               @Inject(PLATFORM_ID) private _platformId: object) {
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.zoomsBuilder.activeZoom$
       .pipe(takeUntil(this._destroy$))
-      .subscribe(() => this.redraw());
+      .subscribe((zoom) => {
+        this.zoomChanged.emit(zoom);
+        this.redraw();
+      });
 
     if (isPlatformBrowser(this._platformId)) {
       interval(TimeInMilliseconds.Minute)
