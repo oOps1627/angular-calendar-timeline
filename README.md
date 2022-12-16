@@ -20,7 +20,7 @@
 
 <div align="center">
 
-https://mattlewis92.github.io/angular-calendar/
+[soon]
 
 </div>
 
