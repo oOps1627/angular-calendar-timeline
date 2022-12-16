@@ -1,9 +1,18 @@
+<div align="center">
+
+![#1589F0](https://placehold.co/150x20/1589F0/1589F0.png) <br>
+![#c5f015](https://placehold.co/150x20/c5f015/c5f015.png)
+
+</div>
+
 <h1 align="center">Angular 13.0+ timeline calendar</h1>
 
 <div align="center">
 
 [![Sponsorship](https://img.shields.io/badge/funding-github-%23EA4AAA)](https://github.com/oOps1627)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+
 
 </div>
 
@@ -32,7 +41,7 @@ npm install --save angular-timeline-calendar
 
 Then import the timeline module into your module where you want to use timeline.
 
-Don't forget to call forChild() method:
+Don't forget to call <b>forChild()</b> method:
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -62,7 +71,7 @@ export class MyTimelineComponent implements AfterViewInit {
 
 <h3 align="center">Custom dates format</h3>
 
-Change localization very simple:
+Change localization is very simple:
 
 ```typescript
 import localeUk from "@angular/common/locales/uk";
@@ -74,7 +83,7 @@ registerLocaleData(localeUk);
 })
 ```
 
-In case if you need to change format of the dates in the header, you can provide custom formatters:
+In case you need to change the format of the dates in the header, you can provide custom formatters:
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -101,7 +110,7 @@ export class MyModule {
 
 <h3 align="center">Zooms</h3>
 
-You can change current zoom by calling <b>changeZoom()</b> method in TimelineComponent. Also, you can set yor own zooms
+You can change current zoom by calling <b>changeZoom()</b> method in TimelineComponent. Also, you can set your own zooms
 array:
 
 ```typescript
@@ -125,23 +134,22 @@ export class MyTimelineComponent implements AfterViewInit {
 }
 ```
 
-This is not all component API. Later I will add some documentation. Currently, you can see comments inside
+This is not all API of component. Maybe later I will add some documentation. Currently, you can see comments inside
 TimelineComponent.
 
 <h3 align="center">Custom view modes</h3>
 
-Library allows you to add custom view mode, for example years, hours, minutes etc. All you need it extend two
+The library allows you to add custom view modes, for example, years, hours, minutes, etc. All you have to do is extends two
 classes: <b>ScaleGeneratorsManager</b> and <b>DivisionsAdaptorsManager</b>.
 
-<b>ScaleGeneratorsManager</b> returns scale generator depending on current zoom. Function of this generator is build the
-header with columns and dates inside each column. 
-For each view mode existed own generator (they implement one interface), so it is the reason why
-we need some "manager".
+<b>ScaleGeneratorsManager</b> returns a scale generator depending on the current zoom. The function of this generator is to build the
+header with columns and dates inside each column.
+Each view mode has its own generator, so it is the reason why we need some "manager".
 
-<b>DivisionsAdaptorsManager</b> contains adaptors for different view modes. Those Adaptors use common interface, and
-they need for calculating operations with dates.
+<b>DivisionsAdaptorsManager</b> contains adaptors for different view modes. Those Adaptors use a common interface, and
+they are necessary for calculating operations with dates.
 
-There is example how it should looks like, when I want to provide some additional view mode:
+Here is an example of how it should look, when you want to add some additional view modes:
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -164,9 +172,9 @@ enum CustomZoomDivisionsType {
 }
 
 class CustomScaleGeneratorsManager extends ScaleGeneratorsManager
-  implements IScaleGeneratorsManager {
-  getGenerator(zoom: ITimelineZoom<CustomZoomDivisionsType>): IScaleGenerator {
-    if (zoom.division === CustomZoomDivisionsType.Custom) {
+  implements IScaleGeneratorsManager<CustomZoomDivisionsType> {
+  getGenerator(division: CustomZoomDivisionsType): IScaleGenerator {
+    if (division === CustomZoomDivisionsType.Custom) {
       return {...};  // your custom logic here
     }
 
@@ -176,7 +184,7 @@ class CustomScaleGeneratorsManager extends ScaleGeneratorsManager
 
 class CustomDivisionsAdaptorsManager extends DivisionsAdaptorsManager
   implements IDivisionsAdaptorsManager<CustomZoomDivisionsType> {
-  getAdaptor(division: TimelineDivisionType): IDivisionAdaptor {
+  getAdaptor(division: CustomZoomDivisionsType): IDivisionAdaptor {
     if (division === CustomZoomDivisionsType.Custom) {
       return {...} // custom adaptor;
     }

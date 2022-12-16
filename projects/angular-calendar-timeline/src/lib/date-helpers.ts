@@ -1,4 +1,4 @@
-import { DateInput } from "./scale-generator/models";
+import { DateInput } from "./models";
 
 export class DateHelpers {
   static generateDateId(date: Date): string {

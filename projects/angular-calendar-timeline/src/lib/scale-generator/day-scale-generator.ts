@@ -1,9 +1,10 @@
 import { DatesCacheDecorator } from '../helpers';
 import { BaseScaleGenerator } from './base-scale-generator';
-import { DateInput, IScale, IScaleColumn, IScaleGenerator, IScaleGroup } from './models';
+import { IScale, IScaleColumn, IScaleGenerator, IScaleGroup } from './models';
 import { DateHelpers } from "../date-helpers";
 import { DAY_SCALE_FORMATTER } from "../formatters/day-scale-formatter";
 import { Injectable } from "@angular/core";
+import { DateInput } from "../models/date-input";
 
 @Injectable()
 export class DefaultDayScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {

@@ -5,8 +5,8 @@ import { DayScaleGenerator } from './day-scale-generator';
 import { Inject, Injectable } from "@angular/core";
 import { ITimelineZoom, TimelineDivisionType } from "../models/zoom";
 
-export interface IScaleGeneratorsManager {
-  getGenerator(zoom: ITimelineZoom): IScaleGenerator;
+export interface IScaleGeneratorsManager<Division = TimelineDivisionType> {
+  getGenerator(division: Division): IScaleGenerator;
 }
 
 @Injectable()
@@ -23,8 +23,8 @@ export class DefaultScaleGeneratorsManager implements IScaleGeneratorsManager {
                 ) {
     }
 
-    getGenerator(zoom: ITimelineZoom): IScaleGenerator {
-        return this._generatorsDictionary[zoom.division];
+    getGenerator(division: TimelineDivisionType): IScaleGenerator {
+        return this._generatorsDictionary[division];
     }
 }
 

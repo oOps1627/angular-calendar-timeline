@@ -155,7 +155,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Get scale generator depending on current zoom.
    */
   get scaleGenerator(): IScaleGenerator {
-    return this._scaleGeneratorsFactory.getGenerator(this.zoom);
+    return this._scaleGeneratorsFactory.getGenerator(this.zoom.division);
   }
 
   /**

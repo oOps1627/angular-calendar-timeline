@@ -16,7 +16,7 @@ import { DayScaleGenerator } from "./scale-generator/day-scale-generator";
 import { WeekScaleGenerator } from "./scale-generator/week-scale-generator";
 import { MonthScaleGenerator } from "./scale-generator/month-scale-generator";
 import { TimelinePanelComponent } from "./panel/timeline-panel.component";
-import { ITimelineZoom } from "./models/zoom";
+import { ITimelineZoom } from "./models";
 
 interface ITimelineModuleInitializationConfig {
   /**
@@ -89,11 +89,11 @@ export class TimelineModule {
     return {
       ngModule: TimelineModule,
       providers: [
+        config?.divisionsAdaptorsManager ?? DivisionsAdaptorsManager,
         config?.scaleGeneratorsManager ?? ScaleGeneratorsManager,
         config?.dayScaleGenerator ?? DayScaleGenerator,
         config?.weekScaleGenerator ?? WeekScaleGenerator,
         config?.monthScaleGenerator ?? MonthScaleGenerator,
-        config?.divisionsAdaptorsManager ?? DivisionsAdaptorsManager,
         {
           provide: DAY_SCALE_FORMATTER,
           useValue: config?.dayScaleFormatter ?? new DayScaleFormatter()
