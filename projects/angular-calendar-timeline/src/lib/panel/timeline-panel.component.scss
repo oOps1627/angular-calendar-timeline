@@ -74,3 +74,14 @@
     }
   }
 }
+
+[mwlResizeHandle] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  box-sizing: border-box;
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 10000;
+}

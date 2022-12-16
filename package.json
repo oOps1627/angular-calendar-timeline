@@ -1,6 +1,6 @@
 {
   "name": "angular-calendar-timeline",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "A timeline for angular 13 that shows tasks or events on a timeline in different modes: days, weeks, and months.",
   "author": "Andrii Krashivskyi",
   "license": "MIT",
@@ -22,7 +22,7 @@
   "private": false,
   "dependencies": {
     "angular-draggable-droppable": "4.5.0",
-    "angular-resizable-element": "^3.3.5",
+    "angular-resizable-element": "5.0.0",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {

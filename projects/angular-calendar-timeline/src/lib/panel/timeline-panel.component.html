@@ -1,9 +1,9 @@
 <div class='panel resize-handle-right'
      mwlResizable
      (resizing)='handleResize($event)'
-     [resizeEdges]="{right: resizable}"
-     [resizeCursorPrecision]="5"
      [style.width.px]='width'>
+
+  <div mwlResizeHandle [resizeEdges]="{right: resizable}"></div>
 
   <div class='label' [style.height.px]="headerHeight">{{label}}</div>
 

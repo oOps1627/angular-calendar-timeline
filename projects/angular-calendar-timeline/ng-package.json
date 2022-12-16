@@ -7,8 +7,6 @@
   "allowedNonPeerDependencies": [
     "angular-draggable-droppable",
     "angular-resizable-element",
-    "calendar-utils",
-    "positioning",
     "tslib"
   ]
 }
