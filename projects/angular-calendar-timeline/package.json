@@ -9,6 +9,11 @@
     "type": "git",
     "url": "https://github.com/oOps1627/angular-calendar-timeline"
   },
+  "keywords": [
+    "angular",
+    "timeline",
+    "calendar"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
