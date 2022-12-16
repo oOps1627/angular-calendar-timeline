@@ -205,6 +205,5 @@ export class MyModule {
 }
 ```
 
-<div align="center">
-https://github.com/oOps1627/angular-calendar-timeline
-</div>
+If you have some issues go here: https://github.com/oOps1627/angular-calendar-timeline
+

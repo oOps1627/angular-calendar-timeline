@@ -82,6 +82,8 @@ interface ITimelineModuleInitializationConfig {
   ],
   exports: [
     TimelineComponent,
+    ResizableModule,
+    DragAndDropModule
   ],
 })
 export class TimelineModule {
