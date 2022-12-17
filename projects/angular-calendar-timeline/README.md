@@ -130,7 +130,7 @@ export class MyTimelineComponent implements AfterViewInit {
     this.timeline.changeZoom(this.timeline.zooms[0]);
 
     // Change current zoom by one step next.
-    this.timeline.changeZoom(this.timeline.zoomIn());
+    this.timeline.zoomIn();
   }
 }
 ```
