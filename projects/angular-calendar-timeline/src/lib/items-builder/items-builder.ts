@@ -1,5 +1,4 @@
-import { IItemsBuilder } from "./items-builder.interface";
-import { ITimelineItem } from "../models";
+import { ITimelineItem, IItemsBuilder } from "../models";
 
 export class ItemsBuilder implements IItemsBuilder {
   private _items: ITimelineItem[] = [];

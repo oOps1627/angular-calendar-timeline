@@ -1,8 +1,9 @@
-import { DatesCacheDecorator } from '../helpers';
-import { DateHelpers } from "../date-helpers";
-import { BaseDivisionsAdaptor, IDivisionAdaptor } from "./base-divisions-adaptor";
+import { DatesCacheDecorator } from '../helpers/cache';
+import { DateHelpers } from "../helpers/date-helpers";
+import { BaseDivisionAdaptor} from "./base-division-adaptor";
+import { IDivisionAdaptor } from "../models/division-adapter";
 
-export class MonthsDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
+export class MonthsDivisionAdaptor extends BaseDivisionAdaptor implements IDivisionAdaptor {
   protected _setDateToStartOfDivision(date: Date): Date {
     const start = new Date(date);
     start.setDate(1);

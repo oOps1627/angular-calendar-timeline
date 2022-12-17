@@ -10,7 +10,7 @@ describe('TimelineWeeksDivisionAdaptor', () => {
   it('Midway time between between 18.11.2022 and 19.11.2022 should be 17.11.2022', () => {
     const firstDate = new Date(2022, 10, 18);
     const secondDate = new Date(2022, 10, 19);
-    const midwayDate = new Date(handler.getTimeInDivisionsCenter(firstDate, secondDate));
+    const midwayDate = new Date(handler.getMiddleDate(firstDate, secondDate));
     expect(midwayDate.getDate()).toEqual(17);
   });
 

@@ -9,8 +9,7 @@ import {
   TemplateRef
 } from "@angular/core";
 import { ResizeEvent } from "angular-resizable-element";
-import { ITimelineItem } from "../models/item";
-import { IIdObject } from "../models/id-object";
+import { ITimelineItem, IIdObject } from "../models";
 
 @Component({
   selector: 'timeline-panel',

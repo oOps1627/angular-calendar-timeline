@@ -20,7 +20,7 @@ import { TimelineZoomComponent } from "./timeline-zoom/timeline-zoom.component";
       }
     ])
   ],
-  providers: [],
+
   bootstrap: [AppComponent]
 })
 export class AppModule {

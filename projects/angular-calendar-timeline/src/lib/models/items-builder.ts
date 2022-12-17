@@ -1,4 +1,4 @@
-import { ITimelineItem } from "../models";
+import { ITimelineItem } from "./item";
 
 export interface IItemsBuilder {
   readonly items: ITimelineItem[];

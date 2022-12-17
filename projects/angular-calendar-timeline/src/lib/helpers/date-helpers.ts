@@ -1,4 +1,4 @@
-import { DateInput } from "./models";
+import { DateInput } from "../models";
 
 export class DateHelpers {
   static generateDateId(date: Date): string {

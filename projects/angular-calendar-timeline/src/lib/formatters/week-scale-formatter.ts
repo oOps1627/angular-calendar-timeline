@@ -1,5 +1,4 @@
-import { IScaleColumn, IScaleGroup } from "../scale-generator/models";
-import { IScaleFormatter } from "./scale-formatter.interface";
+import { IScaleColumn, IScaleFormatter, IScaleGroup } from "../models";
 import { Injectable, InjectionToken } from "@angular/core";
 import { formatDate, FormStyle, getLocaleDayNames, TranslationWidth } from "@angular/common";
 

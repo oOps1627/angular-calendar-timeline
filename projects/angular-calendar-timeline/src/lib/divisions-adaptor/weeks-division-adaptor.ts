@@ -1,8 +1,9 @@
-import { DatesCacheDecorator } from '../helpers';
-import { DateHelpers, TimeInMilliseconds } from "../date-helpers";
-import { BaseDivisionsAdaptor, IDivisionAdaptor } from "./base-divisions-adaptor";
+import { DatesCacheDecorator } from '../helpers/cache';
+import { DateHelpers, TimeInMilliseconds } from "../helpers/date-helpers";
+import { BaseDivisionAdaptor} from "./base-division-adaptor";
+import { IDivisionAdaptor } from "../models";
 
-export class WeeksDivisionAdaptor extends BaseDivisionsAdaptor implements IDivisionAdaptor {
+export class WeeksDivisionAdaptor extends BaseDivisionAdaptor implements IDivisionAdaptor {
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
     const monday = DateHelpers.getFirstDayOfWeek(start);

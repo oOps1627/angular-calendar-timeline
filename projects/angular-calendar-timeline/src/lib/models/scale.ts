@@ -1,5 +1,4 @@
-import { IScaleFormatter } from "../formatters/scale-formatter.interface";
-import { IItemsBuilder } from "../items-builder/items-builder.interface";
+import { IItemsBuilder } from "./items-builder";
 
 export interface IScaleColumn {
   id: string;
@@ -25,6 +24,12 @@ export interface IScale {
   columns: IScaleColumn[];
 
   groups?: IScaleGroup[];
+}
+
+export interface IScaleFormatter {
+  formatColumn(column: IScaleColumn, columnWidth: number, locale: string): string;
+
+  formatGroup?(group: IScaleGroup, locale: string): string;
 }
 
 export interface IScaleGenerator {

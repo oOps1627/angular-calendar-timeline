@@ -140,15 +140,10 @@ TimelineComponent.
 
 <h3 align="center">Custom view modes</h3>
 
-The library allows you to add custom view modes, for example, years, hours, minutes, etc. All you have to do is extends two
-classes: <b>ScaleGeneratorsManager</b> and <b>DivisionsAdaptorsManager</b>.
+The library allows you to add custom view modes, for example, years, hours, minutes, etc. All you have to do is extends <b>StrategyManager</b>
+class.
+Based on the current view type it returns different strategies with a common interface which needs for calculating operations between dates and generating scale.
 
-<b>ScaleGeneratorsManager</b> returns a scale generator depending on the current zoom. The function of this generator is to build the
-header with columns and dates inside each column.
-Each view mode has its own generator, so it is the reason why we need some "manager".
-
-<b>DivisionsAdaptorsManager</b> contains adaptors for different view modes. Those Adaptors use a common interface, and
-they are necessary for calculating operations with dates.
 
 Here is an example of how it should look, when you want to add some additional view modes:
 
@@ -158,11 +153,8 @@ import {
   TimelineModule,
   TimelineDivisionType,
   IScaleFormatter,
-  IScaleGenerator,
-  ScaleGeneratorsManager,
-  IScaleGeneratorsManager,
-  DivisionsAdaptorsManager,
-  IDivisionsAdaptorsManager
+  IStrategyManager,
+  StrategyManager,
 } from 'angular-timeline-calendar';
 
 enum CustomZoomDivisionsType {
@@ -172,8 +164,7 @@ enum CustomZoomDivisionsType {
   Custom = 'Custom'
 }
 
-class CustomScaleGeneratorsManager extends ScaleGeneratorsManager
-  implements IScaleGeneratorsManager<CustomZoomDivisionsType> {
+class CustomStrategyManager extends StrategyManager implements IStrategyManager<CustomZoomDivisionsType> {
   getGenerator(division: CustomZoomDivisionsType): IScaleGenerator {
     if (division === CustomZoomDivisionsType.Custom) {
       return {...};  // your custom logic here
@@ -181,10 +172,7 @@ class CustomScaleGeneratorsManager extends ScaleGeneratorsManager
 
     return super.getGenerator(zoom);
   };
-}
 
-class CustomDivisionsAdaptorsManager extends DivisionsAdaptorsManager
-  implements IDivisionsAdaptorsManager<CustomZoomDivisionsType> {
   getAdaptor(division: CustomZoomDivisionsType): IDivisionAdaptor {
     if (division === CustomZoomDivisionsType.Custom) {
       return {...} // custom adaptor;
@@ -197,10 +185,13 @@ class CustomDivisionsAdaptorsManager extends DivisionsAdaptorsManager
 @NgModule({
   imports: [
     TimelineModule.forChild({
-      scaleGeneratorsManager: CustomScaleGeneratorsManager,
-      divisionsAdaptorsManager: CustomDivisionsAdaptorsManager,
+      strategyManager: StrategyManager,
     }),
   ],
+  providers: [{
+    provide: StrategyManager,
+    useClass: CustomStrategyManager,
+  }],
 })
 export class MyModule {
 }

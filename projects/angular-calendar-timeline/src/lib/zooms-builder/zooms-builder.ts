@@ -1,11 +1,12 @@
 import { BehaviorSubject, Observable } from "rxjs";
 import { ITimelineZoom } from "../models/zoom";
+import { IZoomsBuilder } from "../models";
 
 interface IIndexedZoom extends ITimelineZoom {
   index: number;
 }
 
-export class ZoomsBuilder {
+export class ZoomsBuilder implements IZoomsBuilder {
   private _zooms: IIndexedZoom[];
   private _activeZoom$ = new BehaviorSubject<IIndexedZoom>(null);
 

@@ -6,30 +6,22 @@ import { ResizableModule } from 'angular-resizable-element';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-date-marker.component';
 import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
-import { DivisionsAdaptorsManager } from "./divisions-calculator/divisions-adaptors-factory";
-import { ScaleGeneratorsManager } from "./scale-generator/scale-generators-manager";
 import { DAY_SCALE_FORMATTER, DayScaleFormatter, } from "./formatters/day-scale-formatter";
-import { IScaleFormatter } from "./formatters/scale-formatter.interface";
 import { WEEK_SCALE_FORMATTER, WeekScaleFormatter } from "./formatters/week-scale-formatter";
 import { MONTH_SCALE_FORMATTER, MonthScaleFormatter } from "./formatters/month-scale-formatter";
 import { DayScaleGenerator } from "./scale-generator/day-scale-generator";
 import { WeekScaleGenerator } from "./scale-generator/week-scale-generator";
 import { MonthScaleGenerator } from "./scale-generator/month-scale-generator";
 import { TimelinePanelComponent } from "./panel/timeline-panel.component";
-import { ITimelineZoom } from "./models";
+import { IScaleFormatter, ITimelineZoom } from "./models";
+import { StrategyManager } from "./strategy-manager";
 
 interface ITimelineModuleInitializationConfig {
   /**
-   * Provide it when you want to extend current timeline logic and add some new divisions.
-   * Should be provided ScaleGeneratorsManager class with IScaleGeneratorsManager implementation.
+   * Provide it when you want to extend current timeline logic and add some new view types.
+   * Should be provided StrategyManager class with IStrategyManager implementation.
    */
-  scaleGeneratorsManager?: Provider;
-
-  /**
-   * If you added some new division types, you should also add new custom calculation logic to this divisions.
-   * You can do it by providing new DivisionsAdaptorsManager class with IDivisionsAdaptorsManager implementation.
-   */
-  divisionsAdaptorsManager?: Provider;
+  strategyManager?: Provider;
 
   /**
    * Should be provided DayScaleGenerator class with IScaleGenerator implementation.
@@ -89,8 +81,7 @@ export class TimelineModule {
     return {
       ngModule: TimelineModule,
       providers: [
-        config?.divisionsAdaptorsManager ?? DivisionsAdaptorsManager,
-        config?.scaleGeneratorsManager ?? ScaleGeneratorsManager,
+        config?.strategyManager ?? StrategyManager,
         config?.dayScaleGenerator ?? DayScaleGenerator,
         config?.weekScaleGenerator ?? WeekScaleGenerator,
         config?.monthScaleGenerator ?? MonthScaleGenerator,

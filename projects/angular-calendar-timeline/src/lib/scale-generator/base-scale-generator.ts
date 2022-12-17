@@ -1,8 +1,5 @@
-import { IScale, IScaleGenerator } from "./models";
+import { IScale, IScaleFormatter, IScaleGenerator, DateInput, IItemsBuilder } from "../models";
 import { Injectable, Injector } from "@angular/core";
-import { IScaleFormatter } from "../formatters/scale-formatter.interface";
-import { IItemsBuilder } from "../items-builder/items-builder.interface";
-import { DateInput } from "../models/date-input";
 
 @Injectable()
 export abstract class BaseScaleGenerator implements IScaleGenerator {

@@ -10,7 +10,7 @@ describe('TimelineDaysDivisionAdaptor', () => {
   it('Midway time between between 18.11.2022 and 20.11.2022 should be 19.11.2022', () => {
     const firstDate = new Date(2022, 10, 18);
     const secondDate = new Date(2022, 10, 20);
-    const midwayDate = new Date(divisionCalculator.getTimeInDivisionsCenter(firstDate, secondDate));
+    const midwayDate = new Date(divisionCalculator.getMiddleDate(firstDate, secondDate));
 
     expect(midwayDate.getDate()).toEqual(19);
   });
@@ -18,7 +18,7 @@ describe('TimelineDaysDivisionAdaptor', () => {
   it('Midway time between between 18.11.2022 and 19.11.2022 should be beginning of 19.11.2022', () => {
     const firstDate = new Date(2022, 10, 18);
     const secondDate = new Date(2022, 10, 19);
-    const midwayDate = new Date(divisionCalculator.getTimeInDivisionsCenter(firstDate, secondDate));
+    const midwayDate = new Date(divisionCalculator.getMiddleDate(firstDate, secondDate));
 
     expect(midwayDate.getDate()).toEqual(19);
   });
@@ -26,7 +26,7 @@ describe('TimelineDaysDivisionAdaptor', () => {
     it('Hours of average date between start and end dates should be 12', () => {
        const firstDate = new Date();
        const secondDate = new Date();
-       expect(new Date(divisionCalculator.getTimeInDivisionsCenter(firstDate, secondDate)).getHours()).toEqual(12);
+       expect(new Date(divisionCalculator.getMiddleDate(firstDate, secondDate)).getHours()).toEqual(12);
     });
 
     it('Count of unique days between 31.12.2021 and 03.01.2022 should be 4', () => {

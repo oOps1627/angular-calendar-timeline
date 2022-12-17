@@ -1,7 +1,7 @@
-import { DatesCacheDecorator } from '../helpers';
+import { DatesCacheDecorator } from '../helpers/cache';
 import { BaseScaleGenerator } from './base-scale-generator';
-import { IScale, IScaleGenerator } from './models';
-import { DateHelpers } from "../date-helpers";
+import { IScale, IScaleGenerator } from '../models/scale';
+import { DateHelpers } from "../helpers/date-helpers";
 import { WEEK_SCALE_FORMATTER } from "../formatters/week-scale-formatter";
 import { Injectable } from "@angular/core";
 import { DateInput } from "../models/date-input";
