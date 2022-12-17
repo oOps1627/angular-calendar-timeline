@@ -206,5 +206,5 @@ export class MyModule {
 }
 ```
 
-Have an issue? Leave it here: https://github.com/oOps1627/angular-calendar-timeline
+Have an issue? Leave it here: https://github.com/oOps1627/angular-calendar-timeline/issues
 
