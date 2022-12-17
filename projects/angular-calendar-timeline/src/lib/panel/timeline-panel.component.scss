@@ -9,6 +9,7 @@
   position: sticky;
   left: 0;
   z-index: 10;
+  flex-shrink: 0;
   background-color: #F8F8F8;
   border-right: 1px solid #d0d0d0;
 }

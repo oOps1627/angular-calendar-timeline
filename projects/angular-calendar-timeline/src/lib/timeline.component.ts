@@ -123,6 +123,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;
 
   /**
+   * If false then date marker will be not visible.
+   */
+  @Input() showDateMarket: boolean = true;
+
+  /**
    * Custom template for marker that indicates current time.
    */
   @Input() dateMarkerTemplate: TemplateRef<{ leftPosition: number }> | undefined;
@@ -227,7 +232,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Automatically chooses the most optimal zoom and sets horizontal scroll to the center of the items
+   * Automatically chooses the most optimal zoom and sets horizontal scroll to the center of the items.
+   * Padding sets minimal spacing from left and right to the first and last items.
    */
   fitToContent(paddings: number): void {
     const firstItem = this.itemsBuilder.getFirstItem(true);

@@ -20,16 +20,17 @@
 
 <div align="center">
 
-[soon]
+https://codesandbox.io/s/tender-cerf-zk0ewt
 
 </div>
 
 <h2 align="center">About</h2>
 
-A timeline component for angular 13.0+ that shows tasks or events on a timeline in different modes: days, weeks, and
+A timeline for angular 13+ that shows tasks or events on a timeline in different modes: days, weeks, and
 months.
 
-This library DOESN'T use big dependencies like JQuery or Moment.js. It`s almost a pure Angular library.
+This library is pretty small and DOESN'T use big dependencies like JQuery or Moment.js.
+Library also supports SSR.
 
 <h2 align="center">Getting started</h2>
 
@@ -118,11 +119,11 @@ import { AfterViewInit, ViewChild } from "@angular/core";
 import { TimelineComponent, ITimelineZoom } from "angular-timeline-calendar";
 
 @Component({
-  template: `<timeline-calendar [zooms]="zooms"></timeline-calendar>`
+  template: `<timeline-calendar #timeline [zooms]="zooms"></timeline-calendar>`
 })
 export class MyTimelineComponent implements AfterViewInit {
   zooms: ITimelineZoom[] = [] // set custom array of zooms;
-  @ViewChild(TimelineComponent) timeline: TimelineComponent;
+  @ViewChild('timeline') timeline: TimelineComponent;
 
   ngAfterViewInit(): void {
     // Change current zoom to any from zooms array.
@@ -205,5 +206,5 @@ export class MyModule {
 }
 ```
 
-If you have some issues go here: https://github.com/oOps1627/angular-calendar-timeline
+Have an issue? Leave it here: https://github.com/oOps1627/angular-calendar-timeline
 

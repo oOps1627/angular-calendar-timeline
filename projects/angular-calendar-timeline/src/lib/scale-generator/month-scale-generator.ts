@@ -10,8 +10,8 @@ import { DateInput } from "../models";
 export class DefaultMonthScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
   formatter = this._injector.get(MONTH_SCALE_FORMATTER);
 
-  protected readonly countOfYearsAfterLastItem = 4;
-  protected readonly countOfYearsBeforeFirstItem = 1;
+  protected readonly countOfYearsAfterLastItem = 2;
+  protected readonly countOfYearsBeforeFirstItem = 2;
 
   @DatesCacheDecorator()
   generateScale(startDate: Date, endDate: Date): IScale {

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  TemplateRef
+} from "@angular/core";
 import { ResizeEvent } from "angular-resizable-element";
 import { ITimelineItem } from "../models/item";
 import { IIdObject } from "../models/id-object";
@@ -9,7 +18,7 @@ import { IIdObject } from "../models/id-object";
   styleUrls: ['timeline-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimelinePanelComponent {
+export class TimelinePanelComponent implements OnChanges {
   @Input() items: ITimelineItem[];
 
   @Input() label: string;
@@ -32,6 +41,12 @@ export class TimelinePanelComponent {
 
   @Output() widthChanged = new EventEmitter<number>();
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (Object.keys(changes).some(key => ['width', 'minWidth', 'maxWidth'].includes(key))) {
+      this._validateWidth();
+    }
+  }
+
   trackById(index: number, item: IIdObject): number | string {
     return item.id;
   }
@@ -48,5 +63,15 @@ export class TimelinePanelComponent {
 
   toggleExpand(item: ITimelineItem): void {
     item.expanded = !item.expanded;
+  }
+
+  private _validateWidth(): void {
+    if (this.width < this.minWidth) {
+      this.width = this.minWidth;
+    }
+
+    if (this.width > this.maxWidth) {
+      this.width = this.maxWidth;
+    }
   }
 }
