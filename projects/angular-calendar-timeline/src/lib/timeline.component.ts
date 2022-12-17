@@ -192,6 +192,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    setInterval(() => console.log(this.currentDate), 1000);
+
     this.zoomsBuilder.activeZoom$
       .pipe(takeUntil(this._destroy$))
       .subscribe((zoom) => {
@@ -222,6 +224,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Set horizontal scroll in the middle of the date
    */
   attachCameraToDate(date: Date): void {
+    this.currentDate = date;
     const duration = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, date);
     const scrollLeft = (duration * this.zoom.columnWidth) - (this.visibleScaleWidth / 2);
     this._ignoreNextScrollEvent = true;
