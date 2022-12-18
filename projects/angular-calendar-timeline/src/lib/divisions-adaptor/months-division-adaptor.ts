@@ -8,13 +8,13 @@ export class MonthsDivisionAdaptor extends BaseDivisionAdaptor implements IDivis
     const start = new Date(date);
     start.setDate(1);
 
-    return DateHelpers.setDayBeginningTime(start);
+    return DateHelpers.dayBeginningTime(start);
   }
 
   protected _setDateToEndOfDivision(date: Date): Date {
     date = new Date();
-    date.setDate(DateHelpers.getLastDayOfMonth(date).getDate());
-    DateHelpers.setDayEndingTime(date);
+    date.setDate(DateHelpers.lastDayOfMonth(date).getDate());
+    DateHelpers.dayEndingTime(date);
 
     return date;
   }

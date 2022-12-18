@@ -29,7 +29,7 @@ export class DefaultWeekScaleGenerator extends BaseScaleGenerator implements ISc
     data.groups.push({
       id: DateHelpers.generateDateId(currentWeek),
       date: new Date(currentWeek),
-      columnsInGroup: (DateHelpers.getLastDayOfMonth(currentWeek).getDate() - currentWeek.getDate() + 1) / 7,
+      columnsInGroup: (DateHelpers.lastDayOfMonth(currentWeek).getDate() - currentWeek.getDate() + 1) / 7,
     });
 
     while (currentWeek.getTime() < endTime) {
@@ -41,7 +41,7 @@ export class DefaultWeekScaleGenerator extends BaseScaleGenerator implements ISc
         data.groups.push({
           id: DateHelpers.generateDateId(currentWeek),
           date: new Date(currentWeek),
-          columnsInGroup: DateHelpers.getLastDayOfMonth(currentWeek).getDate() / 7,
+          columnsInGroup: DateHelpers.lastDayOfMonth(currentWeek).getDate() / 7,
         });
       }
 
@@ -57,7 +57,7 @@ export class DefaultWeekScaleGenerator extends BaseScaleGenerator implements ISc
     const lastGroup = data.groups[data.groups.length - 1];
 
     if (lastGroup.date.getMonth() !== currentWeek.getMonth()) {
-      lastGroup.columnsInGroup = (DateHelpers.getLastDayOfMonth(lastGroup.date).getDate() + currentWeek.getDate() - 1) / 7;
+      lastGroup.columnsInGroup = (DateHelpers.lastDayOfMonth(lastGroup.date).getDate() + currentWeek.getDate() - 1) / 7;
     } else {
       lastGroup.columnsInGroup = currentWeek.getDate() / 7;
     }
@@ -68,11 +68,11 @@ export class DefaultWeekScaleGenerator extends BaseScaleGenerator implements ISc
   protected _addEmptySpaceBefore(startDate: DateInput): Date {
     const newDate = new Date(startDate);
     newDate.setDate(newDate.getDate() - (this.countOfWeeksBeforeFirstItem * 7));
-    return DateHelpers.getFirstMondayOfMonth(newDate);
+    return DateHelpers.firstMondayOfMonth(newDate);
   }
 
   protected _addEmptySpaceAfter(endDate: DateInput): Date {
-    const lastDayOfWeek = DateHelpers.getLastDayOfWeek(endDate);
+    const lastDayOfWeek = DateHelpers.lastDayOfWeek(endDate);
     return new Date(lastDayOfWeek.setDate(lastDayOfWeek.getDate() + this.countOfWeeksAfterLastItem * 7));
   }
 }

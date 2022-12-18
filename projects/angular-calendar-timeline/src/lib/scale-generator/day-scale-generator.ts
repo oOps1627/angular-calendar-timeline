@@ -61,7 +61,7 @@ export class DefaultDayScaleGenerator extends BaseScaleGenerator implements ISca
   protected _addEmptySpaceBefore(startDate: DateInput): Date {
     startDate = new Date(startDate);
     startDate.setDate(1);
-    startDate = DateHelpers.setDayBeginningTime(startDate);
+    startDate = DateHelpers.dayBeginningTime(startDate);
     startDate.setMonth(startDate.getMonth() - this.countOfMonthsBeforeFirstItem);
 
     return startDate;
@@ -69,7 +69,7 @@ export class DefaultDayScaleGenerator extends BaseScaleGenerator implements ISca
 
   protected _addEmptySpaceAfter(endDate: DateInput): Date {
     endDate = new Date(endDate);
-    return new Date(DateHelpers.getLastDayOfMonth(endDate).setMonth(endDate.getMonth() + this.countOfMonthsAfterLastItem));
+    return new Date(DateHelpers.lastDayOfMonth(endDate).setMonth(endDate.getMonth() + this.countOfMonthsAfterLastItem));
   }
 }
 

@@ -1,20 +1,20 @@
 import { DatesCacheDecorator } from '../helpers/cache';
-import { DateHelpers, TimeInMilliseconds } from "../helpers/date-helpers";
+import { DateHelpers, MillisecondsToTime } from "../helpers/date-helpers";
 import { BaseDivisionAdaptor} from "./base-division-adaptor";
 import { IDivisionAdaptor } from "../models";
 
 export class WeeksDivisionAdaptor extends BaseDivisionAdaptor implements IDivisionAdaptor {
   @DatesCacheDecorator()
   getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
-    const monday = DateHelpers.getFirstDayOfWeek(start);
-    const last = DateHelpers.getLastDayOfWeek(end);
+    const monday = DateHelpers.firstDayOfWeek(start);
+    const last = DateHelpers.lastDayOfWeek(end);
 
     return Math.round(this.getDurationInDivisions(monday, last));
   }
 
   @DatesCacheDecorator()
   getDurationInDivisions(startDate: Date, endDate: Date): number {
-    return Math.abs((startDate.getTime() - endDate.getTime()) / TimeInMilliseconds.Week);
+    return Math.abs((startDate.getTime() - endDate.getTime()) / MillisecondsToTime.Week);
   }
 
   addDivisionToDate(date: Date, weeks: number): Date {
@@ -26,14 +26,14 @@ export class WeeksDivisionAdaptor extends BaseDivisionAdaptor implements IDivisi
   }
 
   protected _setDateToStartOfDivision(date: Date): Date {
-    const start = DateHelpers.getFirstDayOfWeek(new Date(date));
+    const start = DateHelpers.firstDayOfWeek(new Date(date));
 
-    return DateHelpers.setDayBeginningTime(start);
+    return DateHelpers.dayBeginningTime(start);
   }
 
   protected _setDateToEndOfDivision(date: Date): Date {
-    const start = DateHelpers.getLastDayOfWeek(new Date(date));
+    const start = DateHelpers.lastDayOfWeek(new Date(date));
 
-    return DateHelpers.setDayEndingTime(start);
+    return DateHelpers.dayEndingTime(start);
   }
 }

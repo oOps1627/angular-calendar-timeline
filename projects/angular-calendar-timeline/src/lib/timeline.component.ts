@@ -26,7 +26,7 @@ import {
   ITimelineZoom
 } from './models';
 import { isPlatformBrowser } from "@angular/common";
-import { TimeInMilliseconds } from "./helpers/date-helpers";
+import { MillisecondsToTime } from "./helpers/date-helpers";
 import { ItemsBuilder } from "./items-builder/items-builder";
 import { ZoomsBuilder } from "./zooms-builder/zooms-builder";
 import { DefaultZooms } from "./zooms-builder/zooms";
@@ -134,7 +134,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * Custom template for item in timeline.
    */
-  @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem }> | undefined;
+  @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem, locale: string }> | undefined;
 
   /**
    * If false then date marker will be not visible.
@@ -201,7 +201,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       });
 
     if (isPlatformBrowser(this._platformId)) {
-      interval(TimeInMilliseconds.Minute)
+      interval(MillisecondsToTime.Minute)
         .pipe(startWith(''), takeUntil(this._destroy$))
         .subscribe(() => this._recalculateDateMarkerPosition());
     }

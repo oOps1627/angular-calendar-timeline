@@ -12,7 +12,7 @@
      [style.width.px]='item?._width'>
   <div class="item-custom-template" *ngIf="contentTemplate; else nameTemplate">
     <ng-container [ngTemplateOutlet]="contentTemplate"
-                  [ngTemplateOutletContext]="{$implicit: item}"
+                  [ngTemplateOutletContext]="{$implicit: item, locale: locale}"
     ></ng-container>
   </div>
 

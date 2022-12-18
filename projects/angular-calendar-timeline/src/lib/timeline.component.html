@@ -50,6 +50,7 @@
       <div [style.height.px]='rowHeight' class='item-row'>
         <app-timeline-item [item]='item'
                            [height]="itemHeight"
+                           [locale]="locale"
                            (itemResized)="_onItemResized($event.event, $event.item)"
                            (itemMoved)="_onItemMoved($event.event, $event.item)"
                            [contentTemplate]='itemContentTemplate'

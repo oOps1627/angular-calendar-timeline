@@ -40,7 +40,7 @@ Install through npm:
 npm install --save angular-timeline-calendar
 ```
 
-Then import the timeline module into your module where you want to use timeline.
+Then import the timeline module into the module where you want to use the timeline.
 
 Don't forget to call <b>forChild()</b> method:
 
@@ -70,9 +70,12 @@ export class MyTimelineComponent implements AfterViewInit {
 }
 ```
 
-<h3 align="center">Custom dates format</h3>
+<h2 align="center">Customization</h2>
 
-Change localization is very simple:
+<h3 align="center">1. Localization</h3>
+
+Change localization is very simple, just pass locale code to the 'locale' component input.
+Make sure that the current locale is registered by Angular:
 
 ```typescript
 import localeUk from "@angular/common/locales/uk";
@@ -83,6 +86,8 @@ registerLocaleData(localeUk);
   template: `<timeline-calendar locale="uk"></timeline-calendar>`
 })
 ```
+
+<h3 align="center">2. Dates format</h3>
 
 In case you need to change the format of the dates in the header, you can provide custom formatters:
 
@@ -109,28 +114,40 @@ export class MyModule {
 }
 ```
 
-<h3 align="center">Zooms</h3>
+<h3 align="center">3. Zooms</h3>
 
-You can change current zoom by calling <b>changeZoom()</b> method in TimelineComponent. Also, you can set your own zooms
-array:
+You can simply set your own zooms if you want to add more.
+For changing the current zoom use TimelineComponent API. Here is an example:
 
 ```typescript
 import { AfterViewInit, ViewChild } from "@angular/core";
-import { TimelineComponent, ITimelineZoom } from "angular-timeline-calendar";
+import { TimelineComponent,
+  ITimelineZoom,
+  DefaultZooms,
+  TimelineDivisionType } from "angular-timeline-calendar";
 
 @Component({
   template: `<timeline-calendar #timeline [zooms]="zooms"></timeline-calendar>`
 })
 export class MyTimelineComponent implements AfterViewInit {
-  zooms: ITimelineZoom[] = [] // set custom array of zooms;
   @ViewChild('timeline') timeline: TimelineComponent;
-
+  
+  zooms: ITimelineZoom[] = [
+    {columnWidth: 50, division: TimelineDivisionType.Month},
+    {columnWidth: 55, division: TimelineDivisionType.Month},
+    {columnWidth: 50, division: TimelineDivisionType.Days},
+    DefaultZooms[0] // You can import and use default array;
+  ];
+  
   ngAfterViewInit(): void {
-    // Change current zoom to any from zooms array.
-    this.timeline.changeZoom(this.timeline.zooms[0]);
+    // Change current zoom to any of passed to 'zooms' @Input.
+    this.timeline.changeZoom(this.timeline.zooms[1]);
 
     // Change current zoom by one step next.
     this.timeline.zoomIn();
+
+    // Change current zoom by one step back.
+    this.timeline.zoomOut();
   }
 }
 ```
@@ -138,7 +155,26 @@ export class MyTimelineComponent implements AfterViewInit {
 This is not all API of component. Maybe later I will add some documentation. Currently, you can see comments inside
 TimelineComponent.
 
-<h3 align="center">Custom view modes</h3>
+<h3 align="center">4. Templates</h3>
+
+You easily can customize timeline items view, date marker, and left panel by passing custom TemplateRef:
+
+```html
+<timeline-calendar 
+  [itemContentTemplate]="customItemTemplate"
+  [dateMarkerTemplate]="customDateMarkerTemplate"
+></timeline-calendar>
+
+<ng-template #customItemTemplate let-item let-locale="locale">
+  {{item.name}} {{item.startDate}} {{item.endDate}} {{locale}}
+</ng-template>
+
+<ng-template #customDateMarkerTemplate let-leftPosition="leftPosition">
+  dateMarkerTemplate
+</ng-template>
+```
+
+<h3 align="center">5. View modes</h3>
 
 The library allows you to add custom view modes, for example, years, hours, minutes, etc. All you have to do is extends <b>StrategyManager</b>
 class.
@@ -170,7 +206,7 @@ class CustomStrategyManager extends StrategyManager implements IStrategyManager<
       return {...};  // your custom logic here
     }
 
-    return super.getGenerator(zoom);
+    return super.getGenerator(division);
   };
 
   getAdaptor(division: CustomZoomDivisionsType): IDivisionAdaptor {

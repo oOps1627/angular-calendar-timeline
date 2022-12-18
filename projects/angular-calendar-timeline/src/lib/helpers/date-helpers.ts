@@ -5,7 +5,7 @@ export class DateHelpers {
     return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}-${date.getMinutes()}`;
   }
 
-  static getLastDayOfMonth(date: DateInput): Date {
+  static lastDayOfMonth(date: DateInput): Date {
     const dateWithLastDayOfMonth = new Date(date);
     dateWithLastDayOfMonth.setMonth(dateWithLastDayOfMonth.getMonth() + 1);
     dateWithLastDayOfMonth.setDate(0);
@@ -17,35 +17,35 @@ export class DateHelpers {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   }
 
-  static getFirstMondayOfMonth(date: Date): Date {
+  static firstMondayOfMonth(date: Date): Date {
     const firstDay = new Date(new Date(date).setDate(1));
-    const monday = DateHelpers.getFirstDayOfWeek(firstDay);
+    const monday = DateHelpers.firstDayOfWeek(firstDay);
 
     return monday.getMonth() === date.getMonth() ? monday : new Date(monday.setDate(monday.getDate() + 7));
   }
 
-  static getFirstDayOfWeek(date: DateInput): Date {
+  static firstDayOfWeek(date: DateInput): Date {
     date = new Date(date);
     const first = date.getDate() - date.getDay() + 1;
 
     return new Date(new Date(date).setDate(first));
   }
 
-  static getLastDayOfWeek(date: DateInput): Date {
+  static lastDayOfWeek(date: DateInput): Date {
     date = new Date(date);
     const first = date.getDate() - date.getDay() + 6;
 
     return new Date(new Date(date).setDate(first));
   }
 
-  static setDayBeginningTime(day: Date): Date {
+  static dayBeginningTime(day: Date): Date {
     day = new Date(day);
     day.setHours(0, 0, 0, 0);
 
     return day;
   }
 
-  static setDayEndingTime(day: Date): Date {
+  static dayEndingTime(day: Date): Date {
     day = new Date(day);
     day.setHours(23, 59, 59, 999);
 
@@ -53,8 +53,8 @@ export class DateHelpers {
   }
 }
 
-export enum TimeInMilliseconds {
+export enum MillisecondsToTime {
   Minute = 1000 * 60,
   Day = 86400000,
-  Week = TimeInMilliseconds.Day * 7
+  Week = MillisecondsToTime.Day * 7
 }
