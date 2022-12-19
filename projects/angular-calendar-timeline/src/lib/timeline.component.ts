@@ -129,7 +129,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * Custom template for item in left panel.
    */
-  @Input() panelItemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
+  @Input() panelItemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string, toggleExpand: () => void }>
 
   /**
    * Custom template for item in timeline.

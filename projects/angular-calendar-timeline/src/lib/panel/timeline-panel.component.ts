@@ -36,7 +36,7 @@ export class TimelinePanelComponent implements OnChanges {
 
   @Input() locale: string;
 
-  @Input() itemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
+  @Input() itemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string, toggleExpand: () => void }>
 
   @Output() widthChanged = new EventEmitter<number>();
 
@@ -62,6 +62,7 @@ export class TimelinePanelComponent implements OnChanges {
 
   toggleExpand(item: ITimelineItem): void {
     item.expanded = !item.expanded;
+    item._redraw();
   }
 
   private _validateWidth(): void {

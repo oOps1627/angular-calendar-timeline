@@ -60,17 +60,16 @@
 
     <ng-template #itemsIterationTemplate let-group>
       <ng-container *ngIf='group.expanded'>
-        <div *ngFor='let item of (group.items || []); trackBy: _trackById; let first = first; let last = last'>
-          <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{
-              $implicit: item, first: first, last: last
-            }"></ng-container>
+        <div *ngFor='let item of (group.items || []); trackBy: _trackById;'>
+          <ng-container [ngTemplateOutlet]="itemTemplate"
+                        [ngTemplateOutletContext]="{$implicit: item}"
+          ></ng-container>
+
+          <ng-container [ngTemplateOutlet]='itemsIterationTemplate'
+                        [ngTemplateOutletContext]='{$implicit: item}'
+          ></ng-container>
         </div>
       </ng-container>
-
-      <ng-container *ngFor='let innerGroup of (group.items || []); trackBy: _trackById;'
-                    [ngTemplateOutlet]='itemsIterationTemplate'
-                    [ngTemplateOutletContext]='{$implicit: innerGroup}'
-      ></ng-container>
     </ng-template>
   </div>
 </div>

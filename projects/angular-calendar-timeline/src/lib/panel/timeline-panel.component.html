@@ -14,12 +14,12 @@
 
   <ng-template #itemsIterationTemplate let-item='item' let-index='index' let-depth='depth'>
     <ng-container [ngTemplateOutlet]='itemTemplate || defaultItemTemplate'
-                  [ngTemplateOutletContext]='{item: item, index: index, depth: depth, locale: locale}'>
+                  [ngTemplateOutletContext]='{item: item, index: index, depth: depth, locale: locale, toggleExpand: toggleExpand.bind(item)}'>
     </ng-container>
 
     <div *ngIf='item.expanded'>
       <ng-container *ngFor='let innerItem of (item.items || []); trackBy: trackById;  let index = index'
-                    [ngTemplateOutletContext]='{item: innerItem, index: index, depth: depth + 1}'
+                    [ngTemplateOutletContext]='{item: innerItem, index: index, depth: depth + 1, locale: locale, toggleExpand: toggleExpand.bind(item)}'
                     [ngTemplateOutlet]='itemsIterationTemplate'
       ></ng-container>
     </div>
