@@ -1,8 +1,8 @@
 <div class='wrapper' [style.height.px]="height">
-  <div class='groups' *ngIf="headerGroups.length && formatter.formatGroup">
-    <div *ngFor='let group of headerGroups; trackBy: trackById; index as i'
-         [style.width.px]='zoom.columnWidth * group.columnsInGroup' class='group'>
-      <div>{{formatter.formatGroup(group, locale)}}</div>
+  <div class='groups' *ngIf="groups.length">
+    <div *ngFor='let group of groups; trackBy: trackById; index as i'
+         [style.width.px]='group.width' class='group'>
+      <div>{{group.name}}</div>
     </div>
   </div>
   <div class='columns'>

@@ -1,34 +1,34 @@
 import {
-  IDivisionAdaptor,
+  IViewModeAdaptor,
   IScaleGenerator,
-  TimelineDivisionType
+  TimelineViewMode
 } from "./models";
 import { Inject, Injectable } from "@angular/core";
 import { DayScaleGenerator } from "./scale-generator/day-scale-generator";
 import { WeekScaleGenerator } from "./scale-generator/week-scale-generator";
 import { MonthScaleGenerator } from "./scale-generator/month-scale-generator";
-import { DaysDivisionAdaptor } from "./divisions-adaptor/days-division-adaptor";
-import { WeeksDivisionAdaptor } from "./divisions-adaptor/weeks-division-adaptor";
-import { MonthsDivisionAdaptor } from "./divisions-adaptor/months-division-adaptor";
+import { DaysViewModeAdaptor } from "./view-mode-adaptor/days-view-mode-adaptor";
+import { WeeksViewModeAdaptor } from "./view-mode-adaptor/weeks-view-mode-adaptor";
+import { MonthsViewModeAdaptor } from "./view-mode-adaptor/months-view-mode-adaptor";
 
-export interface IStrategyManager<Division = TimelineDivisionType> {
-  getGenerator(division: Division): IScaleGenerator;
+export interface IStrategyManager<ViewMode = TimelineViewMode> {
+  getScaleGenerator(viewMode: ViewMode): IScaleGenerator;
 
-  getAdaptor(division: Division): IDivisionAdaptor;
+  getViewModeAdaptor(viewMode: ViewMode): IViewModeAdaptor;
 }
 
 @Injectable()
-export class DefaultStrategyManager<Division> implements IStrategyManager<Division> {
+export class DefaultStrategyManager<ViewMode> implements IStrategyManager<ViewMode> {
   protected _generatorsDictionary = {
-    [TimelineDivisionType.Day]: this._dayGenerator,
-    [TimelineDivisionType.Week]: this._weekGenerator,
-    [TimelineDivisionType.Month]: this._monthGenerator,
+    [TimelineViewMode.Day]: this._dayGenerator,
+    [TimelineViewMode.Week]: this._weekGenerator,
+    [TimelineViewMode.Month]: this._monthGenerator,
   };
 
   protected _calculatorsDictionary = {
-    [TimelineDivisionType.Day]: new DaysDivisionAdaptor(),
-    [TimelineDivisionType.Week]: new WeeksDivisionAdaptor(),
-    [TimelineDivisionType.Month]: new MonthsDivisionAdaptor(),
+    [TimelineViewMode.Day]: new DaysViewModeAdaptor(),
+    [TimelineViewMode.Week]: new WeeksViewModeAdaptor(),
+    [TimelineViewMode.Month]: new MonthsViewModeAdaptor(),
   };
 
   constructor(@Inject(DayScaleGenerator) protected _dayGenerator: IScaleGenerator,
@@ -37,15 +37,15 @@ export class DefaultStrategyManager<Division> implements IStrategyManager<Divisi
   ) {
   }
 
-  getAdaptor(division: Division): IDivisionAdaptor {
-    return this._calculatorsDictionary[division as unknown as TimelineDivisionType];
+  getViewModeAdaptor(viewMode: ViewMode): IViewModeAdaptor {
+    return this._calculatorsDictionary[viewMode as unknown as TimelineViewMode];
   }
 
-  getGenerator(division: Division): IScaleGenerator {
-    return this._generatorsDictionary[division as unknown as TimelineDivisionType];
+  getScaleGenerator(viewMode: ViewMode): IScaleGenerator {
+    return this._generatorsDictionary[viewMode as unknown as TimelineViewMode];
   }
 }
 
 @Injectable()
-export class StrategyManager<Division = TimelineDivisionType> extends DefaultStrategyManager<Division> {
+export class StrategyManager<ViewMode = TimelineViewMode> extends DefaultStrategyManager<ViewMode> {
 }

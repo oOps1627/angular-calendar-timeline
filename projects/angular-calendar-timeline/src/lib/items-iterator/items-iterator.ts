@@ -1,6 +1,6 @@
-import { ITimelineItem, IItemsBuilder } from "../models";
+import { ITimelineItem, IItemsIterator } from "../models";
 
-export class ItemsBuilder implements IItemsBuilder {
+export class ItemsIterator implements IItemsIterator {
   private _items: ITimelineItem[] = [];
 
   get items(): ITimelineItem[] {

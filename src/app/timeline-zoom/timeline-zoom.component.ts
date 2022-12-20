@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DefaultZooms } from "../../../projects/angular-calendar-timeline/src/lib/zooms-builder/zooms";
-import { TimelineComponent } from "../../../projects/angular-calendar-timeline/src/lib/timeline.component";
+import { DefaultZooms, TimelineComponent } from "angular-calendar-timeline";
 
 @Component({
   selector: 'app-timeline-zoom',
@@ -16,10 +15,6 @@ export class TimelineZoomComponent {
 
   zoomOut(): void {
     this.timelineComponent.zoomOut();
-  }
-
-  onSliderChange(index: number): void {
-    this.timelineComponent.changeZoom(DefaultZooms[index]);
   }
 
   scrollToToday(): void {

@@ -1,11 +1,11 @@
 import { DatesCacheDecorator } from '../helpers/cache';
 import { DateHelpers, MillisecondsToTime } from "../helpers/date-helpers";
-import { BaseDivisionAdaptor} from "./base-division-adaptor";
-import { IDivisionAdaptor } from "../models/division-adapter";
+import { BaseViewModeAdaptor} from "./base-view-mode-adaptor";
+import { IViewModeAdaptor } from "../models";
 
-export class DaysDivisionAdaptor extends BaseDivisionAdaptor implements IDivisionAdaptor {
+export class DaysViewModeAdaptor extends BaseViewModeAdaptor implements IViewModeAdaptor {
   @DatesCacheDecorator()
-  getUniqueDivisionsCountBetweenDates(start: Date, end: Date): number {
+  getUniqueColumnsWithinRange(start: Date, end: Date): number {
     const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
     const endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
 
@@ -13,11 +13,11 @@ export class DaysDivisionAdaptor extends BaseDivisionAdaptor implements IDivisio
   }
 
   @DatesCacheDecorator()
-  getDurationInDivisions(startDate: Date, endDate: Date): number {
+  getDurationInColumns(startDate: Date, endDate: Date): number {
     return Math.abs((startDate.getTime() - endDate.getTime()) / MillisecondsToTime.Day);
   }
 
-  addDivisionToDate(date: Date, days: number): Date {
+  addColumnToDate(date: Date, days: number): Date {
     const newDate = new Date(date);
     newDate.setDate(date.getDate() + days);
     newDate.setHours(newDate.getHours() + ((days % 1) * 24));
@@ -25,11 +25,11 @@ export class DaysDivisionAdaptor extends BaseDivisionAdaptor implements IDivisio
     return newDate;
   }
 
-  protected _setDateToEndOfDivision(date: Date): Date {
+  protected _setDateToEndOfColumn(date: Date): Date {
     return DateHelpers.dayEndingTime(date);
   }
 
-  protected _setDateToStartOfDivision(date: Date): Date {
+  protected _setDateToStartOfColumn(date: Date): Date {
     return DateHelpers.dayBeginningTime(date);
   }
 }

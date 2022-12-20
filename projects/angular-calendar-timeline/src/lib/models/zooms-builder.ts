@@ -1,18 +1,22 @@
 import { Observable } from "rxjs";
 import { ITimelineZoom } from "./zoom";
 
-export interface IZoomsBuilder {
-  activeZoom$: Observable<ITimelineZoom>;
+export interface IIndexedZoom extends ITimelineZoom {
+  index: number;
+}
 
-  readonly activeZoom: ITimelineZoom;
+export interface IZoomsHandler {
+  activeZoom$: Observable<IIndexedZoom>;
 
-  readonly zooms: ITimelineZoom[];
+  readonly activeZoom: IIndexedZoom;
+
+  readonly zooms: IIndexedZoom[];
 
   setZooms(zooms: ITimelineZoom[]): void;
 
-  getFirstZoom(): ITimelineZoom;
+  getFirstZoom(): IIndexedZoom;
 
-  getLastZoom(): ITimelineZoom;
+  getLastZoom(): IIndexedZoom;
 
   zoomIn(): void;
 

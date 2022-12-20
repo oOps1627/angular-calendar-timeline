@@ -1,19 +1,16 @@
 import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimelineComponent } from './timeline.component';
-import { TimelineItemComponent } from './timeline-item/timeline-item.component';
+import { TimelineItemComponent } from './components/item/timeline-item.component';
 import { ResizableModule } from 'angular-resizable-element';
 import { DragAndDropModule } from 'angular-draggable-droppable';
-import { TimelineDateMarkerComponent } from './timeline-date-marker/timeline-date-marker.component';
-import { TimelineScaleHeaderComponent } from './timeline-scale-header/timeline-scale-header.component';
-import { DAY_SCALE_FORMATTER, DayScaleFormatter, } from "./formatters/day-scale-formatter";
-import { WEEK_SCALE_FORMATTER, WeekScaleFormatter } from "./formatters/week-scale-formatter";
-import { MONTH_SCALE_FORMATTER, MonthScaleFormatter } from "./formatters/month-scale-formatter";
-import { DayScaleGenerator } from "./scale-generator/day-scale-generator";
-import { WeekScaleGenerator } from "./scale-generator/week-scale-generator";
-import { MonthScaleGenerator } from "./scale-generator/month-scale-generator";
-import { TimelinePanelComponent } from "./panel/timeline-panel.component";
-import { IScaleFormatter, ITimelineZoom } from "./models";
+import { TimelineDateMarkerComponent } from './components/date-marker/timeline-date-marker.component';
+import { TimelineScaleHeaderComponent } from './components/scale-header/timeline-scale-header.component';
+import { DAY_SCALE_GENERATOR_CONFIG, DayScaleGenerator } from "./scale-generator/day-scale-generator";
+import { WEEK_SCALE_GENERATOR_CONFIG, WeekScaleGenerator } from "./scale-generator/week-scale-generator";
+import { MONTH_SCALE_GENERATOR_CONFIG, MonthScaleGenerator } from "./scale-generator/month-scale-generator";
+import { TimelinePanelComponent } from "./components/panel/timeline-panel.component";
+import { IScaleGeneratorConfig, ITimelineZoom } from "./models";
 import { StrategyManager } from "./strategy-manager";
 
 interface ITimelineModuleInitializationConfig {
@@ -44,19 +41,19 @@ interface ITimelineModuleInitializationConfig {
   zooms?: ITimelineZoom[];
 
   /**
-   * Text formatter for header in days mode.
+   * Settings for the scale generation in day mode.
    */
-  dayScaleFormatter?: IScaleFormatter;
+  dayScaleConfig?: Partial<IScaleGeneratorConfig>;
 
   /**
-   * Text formatter for header in weeks mode.
+   * Settings for the scale generation in week mode.
    */
-  weekScaleFormatter?: IScaleFormatter;
+  weekScaleConfig?: Partial<IScaleGeneratorConfig>;
 
   /**
-   * Text formatter for header in months mode.
+   * Settings for the scale generation in month mode.
    */
-  monthScaleFormatter?: IScaleFormatter;
+  monthScaleConfig?: Partial<IScaleGeneratorConfig>;
 }
 
 @NgModule({
@@ -86,16 +83,16 @@ export class TimelineModule {
         config?.weekScaleGenerator ?? WeekScaleGenerator,
         config?.monthScaleGenerator ?? MonthScaleGenerator,
         {
-          provide: DAY_SCALE_FORMATTER,
-          useValue: config?.dayScaleFormatter ?? new DayScaleFormatter()
+          provide: DAY_SCALE_GENERATOR_CONFIG,
+          useValue: config?.dayScaleConfig
         },
         {
-          provide: WEEK_SCALE_FORMATTER,
-          useValue: config?.weekScaleFormatter ?? new WeekScaleFormatter()
+          provide: WEEK_SCALE_GENERATOR_CONFIG,
+          useValue: config?.weekScaleConfig
         },
         {
-          provide: MONTH_SCALE_FORMATTER,
-          useValue: config?.monthScaleFormatter ?? new MonthScaleFormatter()
+          provide: MONTH_SCALE_GENERATOR_CONFIG,
+          useValue: config?.monthScaleConfig
         },
       ]
     }

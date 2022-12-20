@@ -5,7 +5,7 @@
 
 </div>
 
-<h1 align="center">Angular 13.0+ timeline calendar</h1>
+<h1 align="center">Angular 13+ timeline calendar</h1>
 
 <div align="center">
 
@@ -87,13 +87,17 @@ registerLocaleData(localeUk);
 })
 ```
 
-<h3 align="center">2. Dates format</h3>
+<h3 align="center">2. Header</h3>
 
-In case you need to change the format of the dates in the header, you can provide custom formatters:
+You can customize the scale view by providing a config for each view mode.  
+In case you need to change the format of the dates in the header or change start or end dates, you can provide a config for each view mode:
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { TimelineModule, IScaleFormatter } from 'angular-timeline-calendar';
+import { TimelineModule,
+  IScaleFormatter, 
+  IScaleGeneratorConfig,
+  IItemsIterator } from 'angular-timeline-calendar';
 
 const myCustomFormatter: IScaleFormatter = {
   formatColumn(column: IScaleColumn, columnWidth: number, locale: string): string {
@@ -104,9 +108,16 @@ const myCustomFormatter: IScaleFormatter = {
 @NgModule({
   imports: [
     TimelineModule.forChild({
-      dayScaleFormatter: myCustomFormatter, // For days mode
-      weekScaleFormatter: myCustomFormatter, // For weeks mode
-      monthScaleFormatter: myCustomFormatter, // For months mode
+      // Customization dates range and their format in the header for day view mode.
+      dayScaleConfig: {
+        formatter: myCustomFormatter,
+        getStartDate: (itemsIterator: IItemsIterator) => itemsIterator.getFirstItem(true),
+        getEndDate: (itemsIterator: IItemsIterator) => new Date(),
+      } as Partial<IScaleGeneratorConfig>,
+      // Customization dates format in the header for week view mode.
+      weekScaleConfig: {
+          formatter: myCustomFormatter
+      } as Partial<IScaleGeneratorConfig>
     }),
   ],
 })
@@ -124,7 +135,7 @@ import { AfterViewInit, ViewChild } from "@angular/core";
 import { TimelineComponent,
   ITimelineZoom,
   DefaultZooms,
-  TimelineDivisionType } from "angular-timeline-calendar";
+  TimelineViewMode } from "angular-timeline-calendar";
 
 @Component({
   template: `<timeline-calendar #timeline [zooms]="zooms"></timeline-calendar>`
@@ -133,9 +144,9 @@ export class MyTimelineComponent implements AfterViewInit {
   @ViewChild('timeline') timeline: TimelineComponent;
   
   zooms: ITimelineZoom[] = [
-    {columnWidth: 50, division: TimelineDivisionType.Month},
-    {columnWidth: 55, division: TimelineDivisionType.Month},
-    {columnWidth: 50, division: TimelineDivisionType.Days},
+    {columnWidth: 50, viewMode: TimelineViewMode.Month},
+    {columnWidth: 55, viewMode: TimelineViewMode.Month},
+    {columnWidth: 50, viewMode: TimelineViewMode.Days},
     DefaultZooms[0] // You can import and use default array;
   ];
   
@@ -187,34 +198,34 @@ Here is an example of how it should look, when you want to add some additional v
 import { NgModule } from '@angular/core';
 import {
   TimelineModule,
-  TimelineDivisionType,
+  TimelineViewMode,
   IScaleFormatter,
   IStrategyManager,
   StrategyManager,
 } from 'angular-timeline-calendar';
 
-enum CustomZoomDivisionsType {
-  Day = TimelineDivisionType.Day,
-  Week = TimelineDivisionType.Week,
-  Month = TimelineDivisionType.Month,
+enum CustomViewMode {
+  Day = TimelineViewMode.Day,
+  Week = TimelineViewMode.Week,
+  Month = TimelineViewMode.Month,
   Custom = 'Custom'
 }
 
-class CustomStrategyManager extends StrategyManager implements IStrategyManager<CustomZoomDivisionsType> {
-  getGenerator(division: CustomZoomDivisionsType): IScaleGenerator {
-    if (division === CustomZoomDivisionsType.Custom) {
+class CustomStrategyManager extends StrategyManager implements IStrategyManager<TimelineViewMode> {
+  getScaleGenerator(viewMode: CustomViewMode): IScaleGenerator {
+    if (viewMode === CustomViewMode.Custom) {
       return {...};  // your custom logic here
     }
 
-    return super.getGenerator(division);
+    return super.getScaleGenerator(viewMode);
   };
 
-  getAdaptor(division: CustomZoomDivisionsType): IDivisionAdaptor {
-    if (division === CustomZoomDivisionsType.Custom) {
+  getViewModeAdaptor(viewMode: CustomViewMode): IViewModeAdaptor {
+    if (viewMode === CustomViewMode.Custom) {
       return {...} // custom adaptor;
     }
 
-    return super.getAdaptor(division);
+    return super.getAdaptor(viewMode);
   }
 }
 

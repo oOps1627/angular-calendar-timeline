@@ -1,6 +1,6 @@
 import { ITimelineItem } from "./item";
 
-export interface IItemsBuilder {
+export interface IItemsIterator {
   readonly items: ITimelineItem[];
 
   setItems(items: ITimelineItem[]): void;

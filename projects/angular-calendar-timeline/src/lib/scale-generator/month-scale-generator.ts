@@ -1,81 +1,54 @@
-import { DatesCacheDecorator } from '../helpers/cache';
 import { BaseScaleGenerator } from './base-scale-generator';
-import { IScale, IScaleColumn, IScaleGenerator, IScaleGroup,  } from '../models/scale';
+import { DateInput, IScaleGenerator, IScaleGeneratorConfig, IScaleGroup } from '../models';
 import { DateHelpers } from "../helpers/date-helpers";
-import { MONTH_SCALE_FORMATTER } from "../formatters/month-scale-formatter";
-import { Injectable } from "@angular/core";
-import { DateInput } from "../models";
+import { Injectable, InjectionToken } from "@angular/core";
+import { MonthScaleFormatter } from "../formatters/month-scale-formatter";
+
+export const MONTH_SCALE_GENERATOR_CONFIG = new InjectionToken<IScaleGeneratorConfig>('Month scale config');
+
+const DefaultConfig: IScaleGeneratorConfig = {
+  formatter: new MonthScaleFormatter(),
+}
 
 @Injectable()
 export class DefaultMonthScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
-  formatter = this._injector.get(MONTH_SCALE_FORMATTER);
-
-  protected readonly countOfYearsAfterLastItem = 1;
-  protected readonly countOfYearsBeforeFirstItem = 1;
-
-  @DatesCacheDecorator()
-  generateScale(startDate: Date, endDate: Date): IScale {
-    const currentDate = new Date(startDate);
-    const endTime = endDate.getTime();
-    const scale: IScale = {
-      startDate,
-      endDate,
-      groups: [],
-      columns: [],
-    };
-
-    while (currentDate.getTime() <= endTime) {
-      const group = this._generateGroup(currentDate);
-      scale.groups.push(group);
-
-      for (let i = 1; i <= group.columnsInGroup; i++) {
-        const monthDate = new Date(currentDate).setMonth(i - 1);
-        scale.columns.push(this._generateColumn(monthDate));
-      }
-
-      currentDate.setFullYear(currentDate.getFullYear() + 1);
-    }
-
-    return scale;
+  protected _getConfig(): IScaleGeneratorConfig {
+    return {...DefaultConfig, ...this._injector.get(MONTH_SCALE_GENERATOR_CONFIG, {})};
   }
 
-  protected _generateGroup(date: DateInput): IScaleGroup {
-    date = new Date(date);
-
-    return {
-      id: DateHelpers.generateDateId(date),
-      columnsInGroup: 12,
-      date: date
-    }
-  }
-
-  protected _generateColumn(date: DateInput): IScaleColumn {
-    date = new Date(date);
-
-    return {
-      id: DateHelpers.generateDateId(date),
-      index: date.getMonth() + 1,
-      date: date,
-    }
-  }
-
-  protected _addEmptySpaceBefore(startDate: DateInput): Date {
+  protected _validateStartDate(startDate: DateInput): Date {
     const newDate = new Date(startDate);
+    const countOfEmptyYearsBefore = 1;
     newDate.setDate(1);
     newDate.setMonth(0);
-    newDate.setFullYear(newDate.getFullYear() - this.countOfYearsBeforeFirstItem);
+    newDate.setFullYear(newDate.getFullYear() - countOfEmptyYearsBefore);
 
     return newDate;
   }
 
-  protected _addEmptySpaceAfter(endDate: DateInput): Date {
+  protected _validateEndDate(endDate: DateInput): Date {
     const newDate = DateHelpers.lastDayOfMonth(endDate);
+    const countOfEmptyYearsAfter = 1;
     newDate.setMonth(11);
-    newDate.setFullYear(newDate.getFullYear() + this.countOfYearsAfterLastItem);
+    newDate.setFullYear(newDate.getFullYear() + countOfEmptyYearsAfter);
 
     return newDate;
+  }
+
+  protected _generateGroups(date: Date): IScaleGroup[] {
+    date = new Date(date.getFullYear(), 1, 0, 0, 0, 0, 0);
+    return [{date, id: DateHelpers.generateDateId(date), coverageInPercents: 100}];
+  }
+
+  protected _getColumnIndex(date: Date): number {
+    return date.getMonth() + 1;
+  }
+
+  protected _getNextColumnDate(date: Date): Date {
+    return new Date(date.setMonth(date.getMonth() + 1));
   }
 }
 
 @Injectable()
-export class MonthScaleGenerator extends DefaultMonthScaleGenerator {}
+export class MonthScaleGenerator extends DefaultMonthScaleGenerator {
+}

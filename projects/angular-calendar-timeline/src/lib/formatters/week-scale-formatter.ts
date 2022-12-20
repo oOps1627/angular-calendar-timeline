@@ -1,8 +1,6 @@
 import { IScaleColumn, IScaleFormatter, IScaleGroup } from "../models";
-import { Injectable, InjectionToken } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { formatDate, FormStyle, getLocaleDayNames, TranslationWidth } from "@angular/common";
-
-export const WEEK_SCALE_FORMATTER = new InjectionToken<IScaleFormatter>('WEEK_SCALE_FORMATTER');
 
 @Injectable()
 export class WeekScaleFormatter implements IScaleFormatter {

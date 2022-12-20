@@ -3,11 +3,11 @@
   [width]="panelWidth"
   [maxWidth]="maxPanelWidth"
   [minWidth]="minPanelWidth"
-  [resizable]="panelResizable"
+  [resizable]="isPanelResizable"
   [itemTemplate]="panelItemTemplate"
   [label]="panelLabel"
   [headerHeight]="headerHeight"
-  [items]="itemsBuilder.items"
+  [items]="itemsIterator.items"
   [locale]="locale"
   [rowHeight]="rowHeight">
 </timeline-panel>
@@ -30,13 +30,14 @@
   </div>
 
   <timeline-date-marker *ngIf="showDateMarket"
+                        [leftPosition]="dateMarkerLeftPosition"
                         [headerHeight]="headerHeight"
-                        [leftPosition]='dateMarkerLeftPosition'
+                        [scale]="scale"
                         [customTemplate]="dateMarkerTemplate"
   ></timeline-date-marker>
 
-  <div class='timeline-items' *ngIf="!itemsBuilder.isEmpty()">
-    <ng-container *ngFor='let group of itemsBuilder.items; trackBy: _trackById;'>
+  <div class='timeline-items' *ngIf="!itemsIterator.isEmpty()">
+    <ng-container *ngFor='let group of itemsIterator.items; trackBy: _trackById;'>
       <ng-container [ngTemplateOutlet]='itemTemplate'
                     [ngTemplateOutletContext]='{$implicit: group}'
       ></ng-container>
@@ -48,13 +49,14 @@
 
     <ng-template #itemTemplate let-item>
       <div [style.height.px]='rowHeight' class='item-row'>
-        <app-timeline-item [item]='item'
-                           [height]="itemHeight"
-                           [locale]="locale"
-                           (itemResized)="_onItemResized($event.event, $event.item)"
-                           (itemMoved)="_onItemMoved($event.event, $event.item)"
-                           [contentTemplate]='itemContentTemplate'
-        ></app-timeline-item>
+        <timeline-item [item]='item'
+                       [scale]="scale"
+                       [height]="itemHeight"
+                       [locale]="locale"
+                       (itemResized)="_onItemResized($event.event, $event.item)"
+                       (itemMoved)="_onItemMoved($event.event, $event.item)"
+                       [contentTemplate]='itemContentTemplate'
+        ></timeline-item>
       </div>
     </ng-template>
 

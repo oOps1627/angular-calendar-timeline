@@ -9,7 +9,7 @@ import {
   TemplateRef
 } from "@angular/core";
 import { ResizeEvent } from "angular-resizable-element";
-import { ITimelineItem, IIdObject } from "../models";
+import { ITimelineItem, IIdObject } from "../../models";
 
 @Component({
   selector: 'timeline-panel',
@@ -36,7 +36,7 @@ export class TimelinePanelComponent implements OnChanges {
 
   @Input() locale: string;
 
-  @Input() itemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string, toggleExpand: () => void }>
+  @Input() itemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
 
   @Output() widthChanged = new EventEmitter<number>();
 
@@ -62,7 +62,6 @@ export class TimelinePanelComponent implements OnChanges {
 
   toggleExpand(item: ITimelineItem): void {
     item.expanded = !item.expanded;
-    item._redraw();
   }
 
   private _validateWidth(): void {

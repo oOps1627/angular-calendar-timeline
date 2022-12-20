@@ -17,8 +17,8 @@ export class AppComponent {
 
   items: ITimelineItem[] = [
     {
-      startDate: new Date('2021-07-08T00:00:00'),
-      endDate: new Date('2021-07-09T00:00:00'),
+      startDate: new Date('2022-07-08T00:00:00'),
+      endDate: new Date('2022-07-09T00:00:00'),
       id: 1,
       name: "First",
       canResizeLeft: true,
@@ -26,8 +26,8 @@ export class AppComponent {
       canDrag: true
     },
     {
-      startDate: new Date('2021-07-09T00:00:00'),
-      endDate: new Date('2021-07-19T00:00:00'),
+      startDate: new Date('2022-07-09T00:00:00'),
+      endDate: new Date('2022-07-19T00:00:00'),
       id: 2,
       name: "Second",
       canResizeLeft: true,
@@ -35,8 +35,8 @@ export class AppComponent {
       canDrag: true,
       items: [
         {
-          startDate: new Date('2021-07-09T00:00:00'),
-          endDate: new Date('2021-07-20T00:00:00'),
+          startDate: new Date('2022-07-09T00:00:00'),
+          endDate: new Date('2022-07-20T00:00:00'),
           id: 3,
           name: "2.1",
           canResizeLeft: true,
@@ -44,8 +44,8 @@ export class AppComponent {
           canDrag: true,
           items: [
             {
-              startDate: new Date('2021-07-19T00:00:00'),
-              endDate: new Date('2021-07-20T00:00:00'),
+              startDate: new Date('2022-07-19T00:00:00'),
+              endDate: new Date('2022-07-20T00:00:00'),
               id: 7,
               name: "2.1.1",
               canResizeLeft: true,
@@ -55,8 +55,8 @@ export class AppComponent {
           ]
         },
         {
-          startDate: new Date('2021-07-09T00:00:00'),
-          endDate: new Date('2021-07-20T00:00:00'),
+          startDate: new Date('2022-07-09T00:00:00'),
+          endDate: new Date('2022-07-20T00:00:00'),
           id: 6,
           name: "2.2",
           canResizeLeft: true,
@@ -66,8 +66,8 @@ export class AppComponent {
       ]
     },
     {
-      startDate: new Date('2021-08-09T00:00:00'),
-      endDate: new Date('2021-08-19T00:00:00'),
+      startDate: new Date('2022-08-09T00:00:00'),
+      endDate: new Date('2022-08-19T00:00:00'),
       id: 4,
       name: "Third",
       canResizeLeft: true,
@@ -75,8 +75,8 @@ export class AppComponent {
       canDrag: true,
       items: [
         {
-          startDate: new Date('2021-08-09T00:00:00'),
-          endDate: new Date('2021-08-20T00:00:00'),
+          startDate: new Date('2022-08-09T00:00:00'),
+          endDate: new Date('2022-08-20T00:00:00'),
           id: 5,
           name: "3.1",
           canResizeLeft: true,

@@ -46,9 +46,12 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
    */
   meta?: Meta;
 
+  /**
+   * Trigger Change Detection in component created for this item.
+   */
+  updateView?(): void;
+
   _width?: number;
 
   _left?: number;
-
-  _redraw?(): void;
 }

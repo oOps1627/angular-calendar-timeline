@@ -17,19 +17,19 @@ import { ResizeEvent } from 'angular-resizable-element';
 import { interval, Subject, takeUntil } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import {
-  IDivisionAdaptor,
+  IViewModeAdaptor,
   IIdObject,
-  IItemsBuilder,
+  IItemsIterator,
   IScale,
   IScaleGenerator,
   ITimelineItem,
-  ITimelineZoom
+  ITimelineZoom, IZoomsHandler
 } from './models';
 import { isPlatformBrowser } from "@angular/common";
 import { MillisecondsToTime } from "./helpers/date-helpers";
-import { ItemsBuilder } from "./items-builder/items-builder";
-import { ZoomsBuilder } from "./zooms-builder/zooms-builder";
-import { DefaultZooms } from "./zooms-builder/zooms";
+import { ItemsIterator } from "./items-iterator/items-iterator";
+import { ZoomsHandler } from "./zooms-handler/zooms-handler";
+import { DefaultZooms } from "./zooms-handler/zooms";
 import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
 import { StrategyManager } from "./strategy-manager";
 
@@ -51,17 +51,17 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   public scaleGenerator: IScaleGenerator;
 
   /**
-   * Division adapter changes depending on current view type.
+   * View mode adaptor changes depending on current view type.
    */
-  public divisionAdaptor: IDivisionAdaptor;
+  public viewModeAdaptor: IViewModeAdaptor;
 
   public dateMarkerLeftPosition: number = 0;
 
   public scale: IScale | undefined;
 
-  public itemsBuilder: IItemsBuilder = new ItemsBuilder();
+  public itemsIterator: IItemsIterator = new ItemsIterator();
 
-  public zoomsBuilder: ZoomsBuilder = new ZoomsBuilder(DefaultZooms);
+  public zoomsHandler: IZoomsHandler = new ZoomsHandler(DefaultZooms);
 
   private _ignoreNextScrollEvent: boolean = false;
 
@@ -124,12 +124,12 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * Can resize panel. By default is true.
    */
-  @Input() panelResizable: boolean = true;
+  @Input() isPanelResizable: boolean = true;
 
   /**
    * Custom template for item in left panel.
    */
-  @Input() panelItemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string, toggleExpand: () => void }>
+  @Input() panelItemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
 
   /**
    * Custom template for item in timeline.
@@ -151,7 +151,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Current zoom can be changed to any existed in this array by calling method "changeZoom()"
    */
   @Input() set zooms(value: ITimelineZoom[]) {
-    this.zoomsBuilder.setZooms(value);
+    this.zoomsHandler.setZooms(value);
   }
 
   /**
@@ -159,7 +159,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    */
   @Input()
   set items(items: ITimelineItem[]) {
-    this.itemsBuilder.setItems(items);
+    this.itemsIterator.setItems(items);
     this.redraw();
   }
 
@@ -174,14 +174,14 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Active zoom.
    */
   get zoom(): ITimelineZoom {
-    return this.zoomsBuilder.activeZoom;
+    return this.zoomsHandler.activeZoom;
   }
 
   /**
    * Registered zooms list.
    */
   get zooms(): ITimelineZoom[] {
-    return this.zoomsBuilder.zooms;
+    return this.zoomsHandler.zooms;
   }
 
   constructor(private _cdr: ChangeDetectorRef,
@@ -192,12 +192,12 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.zoomsBuilder.activeZoom$
+    this.zoomsHandler.activeZoom$
       .pipe(takeUntil(this._destroy$))
       .subscribe((zoom) => {
         this._setStrategies(zoom);
-        this.zoomChanged.emit(zoom);
         this.redraw();
+        this.zoomChanged.emit(zoom);
       });
 
     if (isPlatformBrowser(this._platformId)) {
@@ -224,7 +224,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    */
   attachCameraToDate(date: Date): void {
     this.currentDate = date;
-    const duration = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, date);
+    const duration = this.viewModeAdaptor.getDurationInColumns(this.scale.startDate, date);
     const scrollLeft = (duration * this.zoom.columnWidth) - (this.visibleScaleWidth / 2);
     this._ignoreNextScrollEvent = true;
 
@@ -238,8 +238,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Padding sets minimal spacing from left and right to the first and last items.
    */
   fitToContent(paddings: number): void {
-    const firstItem = this.itemsBuilder.getFirstItem(true);
-    const lastItem = this.itemsBuilder.getLastItem(true);
+    const firstItem = this.itemsIterator.getFirstItem(true);
+    const lastItem = this.itemsIterator.getLastItem(true);
 
     if (!firstItem || !lastItem)
       return;
@@ -247,11 +247,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     const startDate = new Date(firstItem.startDate);
     const endDate = new Date(lastItem.endDate);
     const zoom = this._calculateOptimalZoom(startDate, endDate, paddings);
-    const divisionAdaptor = this._strategyManager.getAdaptor(zoom.division);
+    const viewModeAdaptor = this._strategyManager.getViewModeAdaptor(zoom.viewMode);
 
-    this.currentDate = new Date(divisionAdaptor.getMiddleDate(startDate, endDate));
+    this.currentDate = new Date(viewModeAdaptor.getMiddleDate(startDate, endDate));
 
-    if (this.zoomsBuilder.isZoomActive(zoom)) {
+    if (this.zoomsHandler.isZoomActive(zoom)) {
       this.attachCameraToDate(this.currentDate);
     } else {
       this.changeZoom(zoom);
@@ -262,45 +262,44 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Change zoom to one of the existed
    */
   changeZoom(zoom: ITimelineZoom): void {
-    this.zoomsBuilder.changeActiveZoom(zoom);
+    this.zoomsHandler.changeActiveZoom(zoom);
   }
 
   /**
    * Changes zoom to the max value
    */
   zoomFullIn(): void {
-    this.zoomsBuilder.changeActiveZoom(this.zoomsBuilder.getLastZoom());
+    this.zoomsHandler.changeActiveZoom(this.zoomsHandler.getLastZoom());
   }
 
   /**
    * Changes zoom to the min value
    */
   zoomFullOut(): void {
-    this.zoomsBuilder.changeActiveZoom(this.zoomsBuilder.getFirstZoom());
+    this.zoomsHandler.changeActiveZoom(this.zoomsHandler.getFirstZoom());
   }
 
   /**
    * Changes zoom for 1 step back
    */
   zoomIn(): void {
-    this.zoomsBuilder.zoomIn();
+    this.zoomsHandler.zoomIn();
   }
 
   /**
    * Changes zoom for 1 step forward
    */
   zoomOut(): void {
-    this.zoomsBuilder.zoomOut();
+    this.zoomsHandler.zoomOut();
   }
 
-
   private _calculateOptimalZoom(startDate: Date, endDate: Date, paddings = 15): ITimelineZoom {
-    let possibleZoom: ITimelineZoom = this.zoomsBuilder.getFirstZoom();
+    let possibleZoom: ITimelineZoom = this.zoomsHandler.getFirstZoom();
 
-    for (let i = this.zoomsBuilder.getLastZoom().index; i >= this.zoomsBuilder.getFirstZoom().index; i--) {
-      const currentZoom = this.zoomsBuilder.zooms[i];
-      const divisionCalculator = this._strategyManager.getAdaptor(currentZoom.division);
-      const countOfColumns = divisionCalculator.getUniqueDivisionsCountBetweenDates(startDate, endDate);
+    for (let i = this.zoomsHandler.getLastZoom().index; i >= this.zoomsHandler.getFirstZoom().index; i--) {
+      const currentZoom = this.zoomsHandler.zooms[i];
+      const viewModeAdaptor = this._strategyManager.getViewModeAdaptor(currentZoom.viewMode);
+      const countOfColumns = viewModeAdaptor.getUniqueColumnsWithinRange(startDate, endDate);
 
       if (countOfColumns * currentZoom.columnWidth < (this.visibleScaleWidth - paddings * 2)) {
         possibleZoom = currentZoom;
@@ -316,14 +315,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
     const columns = Math.round(scrollLeftToCenterScreen / this.zoom.columnWidth);
 
-    return this.divisionAdaptor.addDivisionToDate(this.scale.startDate, columns);
+    return this.viewModeAdaptor.addColumnToDate(this.scale.startDate, columns);
   }
 
   _onItemMoved(event: DragEndEvent, item: ITimelineItem): void {
-    const divisionCalculator = this.divisionAdaptor;
     const transferColumns = Math.round(event.x / this.zoom.columnWidth);
-    item.startDate = divisionCalculator.addDivisionToDate(new Date(item.startDate), transferColumns);
-    item.endDate = divisionCalculator.addDivisionToDate(new Date(item.endDate), transferColumns);
+    item.startDate = this.viewModeAdaptor.addColumnToDate(new Date(item.startDate), transferColumns);
+    item.endDate = this.viewModeAdaptor.addColumnToDate(new Date(item.endDate), transferColumns);
     this._updateItemPosition(item);
     this.itemMoved.emit(item);
   }
@@ -335,7 +333,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   _onItemResized(event: ResizeEvent, item: ITimelineItem): void {
     const calculateNewDate = (movedPx: number, oldDate: Date): Date => {
       const countOfColumnsMoved = Math.round(movedPx as number / this.zoom.columnWidth);
-      return this.divisionAdaptor.addDivisionToDate(oldDate, countOfColumnsMoved);
+      return this.viewModeAdaptor.addColumnToDate(oldDate, countOfColumnsMoved);
     }
 
     if (event.edges.left) {
@@ -363,26 +361,26 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private _generateScale(): void {
-    const scaleStartDate = this.scaleGenerator.getStartDate(this.itemsBuilder);
-    const scaleEndDate = this.scaleGenerator.getEndDate(this.itemsBuilder);
+    const scaleStartDate = this.scaleGenerator.getStartDate(this.itemsIterator);
+    const scaleEndDate = this.scaleGenerator.getEndDate(this.itemsIterator);
     this.scale = this.scaleGenerator.generateScale(scaleStartDate, scaleEndDate);
   }
 
   private _updateItemsPosition(): void {
-    this.itemsBuilder.forEach((item) => this._updateItemPosition(item));
+    this.itemsIterator.forEach((item) => this._updateItemPosition(item));
   }
 
   private _updateItemPosition(item: ITimelineItem): void {
     item._width = this._calculateItemWidth(item);
     item._left = this._calculateItemLeftPosition(item);
-    item._redraw && item._redraw();
+    item.updateView && item.updateView();
   }
 
   private _calculateItemLeftPosition(item: ITimelineItem): number {
     if (!item.startDate || !item.endDate)
       return 0;
 
-    const columnsOffsetFromStart = this.divisionAdaptor.getUniqueDivisionsCountBetweenDates(this.scale.startDate, new Date(item.startDate)) - 1;
+    const columnsOffsetFromStart = this.viewModeAdaptor.getUniqueColumnsWithinRange(this.scale.startDate, new Date(item.startDate)) - 1;
 
     return columnsOffsetFromStart * this.zoom.columnWidth;
   }
@@ -391,20 +389,20 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     if (!item.startDate || !item.endDate)
       return 0;
 
-    const columnsOccupied = this.divisionAdaptor.getUniqueDivisionsCountBetweenDates(new Date(item.startDate), new Date(item.endDate));
+    const columnsOccupied = this.viewModeAdaptor.getUniqueColumnsWithinRange(new Date(item.startDate), new Date(item.endDate));
 
     return columnsOccupied * this.zoom.columnWidth;
   }
 
   private _recalculateDateMarkerPosition(): void {
-    const countOfColumns = this.divisionAdaptor.getDurationInDivisions(this.scale.startDate, new Date());
+    const countOfColumns = this.viewModeAdaptor.getDurationInColumns(this.scale.startDate, new Date());
 
     this.dateMarkerLeftPosition = countOfColumns * this.zoom.columnWidth;
   }
 
   private _setStrategies(zoom: ITimelineZoom): void {
-    this.divisionAdaptor = this._strategyManager.getAdaptor(zoom.division);
-    this.scaleGenerator = this._strategyManager.getGenerator(zoom.division);
+    this.viewModeAdaptor = this._strategyManager.getViewModeAdaptor(zoom.viewMode);
+    this.scaleGenerator = this._strategyManager.getScaleGenerator(zoom.viewMode);
   }
 
   ngOnDestroy(): void {

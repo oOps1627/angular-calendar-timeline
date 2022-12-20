@@ -1,12 +1,9 @@
 import { BehaviorSubject, Observable } from "rxjs";
 import { ITimelineZoom } from "../models/zoom";
-import { IZoomsBuilder } from "../models";
+import { IIndexedZoom, IZoomsHandler } from "../models";
 
-interface IIndexedZoom extends ITimelineZoom {
-  index: number;
-}
 
-export class ZoomsBuilder implements IZoomsBuilder {
+export class ZoomsHandler implements IZoomsHandler {
   private _zooms: IIndexedZoom[];
   private _activeZoom$ = new BehaviorSubject<IIndexedZoom>(null);
 
@@ -68,6 +65,6 @@ export class ZoomsBuilder implements IZoomsBuilder {
   }
 
   private _findZoomIndex(zoom: ITimelineZoom): number {
-    return this._zooms.findIndex(i => i.columnWidth === zoom.columnWidth && i.division === zoom.division);
+    return this._zooms.findIndex(i => i.columnWidth === zoom.columnWidth && i.viewMode === zoom.viewMode);
   }
 }

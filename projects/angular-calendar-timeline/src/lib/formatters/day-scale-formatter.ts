@@ -1,8 +1,6 @@
 import { IScaleColumn, IScaleFormatter, IScaleGroup } from "../models";
 import { formatDate } from "@angular/common";
-import { Injectable, InjectionToken } from "@angular/core";
-
-export const DAY_SCALE_FORMATTER = new InjectionToken<IScaleFormatter>('DAY_SCALE_FORMATTER');
+import { Injectable } from "@angular/core";
 
 @Injectable()
 export class DayScaleFormatter implements IScaleFormatter {
