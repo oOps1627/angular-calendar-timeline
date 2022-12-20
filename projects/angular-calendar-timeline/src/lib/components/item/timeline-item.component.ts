@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import { ResizeEvent } from "angular-resizable-element";
 import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
-import { ITimelineItem } from "../../models/item";
-import { IScale } from "angular-calendar-timeline";
+import { ITimelineItem, IScale } from "../../models";
 
 @Component({
   selector: 'timeline-item',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { IScale } from "angular-calendar-timeline";
+import { IScale } from "../../models";
 
 @Component({
   selector: 'timeline-date-marker',
