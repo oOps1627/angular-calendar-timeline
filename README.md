@@ -111,7 +111,7 @@ const myCustomFormatter: IScaleFormatter = {
       // Customization dates range and their format in the header for day view mode.
       dayScaleConfig: {
         formatter: myCustomFormatter,
-        getStartDate: (itemsIterator: IItemsIterator) => itemsIterator.getFirstItem(true),
+        getStartDate: (itemsIterator: IItemsIterator) => itemsIterator.getFirstItem(true).startDate,
         getEndDate: (itemsIterator: IItemsIterator) => new Date(),
       } as Partial<IScaleGeneratorConfig>,
       // Customization dates format in the header for week view mode.

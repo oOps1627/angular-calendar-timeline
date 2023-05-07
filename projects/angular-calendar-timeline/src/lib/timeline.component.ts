@@ -23,7 +23,7 @@ import {
   IScale,
   IScaleGenerator,
   ITimelineItem,
-  ITimelineZoom, IZoomsHandler
+  ITimelineZoom, IZoomsHandler, IScaleColumn
 } from './models';
 import { isPlatformBrowser } from "@angular/common";
 import { MillisecondsToTime } from "./helpers/date-helpers";
@@ -135,6 +135,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Custom template for item in timeline.
    */
   @Input() itemContentTemplate: TemplateRef<{ $implicit: ITimelineItem, locale: string }> | undefined;
+
+  /**
+   * Custom template for separators between columns.
+   */
+  @Input() columnSeparatorTemplate: TemplateRef<{column: IScaleColumn, index: number, columnWidth: number, headerHeight: number}> | undefined;
 
   /**
    * If false then date marker will be not visible.

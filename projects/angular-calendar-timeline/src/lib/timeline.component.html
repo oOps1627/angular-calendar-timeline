@@ -22,11 +22,16 @@
   ></timeline-scale-header>
 
   <div class="column-separators">
-    <div *ngFor='let date of scale?.columns; index as i'
-         [style.left.px]='zoom.columnWidth * (i + 1)'
-         [style.height]="'calc(100% - ' + headerHeight + 'px)'"
-         class='line'>
-    </div>
+    <ng-container *ngFor='let date of scale?.columns; index as i; trackBy: _trackById'>
+      <div class="line" *ngIf="!columnSeparatorTemplate"
+           [style.left.px]='zoom.columnWidth * (i + 1)'
+           [style.height]="'calc(100% - ' + headerHeight + 'px)'">
+      </div>
+
+      <ng-template [ngTemplateOutlet]="columnSeparatorTemplate"
+                   [ngTemplateOutletContext]="{column: date, index: i, columnWidth: zoom.columnWidth, headerHeight: headerHeight}">
+      </ng-template>
+    </ng-container>
   </div>
 
   <timeline-date-marker *ngIf="showDateMarket"

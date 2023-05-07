@@ -4,8 +4,20 @@
  <div class="timeline-wrapper">
    <timeline-calendar #timelineComponent
                       [panelLabel]="label"
+                      [columnSeparatorTemplate]="separators"
                       [items]='items'
                       [locale]="locale">
    </timeline-calendar>
+
+   <ng-template #separators let-index="index" let-columnWidth="columnWidth" let-headerHeight="headerHeight">
+     <div class="line"
+          [style.left.px]='columnWidth * (index + 1)'
+          [style.height]="'calc(100% - ' + headerHeight + 'px)'">
+     </div>
+
+     <div class="line"
+          [style.left.px]='columnWidth * (index + 1) - (columnWidth / 2)'
+          [style.height]="'calc(100% - ' + headerHeight + 'px)'"></div>
+   </ng-template>
  </div>
 </div>
