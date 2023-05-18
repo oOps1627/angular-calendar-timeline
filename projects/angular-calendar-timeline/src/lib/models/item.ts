@@ -7,12 +7,12 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   name: string;
 
   /**
-   * Date when item starts.
+   * Date when item starts. If 'streamItems' property is not empty then 'startDate' will be cleared.
    */
   startDate?: Date;
 
   /**
-   * Date when item ends.
+   * Date when item ends. If 'streamItems' property is not empty then 'endDate' will be cleared.
    */
   endDate?: Date;
 
@@ -32,19 +32,24 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   canDrag?: boolean;
 
   /**
-   * Each item can contains own items.
+   * These items will be determined like children and will be displayed under the current item in separate rows.
    */
-  items?: ITimelineItem<Meta>[];
-
-  stream?: boolean;
+  childrenItems?: ITimelineItem<Meta>[];
 
   /**
-   * Show / hide inner items. Can toggle in left panel. Works only if item has not empty array in "items" property.
+   * Transforms current item into the stream. It allows adding multiple items into one row.
+   * Can't be used simultaneously with the startDate/endDate of the current item.
+   * Also these items can't contain childrenItems.
    */
-  expanded?: boolean;
+  streamItems?: (Omit<ITimelineItem<Meta>, 'childrenItems'>)[];
 
   /**
-   * Here can be added some custom information about item.
+   * Show / hide inner items. Can toggle in left panel. Works only if item has not empty array in "innerItems" property.
+   */
+  childrenItemsExpanded?: boolean;
+
+  /**
+   * Here can be added some custom data about item. It not uses in the library.
    */
   meta?: Meta;
 

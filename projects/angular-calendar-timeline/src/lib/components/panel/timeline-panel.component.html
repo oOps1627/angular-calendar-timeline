@@ -19,8 +19,8 @@
     </ng-container>
 
 
-    <div *ngIf='item.expanded && !item.stream'>
-      <ng-container *ngFor='let innerItem of (item.items || []); trackBy: trackById;  let index = index'
+    <div *ngIf='item.childrenItemsExpanded'>
+      <ng-container *ngFor='let innerItem of (item.childrenItems || []); trackBy: trackById;  let index = index'
                     [ngTemplateOutletContext]='{item: innerItem, index: index, depth: depth + 1, locale: locale}'
                     [ngTemplateOutlet]='itemsIterationTemplate'
       ></ng-container>
@@ -29,17 +29,17 @@
 </div>
 
 <ng-template #defaultItemTemplate let-item='item' let-index='index' let-depth='depth'>
-  <div [style.height.px]='rowHeight * (item.stream ? item?._streamLevels?.length || 1 : 1)'
+  <div [style.height.px]='rowHeight * (item.streamItems ? item?._streamLevels?.length || 1 : 1)'
        [style.width.px]='width'
-       [class.can-collapse]='item.items && item.items.length'
+       [class.can-collapse]='item.childrenItems && item.childrenItems.length'
        class='panel-item'>
 
-    <div [style.marginLeft.px]='depth * innerGroupOffset' (click)='toggleExpand(item)' class='item-content'>
+    <div [style.marginLeft.px]='depth * childGroupOffset' (click)='toggleExpand(item)' class='item-content'>
       <div class='collapse-icon'
-           [class.collapsed]='!item.expanded'>
+           [class.collapsed]='!item.childrenItemsExpanded'>
       </div>
 
-      <span class='item-name' title="{{getGroupName(item)}}">{{getGroupName(item)}}</span>
+      <span class='item-name' title="{{item.name}}">{{item.name}}</span>
     </div>
   </div>
 </ng-template>

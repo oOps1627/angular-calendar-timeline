@@ -14,7 +14,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
-import { interval, Subject, takeUntil } from 'rxjs';
+import { first, interval, Subject, takeUntil } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import {
   IViewModeAdaptor,
@@ -87,17 +87,17 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input() locale: string = 'en';
 
   /**
-   * Height of the each row. By default is 40.
+   * Height of the each row in pixels. By default is 40.
    */
   @Input() rowHeight: number = 40;
 
   /**
-   * Height of the each timeline item. Can't be bigger then 'rowHeight' property. By default is 30.
+   * Height of the each timeline item in pixels. Can't be bigger then 'rowHeight' property. By default is 30.
    */
   @Input() itemHeight: number = 30;
 
   /**
-   * Height of top dates panel. By default is 60.
+   * Height of top dates panel in pixels. By default is 60.
    */
   @Input() headerHeight: number = 60;
 
@@ -107,24 +107,34 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input() panelLabel: string = '';
 
   /**
-   * Width of left panel. By default is 160.
+   * Width of left panel in pixels. By default is 160.
    */
   @Input() panelWidth: number = 160;
 
   /**
-   * Minimal width of left panel. By default is 50.
+   * Minimal width of left panel in pixels. By default is 50.
    */
   @Input() minPanelWidth: number = 50;
 
   /**
-   * Maximal width of left panel. By default is 400.
+   * Maximal width of left panel in pixels. By default is 400.
    */
   @Input() maxPanelWidth: number = 400;
+
+  /**
+   *  Sets the left displacement in pixels between parent and child groups in left panel. By default is 15.
+   */
+  @Input() offsetForChildPanelItem: number = 15;
 
   /**
    * Can resize panel. By default is true.
    */
   @Input() isPanelResizable: boolean = true;
+
+  /**
+   * If false then date marker will be not visible.
+   */
+  @Input() showDateMarket: boolean = true;
 
   /**
    * Custom template for item in left panel.
@@ -140,11 +150,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Custom template for separators between columns.
    */
   @Input() columnSeparatorTemplate: TemplateRef<{column: IScaleColumn, index: number, columnWidth: number, headerHeight: number}> | undefined;
-
-  /**
-   * If false then date marker will be not visible.
-   */
-  @Input() showDateMarket: boolean = true;
 
   /**
    * Custom template for marker that indicates current time.
@@ -218,6 +223,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   redraw(): void {
     this._generateScale();
     this._updateItemsPosition();
+    this.itemsIterator.setItems([...this.itemsIterator.items]);
     this._recalculateDateMarkerPosition();
     this._ignoreNextScrollEvent = true;
     this._cdr.detectChanges();

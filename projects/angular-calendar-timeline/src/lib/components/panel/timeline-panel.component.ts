@@ -36,7 +36,7 @@ export class TimelinePanelComponent implements OnChanges {
 
   @Input() locale: string;
 
-  @Input() innerGroupOffset: number = 15;
+  @Input() childGroupOffset: number = 15;
 
   @Input() itemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
 
@@ -63,11 +63,7 @@ export class TimelinePanelComponent implements OnChanges {
   }
 
   toggleExpand(item: ITimelineItem): void {
-    item.expanded = !item.expanded;
-  }
-
-  getGroupName(item: ITimelineItem): string {
-    return item.name;
+    item.childrenItemsExpanded = !item.childrenItemsExpanded;
   }
 
   private _validateWidth(): void {

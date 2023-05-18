@@ -33,7 +33,7 @@ export class AppComponent {
       canResizeLeft: true,
       canResizeRight: true,
       canDrag: true,
-      items: [
+      childrenItems: [
         {
           startDate: new Date('2022-07-09T00:00:00'),
           endDate: new Date('2022-07-20T00:00:00'),
@@ -42,7 +42,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDrag: true,
-          items: [
+          childrenItems: [
             {
               startDate: new Date('2022-07-19T00:00:00'),
               endDate: new Date('2022-07-20T00:00:00'),
@@ -73,7 +73,7 @@ export class AppComponent {
       canResizeLeft: true,
       canResizeRight: true,
       canDrag: true,
-      items: [
+      childrenItems: [
         {
           startDate: new Date('2022-08-09T00:00:00'),
           endDate: new Date('2022-08-20T00:00:00'),
@@ -86,10 +86,9 @@ export class AppComponent {
       ]
     },
     {
-      name: "combined",
+      name: "Stream",
       id: 6,
-      stream: true,
-      items: [
+      streamItems: [
         {
           startDate: new Date('2022-08-09T00:00:00'),
           endDate: new Date('2022-08-20T00:00:00'),
@@ -117,6 +116,52 @@ export class AppComponent {
           canResizeRight: true,
           canDrag: true,
         }
+      ],
+      childrenItems: [
+        {
+          id: 11,
+          name: "Stream 11",
+          streamItems: [
+            {
+              startDate: new Date('2022-07-09T00:00:00'),
+              endDate: new Date('2022-07-20T00:00:00'),
+              id: 14,
+              name: "Stream 11 (1)",
+              canResizeLeft: true,
+              canResizeRight: true,
+              canDrag: true,
+            },
+            {
+              startDate: new Date('2022-07-09T00:00:00'),
+              endDate: new Date('2022-07-20T00:00:00'),
+              id: 15,
+              name: "Stream 11 (2)",
+              canResizeLeft: true,
+              canResizeRight: true,
+              canDrag: true,
+            },
+          ]
+        },
+        {
+          startDate: new Date('2022-08-09T00:00:00'),
+          endDate: new Date('2022-08-20T00:00:00'),
+          id: 12,
+          name: "21e25",
+          canResizeLeft: true,
+          canResizeRight: true,
+          canDrag: true,
+          childrenItems: [
+            {
+              startDate: new Date('2022-09-09T00:00:00'),
+              endDate: new Date('2022-09-20T00:00:00'),
+              id: 13,
+              name: "asda",
+              canResizeLeft: true,
+              canResizeRight: true,
+              canDrag: true,
+            },
+          ]
+        },
       ]
     }
   ];

@@ -9,7 +9,7 @@ export class ItemsIterator implements IItemsIterator {
 
   setItems(items: ITimelineItem[]) {
     this._items = items;
-    this._sort();
+    this._validate();
     this._createStreams();
   }
 
@@ -17,12 +17,14 @@ export class ItemsIterator implements IItemsIterator {
     return !this._items?.length;
   }
 
-  getFirstItem(onlyExpanded: boolean): ITimelineItem {
+  getFirstItem(onlyVisible: boolean): ITimelineItem {
     let firstItem = this._items[0];
+    const iterator = (onlyVisible ? this._forEachVisible : this.forEach).bind(this);
 
-    this.forEach((item, parent) => {
-      if (onlyExpanded && (parent && !parent?.expanded))
+    iterator((item, parent) => {
+      if (!item.startDate || !item.endDate) {
         return;
+      }
 
       if (new Date(firstItem.startDate).getTime() > new Date(item.startDate).getTime()) {
         firstItem = item;
@@ -32,13 +34,11 @@ export class ItemsIterator implements IItemsIterator {
     return firstItem;
   }
 
-  getLastItem(onlyExpanded: boolean): ITimelineItem {
+  getLastItem(onlyVisible: boolean): ITimelineItem {
     let lastItem = this._items[0];
+    const iterator = (onlyVisible ? this._forEachVisible : this.forEach).bind(this);
 
-    this.forEach((item, parent) => {
-      if (onlyExpanded && (parent && !parent?.expanded))
-        return;
-
+    iterator((item, parent) => {
       if (new Date(lastItem.endDate).getTime() < new Date(item.endDate).getTime()) {
         lastItem = item;
       }
@@ -49,10 +49,23 @@ export class ItemsIterator implements IItemsIterator {
 
   forEach(handler: (item: ITimelineItem, parent: (ITimelineItem | null)) => void): void {
     function iterateAll(items: ITimelineItem[], parent: ITimelineItem | null): void {
-      (items || []).forEach(item => {
+      (items ?? []).forEach(item => {
         handler(item, parent);
-        if (item.items) {
-          iterateAll(item.items, item);
+        iterateAll(item.streamItems ?? [], item);
+        iterateAll(item.childrenItems ?? [], item);
+      });
+    }
+
+    iterateAll(this._items, null);
+  }
+
+  private _forEachVisible(handler: (item: ITimelineItem, parent: (ITimelineItem | null)) => void): void {
+    function iterateAll(items: ITimelineItem[], parent: ITimelineItem | null): void {
+      (items ?? []).forEach(item => {
+        handler(item, parent);
+        iterateAll(item.streamItems ?? [], item);
+        if (item.childrenItemsExpanded) {
+          iterateAll(item.childrenItems ?? [], item);
         }
       });
     }
@@ -62,8 +75,8 @@ export class ItemsIterator implements IItemsIterator {
 
   private _createStreams(): void {
     this.forEach((item, parent) => {
-      if (item.stream) {
-        item._streamLevels = this._createLevels(item.items);
+      if (item.streamItems) {
+        item._streamLevels = this._createLevels(item.streamItems);
       }
     });
   }
@@ -84,7 +97,6 @@ export class ItemsIterator implements IItemsIterator {
         }
 
         const isItemCollides = levelItems.some(levelItem => this._isItemsCollides(levelItem, item));
-
         if (!isItemCollides) {
           levels[currentLevelIndex].push(item);
           isLevelFound = true;
@@ -109,11 +121,20 @@ export class ItemsIterator implements IItemsIterator {
       item2End > item1Start && item2Start < item1End;
   }
 
-  private _sort(): void {
-    this.forEach((item: ITimelineItem) => () => {
-      (item.items ?? []).sort((a, b) => {
-        return new Date(a.startDate).getTime() > new Date(b.startDate).getTime() ? 1 : -1;
-      });
+  private _validate(): void {
+    this.forEach((item: ITimelineItem) => {
+      if ((item.startDate && !item.endDate) || (item.endDate && !item.startDate)) {
+        this._removeItemDates(item);
+      }
+
+      if (item.streamItems) {
+        this._removeItemDates(item);
+      }
     });
+  }
+
+  private _removeItemDates(item: ITimelineItem): void {
+    delete item.startDate;
+    delete item.endDate;
   }
 }

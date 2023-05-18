@@ -27,7 +27,6 @@ export class TimelineItemComponent {
   isItemResizingStarted = false;
 
   @Input() set item(item: ITimelineItem | undefined) {
-
     this._item = item;
     item.updateView = () => this._cdr.detectChanges();
     this._checkIsInScaleRange();
@@ -72,6 +71,11 @@ export class TimelineItemComponent {
 
   private _checkIsInScaleRange(): void {
     if (!this._item || !this._scale) {
+      return;
+    }
+
+    if (!this._item.startDate || !this._item.endDate) {
+      this.isInScaleRange = true;
       return;
     }
 
