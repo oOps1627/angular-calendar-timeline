@@ -10,7 +10,7 @@ export class ItemsIterator implements IItemsIterator {
   setItems(items: ITimelineItem[]) {
     this._items = items;
     this._validate();
-    this._createStreams();
+    this._createItemsLevels();
   }
 
   isEmpty(): boolean {
@@ -73,18 +73,18 @@ export class ItemsIterator implements IItemsIterator {
     iterateAll(this._items, null);
   }
 
-  private _createStreams(): void {
+  private _createItemsLevels(): void {
     this.forEach((item, parent) => {
       if (item.streamItems) {
-        item._streamLevels = this._createLevels(item.streamItems);
+        item._streamLevels = this._createItemLevels(item);
       }
     });
   }
 
-  private _createLevels(items: ITimelineItem[]): ITimelineItem[][] {
+  private _createItemLevels(item: ITimelineItem): ITimelineItem[][] {
     const levels: ITimelineItem[][] = [];
 
-    items.forEach(item => {
+    item.streamItems.forEach(item => {
       let isLevelFound = false;
       let currentLevelIndex = 0;
 
