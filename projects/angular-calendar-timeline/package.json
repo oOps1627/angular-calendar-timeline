@@ -26,7 +26,7 @@
     "test": "ng test",
     "build:copy-package-json": "copyfiles README.md package.json projects/angular-calendar-timeline",
     "build:lib": "ng build angular-calendar-timeline --configuration production",
-    "release:npm-publish": "npm publish dist/angular-calendar-timeline"
+    "release:npm-publish": "npm publish ./dist/angular-calendar-timeline"
   },
   "private": false,
   "dependencies": {
