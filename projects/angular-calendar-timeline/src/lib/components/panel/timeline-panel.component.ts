@@ -9,7 +9,7 @@ import {
   TemplateRef
 } from "@angular/core";
 import { ResizeEvent } from "angular-resizable-element";
-import { ITimelineItem, IIdObject } from "../../models";
+import { ITimelineItem, IIdObject, IItemsIterator } from "../../models";
 
 @Component({
   selector: 'timeline-panel',
@@ -18,7 +18,7 @@ import { ITimelineItem, IIdObject } from "../../models";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelinePanelComponent implements OnChanges {
-  @Input() items: ITimelineItem[];
+  @Input() items: ITimelineItem[] = [];
 
   @Input() label: string;
 
@@ -35,6 +35,8 @@ export class TimelinePanelComponent implements OnChanges {
   @Input() rowHeight: number;
 
   @Input() locale: string;
+
+  @Input() innerGroupOffset: number = 15;
 
   @Input() itemTemplate: TemplateRef<{ item: ITimelineItem, index: number, depth: number, locale: string }>
 
@@ -62,6 +64,10 @@ export class TimelinePanelComponent implements OnChanges {
 
   toggleExpand(item: ITimelineItem): void {
     item.expanded = !item.expanded;
+  }
+
+  getGroupName(item: ITimelineItem): string {
+    return item.name;
   }
 
   private _validateWidth(): void {

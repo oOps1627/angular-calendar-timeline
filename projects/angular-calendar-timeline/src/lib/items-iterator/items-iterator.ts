@@ -10,6 +10,7 @@ export class ItemsIterator implements IItemsIterator {
   setItems(items: ITimelineItem[]) {
     this._items = items;
     this._sort();
+    this._createStreams();
   }
 
   isEmpty(): boolean {
@@ -57,6 +58,55 @@ export class ItemsIterator implements IItemsIterator {
     }
 
     iterateAll(this._items, null);
+  }
+
+  private _createStreams(): void {
+    this.forEach((item, parent) => {
+      if (item.stream) {
+        item._streamLevels = this._createLevels(item.items);
+      }
+    });
+  }
+
+  private _createLevels(items: ITimelineItem[]): ITimelineItem[][] {
+    const levels: ITimelineItem[][] = [];
+
+    items.forEach(item => {
+      let isLevelFound = false;
+      let currentLevelIndex = 0;
+
+      while (!isLevelFound) {
+        const levelItems = levels[currentLevelIndex];
+        if (!levelItems) {
+          levels[currentLevelIndex] = [item];
+          isLevelFound = true;
+          break;
+        }
+
+        const isItemCollides = levelItems.some(levelItem => this._isItemsCollides(levelItem, item));
+
+        if (!isItemCollides) {
+          levels[currentLevelIndex].push(item);
+          isLevelFound = true;
+          break;
+        }
+
+        currentLevelIndex++;
+      }
+    })
+
+    return levels;
+  }
+
+  private _isItemsCollides(item1: ITimelineItem, item2: ITimelineItem): boolean {
+    const item1Start = item1._left;
+    const item1End = item1._left + item1._width;
+    const item2Start = item2._left;
+    const item2End = item2._left + item2._width;
+
+    return item1Start === item2Start || item1End === item2End ||
+      item1End > item2Start && item1Start < item2End ||
+      item2End > item1Start && item2Start < item1End;
   }
 
   private _sort(): void {

@@ -328,6 +328,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     item.startDate = this.viewModeAdaptor.addColumnToDate(new Date(item.startDate), transferColumns);
     item.endDate = this.viewModeAdaptor.addColumnToDate(new Date(item.endDate), transferColumns);
     this._updateItemPosition(item);
+    this.itemsIterator.setItems([...this.itemsIterator.items]);
     this.itemMoved.emit(item);
   }
 
@@ -354,6 +355,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
 
     this._updateItemPosition(item);
+    this.itemsIterator.setItems([...this.itemsIterator.items]);
     this.itemResized.emit(item);
   }
 

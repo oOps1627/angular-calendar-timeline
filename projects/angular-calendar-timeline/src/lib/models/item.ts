@@ -9,32 +9,34 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   /**
    * Date when item starts.
    */
-  startDate: Date;
+  startDate?: Date;
 
   /**
    * Date when item ends.
    */
-  endDate: Date;
+  endDate?: Date;
 
   /**
    * Allows to disable / enable resize to left
    */
-  canResizeLeft: boolean;
+  canResizeLeft?: boolean;
 
   /**
    * Allows to disable / enable resize to right
    */
-  canResizeRight: boolean;
+  canResizeRight?: boolean;
 
   /**
    * Disable / enable item dragging
    */
-  canDrag: boolean;
+  canDrag?: boolean;
 
   /**
    * Each item can contains own items.
    */
   items?: ITimelineItem<Meta>[];
+
+  stream?: boolean;
 
   /**
    * Show / hide inner items. Can toggle in left panel. Works only if item has not empty array in "items" property.
@@ -54,4 +56,6 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   _width?: number;
 
   _left?: number;
+
+  _streamLevels?: ITimelineItem[][];
 }

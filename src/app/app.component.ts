@@ -84,6 +84,40 @@ export class AppComponent {
           canDrag: true,
         }
       ]
+    },
+    {
+      name: "combined",
+      id: 6,
+      stream: true,
+      items: [
+        {
+          startDate: new Date('2022-08-09T00:00:00'),
+          endDate: new Date('2022-08-20T00:00:00'),
+          id: 7,
+          name: "4",
+          canResizeLeft: true,
+          canResizeRight: true,
+          canDrag: true,
+        },
+        {
+          startDate: new Date('2022-08-09T00:00:00'),
+          endDate: new Date('2022-08-20T00:00:00'),
+          id: 8,
+          name: "5",
+          canResizeLeft: true,
+          canResizeRight: true,
+          canDrag: true,
+        },
+        {
+          startDate: new Date('2022-07-09T00:00:00'),
+          endDate: new Date('2022-07-20T00:00:00'),
+          id: 9,
+          name: "6",
+          canResizeLeft: true,
+          canResizeRight: true,
+          canDrag: true,
+        }
+      ]
     }
   ];
 }
