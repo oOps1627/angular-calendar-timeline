@@ -246,3 +246,5 @@ export class MyModule {
 
 Have an issue? Leave it here: https://github.com/oOps1627/angular-calendar-timeline/issues
 
+You can support me by donation https://www.paypal.com/donate/?hosted_button_id=38ZN57VTQ9TQC
+

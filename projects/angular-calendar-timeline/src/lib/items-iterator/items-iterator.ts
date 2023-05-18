@@ -87,8 +87,8 @@ export class ItemsIterator implements IItemsIterator {
     item.streamItems.forEach(item => {
       let isLevelFound = false;
       let currentLevelIndex = 0;
+        while (!isLevelFound) {
 
-      while (!isLevelFound) {
         const levelItems = levels[currentLevelIndex];
         if (!levelItems) {
           levels[currentLevelIndex] = [item];
