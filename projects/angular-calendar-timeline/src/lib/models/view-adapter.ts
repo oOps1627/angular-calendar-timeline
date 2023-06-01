@@ -31,4 +31,8 @@ export interface IViewModeAdaptor {
    * Adds one unit of measurement to date.
    */
   addColumnToDate(date: Date, units: number): Date;
+
+  setDateToStartOfColumn(date: Date): Date;
+
+  setDateToEndOfColumn(date: Date): Date;
 }

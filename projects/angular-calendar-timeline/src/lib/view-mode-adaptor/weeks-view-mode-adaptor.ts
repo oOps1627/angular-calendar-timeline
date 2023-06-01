@@ -25,13 +25,13 @@ export class WeeksViewModeAdaptor extends BaseViewModeAdaptor implements IViewMo
     return newDate;
   }
 
-  protected _setDateToStartOfColumn(date: Date): Date {
+  setDateToStartOfColumn(date: Date): Date {
     const start = DateHelpers.firstDayOfWeek(new Date(date));
 
     return DateHelpers.dayBeginningTime(start);
   }
 
-  protected _setDateToEndOfColumn(date: Date): Date {
+  setDateToEndOfColumn(date: Date): Date {
     const start = DateHelpers.lastDayOfWeek(new Date(date));
 
     return DateHelpers.dayEndingTime(start);

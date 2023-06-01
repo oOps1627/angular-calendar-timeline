@@ -4,19 +4,18 @@ import { BaseViewModeAdaptor} from "./base-view-mode-adaptor";
 import { IViewModeAdaptor } from "../models";
 
 export class MonthsViewModeAdaptor extends BaseViewModeAdaptor implements IViewModeAdaptor {
-  protected _setDateToStartOfColumn(date: Date): Date {
+  setDateToStartOfColumn(date: Date): Date {
     const start = new Date(date);
     start.setDate(1);
 
     return DateHelpers.dayBeginningTime(start);
   }
 
-  protected _setDateToEndOfColumn(date: Date): Date {
-    date = new Date();
-    date.setDate(DateHelpers.lastDayOfMonth(date).getDate());
-    DateHelpers.dayEndingTime(date);
+  setDateToEndOfColumn(date: Date): Date {
+    const end = new Date(date);
+    end.setDate(DateHelpers.lastDayOfMonth(date).getDate());
 
-    return date;
+    return DateHelpers.dayEndingTime(end);
   }
 
   @DatesCacheDecorator()

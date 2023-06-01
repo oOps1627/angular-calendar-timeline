@@ -349,13 +349,16 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     }
 
     if (event.edges.left) {
-      const newStartDate = calculateNewDate(<number>event.edges.left, new Date(item.startDate));
-      if (newStartDate.getTime() <= new Date(item.endDate).getTime()) {
+      const newStartDate = this.viewModeAdaptor.setDateToStartOfColumn(
+        calculateNewDate(<number>event.edges.left, new Date(item.startDate))
+      );
+      if (this.viewModeAdaptor.setDateToStartOfColumn(newStartDate).getTime() <= new Date(item.endDate).getTime()) {
         item.startDate = newStartDate;
       }
     } else {
       const newEndDate = calculateNewDate(<number>event.edges.right, new Date(item.endDate));
-      if (newEndDate.getTime() >= new Date(item.startDate).getTime()) {
+
+      if (this.viewModeAdaptor.setDateToEndOfColumn(newEndDate).getTime() >= new Date(item.startDate).getTime()) {
         item.endDate = newEndDate;
       }
     }
