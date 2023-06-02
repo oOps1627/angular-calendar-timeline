@@ -32,6 +32,8 @@ import { ZoomsHandler } from "./zooms-handler/zooms-handler";
 import { DefaultZooms } from "./zooms-handler/zooms";
 import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
 import { StrategyManager } from "./strategy-manager";
+import { RowsMap } from "./helpers/groups";
+import { isStream } from "./helpers/stream";
 
 @Component({
   selector: 'timeline-calendar',
@@ -330,12 +332,51 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   _onItemMoved(event: DragEndEvent, item: ITimelineItem): void {
+    if (event.y) {
+      this._onItemMovedVertically(event, item);
+    }
+
+
+
+    //console.log(event, findGroupByVerticalPosition(this.itemsIterator, event.y, 40));
     const transferColumns = Math.round(event.x / this.zoom.columnWidth);
     item.startDate = this.viewModeAdaptor.addColumnToDate(new Date(item.startDate), transferColumns);
     item.endDate = this.viewModeAdaptor.addColumnToDate(new Date(item.endDate), transferColumns);
     this._updateItemPosition(item);
     this.itemsIterator.setItems([...this.itemsIterator.items]);
     this.itemMoved.emit(item);
+  }
+
+  private _onItemMovedVertically(event: DragEndEvent, item: ITimelineItem): void {
+    const rowsHandler = new RowsMap(this.itemsIterator);
+    const rowIndex = rowsHandler.getRowIndexByItem(item);
+    const transferRows = event.y / this.rowHeight;
+    const newRowIndex = rowIndex + transferRows;
+
+    if (rowIndex === newRowIndex)
+      return;
+
+    const group = rowsHandler.getStreamByRowIndex(rowIndex);
+    const newGroup = rowsHandler.getStreamByRowIndex(newRowIndex);
+
+    if (isStream(newGroup)) {
+      newGroup.streamItems = [...newGroup.streamItems, item];
+    } else {
+      const {childrenItems, ...newItem} = {...newGroup};
+      newGroup.streamItems = [{...newItem}, {...item}];
+      delete newGroup.startDate;
+      delete newGroup.endDate;
+    }
+
+    if (isStream(group)) {
+      group.streamItems = group.streamItems.filter(i => i.id !== item.id);
+    } else {
+      delete group.endDate;
+      delete group.startDate;
+      group.streamItems = [];
+    }
+    console.log(this.itemsIterator.items)
+    //this.itemsIterator.setItems(this.items);
   }
 
   _trackById(index: number, item: IIdObject): number | string {

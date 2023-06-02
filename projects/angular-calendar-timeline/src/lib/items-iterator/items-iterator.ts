@@ -19,7 +19,7 @@ export class ItemsIterator implements IItemsIterator {
 
   getFirstItem(onlyVisible: boolean): ITimelineItem {
     let firstItem = this._items[0];
-    const iterator = (onlyVisible ? this._forEachVisible : this.forEach).bind(this);
+    const iterator = (onlyVisible ? this.forEachVisible : this.forEach).bind(this);
 
     iterator((item, parent) => {
       if (!item.startDate || !item.endDate) {
@@ -36,7 +36,7 @@ export class ItemsIterator implements IItemsIterator {
 
   getLastItem(onlyVisible: boolean): ITimelineItem {
     let lastItem = this._items[0];
-    const iterator = (onlyVisible ? this._forEachVisible : this.forEach).bind(this);
+    const iterator = (onlyVisible ? this.forEachVisible : this.forEach).bind(this);
 
     iterator((item, parent) => {
       if (new Date(lastItem.endDate).getTime() < new Date(item.endDate).getTime()) {
@@ -59,7 +59,7 @@ export class ItemsIterator implements IItemsIterator {
     iterateAll(this._items, null);
   }
 
-  private _forEachVisible(handler: (item: ITimelineItem, parent: (ITimelineItem | null)) => void): void {
+  forEachVisible(handler: (item: ITimelineItem, parent: (ITimelineItem | null)) => void): void {
     function iterateAll(items: ITimelineItem[], parent: ITimelineItem | null): void {
       (items ?? []).forEach(item => {
         handler(item, parent);

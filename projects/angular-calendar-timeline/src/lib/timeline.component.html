@@ -79,6 +79,9 @@
           </div>
         </div>
 
+      <div [style.height.px]='rowHeight' class='item-row' *ngIf="group?._streamLevels?.length === 0">
+      </div>
+
       <ng-container *ngIf='group.childrenItemsExpanded'>
         <div *ngFor='let item of (group.childrenItems || []); trackBy: _trackById;'>
           <div [style.height.px]='rowHeight' *ngIf="!item.streamItems" class='item-row'>

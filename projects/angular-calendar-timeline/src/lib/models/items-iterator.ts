@@ -9,6 +9,8 @@ export interface IItemsIterator {
 
   forEach(handler: (item: ITimelineItem, parent: ITimelineItem | null) => void): void;
 
+  forEachVisible(handler: (item: ITimelineItem, parent: ITimelineItem | null) => void): void;
+
   getFirstItem(onlyExpanded: boolean): ITimelineItem;
 
   getLastItem(onlyExpanded: boolean): ITimelineItem;
