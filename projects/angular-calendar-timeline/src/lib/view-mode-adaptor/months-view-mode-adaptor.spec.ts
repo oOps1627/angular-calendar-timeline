@@ -68,4 +68,20 @@ describe('MonthsViewModeAdaptor', () => {
     const countOfMonths = viewModeAdaptor.getDurationInColumns(firstDate, secondDate);
     expect(countOfMonths).toBeLessThan(1);
   });
+
+  it('Column should begins on 01.12.2023 when column date is in (01-31).12.2023 dates range', () => {
+   const date = new Date(2023, 11, 30);
+    const beginningDate = viewModeAdaptor.getBeginningDateOfColumn(date);
+    expect(beginningDate.getDate()).toBe(1);
+    expect(beginningDate.getMonth()).toBe(11);
+    expect(beginningDate.getFullYear()).toBe(2023);
+  });
+
+  it('Column should ends on 31.12.2023 when column date is in (01-31).12.2023 dates range', () => {
+    const date = new Date(2023, 11, 30);
+    const beginningDate = viewModeAdaptor.getEndingDateOfColumn(date);
+    expect(beginningDate.getDate()).toBe(31);
+    expect(beginningDate.getMonth()).toBe(11);
+    expect(beginningDate.getFullYear()).toBe(2023);
+  });
 });

@@ -32,7 +32,17 @@ export interface IViewModeAdaptor {
    */
   addColumnToDate(date: Date, units: number): Date;
 
-  setDateToStartOfColumn(date: Date): Date;
+  /**
+   * Returns the date where column is beginning.
+   * @param date
+   * @returns date
+   */
+  getBeginningDateOfColumn(date: Date): Date;
 
-  setDateToEndOfColumn(date: Date): Date;
+  /**
+   * Returns the date where column is ending.
+   * @param date
+   * @returns date
+   */
+  getEndingDateOfColumn(date: Date): Date;
 }

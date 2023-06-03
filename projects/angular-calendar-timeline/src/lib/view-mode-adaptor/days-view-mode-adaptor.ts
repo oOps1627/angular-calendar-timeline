@@ -25,11 +25,11 @@ export class DaysViewModeAdaptor extends BaseViewModeAdaptor implements IViewMod
     return newDate;
   }
 
-  setDateToEndOfColumn(date: Date): Date {
+  getEndingDateOfColumn(date: Date): Date {
     return DateHelpers.dayEndingTime(date);
   }
 
-  setDateToStartOfColumn(date: Date): Date {
+  getBeginningDateOfColumn(date: Date): Date {
     return DateHelpers.dayBeginningTime(date);
   }
 }

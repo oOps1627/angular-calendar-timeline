@@ -33,7 +33,7 @@ export class DateHelpers {
 
   static lastDayOfWeek(date: DateInput): Date {
     date = new Date(date);
-    const first = date.getDate() - date.getDay() + 6;
+    const first = date.getDate() - date.getDay() + 7;
 
     return new Date(new Date(date).setDate(first));
   }
