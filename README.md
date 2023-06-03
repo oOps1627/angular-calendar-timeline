@@ -248,5 +248,5 @@ Have an issue? Leave it here: https://github.com/oOps1627/angular-calendar-timel
 
 You can support me by donation:
 * https://www.paypal.com/donate/?hosted_button_id=38ZN57VTQ9TQC
-* buymeacoffee.com/andriy1627
+* https://buymeacoffee.com/andriy1627
 
