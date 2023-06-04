@@ -14,7 +14,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
-import { first, interval, Subject, takeUntil } from 'rxjs';
+import { interval, Subject, takeUntil } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import {
   IViewModeAdaptor,
@@ -32,7 +32,7 @@ import { ZoomsHandler } from "./zooms-handler/zooms-handler";
 import { DefaultZooms } from "./zooms-handler/zooms";
 import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
 import { StrategyManager } from "./strategy-manager";
-import { RowsMap } from "./helpers/groups";
+import { RowDeterminant } from "./helpers/row-determinant";
 import { isStream } from "./helpers/stream";
 
 @Component({
@@ -82,6 +82,11 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Emits event when current zoom was changed.
    */
   @Output() zoomChanged: EventEmitter<ITimelineZoom> = new EventEmitter<ITimelineZoom>();
+
+  /**
+   * Emits event when user clicked somewhere on time grid.
+   */
+  @Output() timeGridClicked: EventEmitter<{originalEvent: Event, row: ITimelineItem, column: IScaleColumn}> = new EventEmitter();
 
   /**
    * The locale used to format dates. By default is 'en'
@@ -323,6 +328,17 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return possibleZoom;
   }
 
+  getCellByCoordinates(x: number, y: number): {row: ITimelineItem, column: IScaleColumn} {
+    const rowDeterminant = new RowDeterminant(this.itemsIterator);
+    const rowIndex = Math.floor((y - this.headerHeight) / this.rowHeight);
+    const row: ITimelineItem = rowDeterminant.getStreamByRowIndex(rowIndex);
+
+    const columnIndex = Math.floor((x - this.panelWidth) / this.zoom.columnWidth);
+    const column: IScaleColumn = this.scale.columns[columnIndex];
+
+    return {column, row};
+  }
+
   _getCurrentDate(): Date {
     const currentScrollLeft = this._elementRef.nativeElement.scrollLeft ?? 0;
     const scrollLeftToCenterScreen = currentScrollLeft + (this.visibleScaleWidth / 2);
@@ -336,9 +352,6 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       this._onItemMovedVertically(event, item);
     }
 
-
-
-    //console.log(event, findGroupByVerticalPosition(this.itemsIterator, event.y, 40));
     const transferColumns = Math.round(event.x / this.zoom.columnWidth);
     item.startDate = this.viewModeAdaptor.addColumnToDate(new Date(item.startDate), transferColumns);
     item.endDate = this.viewModeAdaptor.addColumnToDate(new Date(item.endDate), transferColumns);
@@ -348,16 +361,16 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   }
 
   private _onItemMovedVertically(event: DragEndEvent, item: ITimelineItem): void {
-    const rowsHandler = new RowsMap(this.itemsIterator);
-    const rowIndex = rowsHandler.getRowIndexByItem(item);
+    const rowDeterminant = new RowDeterminant(this.itemsIterator);
+    const rowIndex = rowDeterminant.getRowIndexByItem(item);
     const transferRows = event.y / this.rowHeight;
     const newRowIndex = rowIndex + transferRows;
 
     if (rowIndex === newRowIndex)
       return;
 
-    const group = rowsHandler.getStreamByRowIndex(rowIndex);
-    const newGroup = rowsHandler.getStreamByRowIndex(newRowIndex);
+    const group = rowDeterminant.getStreamByRowIndex(rowIndex);
+    const newGroup = rowDeterminant.getStreamByRowIndex(newRowIndex);
 
     if (isStream(newGroup)) {
       newGroup.streamItems = [...newGroup.streamItems, item];
@@ -375,12 +388,21 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       delete group.startDate;
       group.streamItems = [];
     }
-    console.log(this.itemsIterator.items)
-    //this.itemsIterator.setItems(this.items);
   }
 
   _trackById(index: number, item: IIdObject): number | string {
     return item.id;
+  }
+
+  _handleContentClick(event: MouseEvent): void {
+    const scrollLeft: number = this._elementRef.nativeElement.scrollLeft;
+    const scrollTop: number = this._elementRef.nativeElement.scrollTop;
+    const rect = this._elementRef.nativeElement.getBoundingClientRect();
+    const xClick = event.clientX - rect.left + scrollLeft;
+    const yClick = event.clientY - rect.top + scrollTop;
+    const cell = this.getCellByCoordinates(xClick, yClick);
+
+    this.timeGridClicked.emit({originalEvent: event, column: cell.column, row: cell.row});
   }
 
   _onItemResized(event: ResizeEvent, item: ITimelineItem): void {

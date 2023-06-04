@@ -13,7 +13,7 @@
   [rowHeight]="rowHeight">
 </timeline-panel>
 
-<div class='content-wrapper'>
+<div class='content-wrapper' (click)="_handleContentClick($event)">
   <timeline-scale-header
     [height]="headerHeight"
     [formatter]="scaleGenerator.formatter"
@@ -61,6 +61,7 @@
       <timeline-item [item]='item'
                      [scale]="scale"
                      [height]="itemHeight"
+                     [rowHeight]="rowHeight"
                      [locale]="locale"
                      (itemResized)="_onItemResized($event.event, $event.item)"
                      (itemMoved)="_onItemMoved($event.event, $event.item)"

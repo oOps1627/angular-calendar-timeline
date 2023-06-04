@@ -6,9 +6,9 @@
      (dragEnd)='onItemDropped($event)'
      (resizeEnd)='onItemResizeEnd($event)'
      (resizeStart)='onItemResizeStart($event)'
-     [dragAxis]="{y: true, x: item.canDrag}"
+     [dragAxis]="{y: item.canDragY, x: item.canDragX}"
      [enableGhostResize]='true'
-     [dragSnapGrid]="{y: 40}"
+     [dragSnapGrid]="{y: rowHeight}"
      [style.height.px]='height'
      [style.left.px]='item?._left'
      [style.width.px]='item?._width'>

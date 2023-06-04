@@ -27,9 +27,14 @@ export interface ITimelineItem<Meta = any> extends IIdObject {
   canResizeRight?: boolean;
 
   /**
-   * Disable / enable item dragging
+   * Disable / enable vertical item dragging
    */
-  canDrag?: boolean;
+  canDragY?: boolean;
+
+  /**
+   * Disable / enable horizontal item dragging
+   */
+  canDragX?: boolean;
 
   /**
    * These items will be determined like children and will be displayed under the current item in separate rows.

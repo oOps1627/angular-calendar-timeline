@@ -39,6 +39,8 @@ export class TimelineItemComponent {
 
   @Input() height: number;
 
+  @Input() rowHeight: number;
+
   @Input() locale: string;
 
   @Input() contentTemplate: TemplateRef<{ $implicit: ITimelineItem, locale: string }> | undefined;

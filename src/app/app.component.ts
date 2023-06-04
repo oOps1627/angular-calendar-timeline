@@ -23,7 +23,7 @@ export class AppComponent {
       name: "First",
       canResizeLeft: true,
       canResizeRight: true,
-      canDrag: true
+      canDragX: true
     },
     {
       startDate: new Date('2022-07-09T00:00:00'),
@@ -32,7 +32,7 @@ export class AppComponent {
       name: "Second",
       canResizeLeft: true,
       canResizeRight: true,
-      canDrag: true,
+      canDragX: true,
       childrenItems: [
         {
           startDate: new Date('2022-07-09T00:00:00'),
@@ -41,7 +41,7 @@ export class AppComponent {
           name: "2.1",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
           childrenItems: [
             {
               startDate: new Date('2022-07-19T00:00:00'),
@@ -50,7 +50,7 @@ export class AppComponent {
               name: "2.1.1",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
             }
           ]
         },
@@ -61,7 +61,7 @@ export class AppComponent {
           name: "2.2",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
         }
       ]
     },
@@ -72,7 +72,7 @@ export class AppComponent {
       name: "Third",
       canResizeLeft: true,
       canResizeRight: true,
-      canDrag: true,
+      canDragX: true,
       childrenItems: [
         {
           startDate: new Date('2022-08-09T00:00:00'),
@@ -81,7 +81,7 @@ export class AppComponent {
           name: "3.1",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
         }
       ]
     },
@@ -96,7 +96,7 @@ export class AppComponent {
           name: "4",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
         },
         {
           startDate: new Date('2022-08-09T00:00:00'),
@@ -105,7 +105,7 @@ export class AppComponent {
           name: "5",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
         },
         {
           startDate: new Date('2022-07-09T00:00:00'),
@@ -114,7 +114,7 @@ export class AppComponent {
           name: "6",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
         }
       ],
       childrenItems: [
@@ -129,7 +129,7 @@ export class AppComponent {
               name: "Stream 11 (1)",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
             },
             {
               startDate: new Date('2022-07-09T00:00:00'),
@@ -138,7 +138,7 @@ export class AppComponent {
               name: "Stream 11 (2)",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
             },
           ]
         },
@@ -149,7 +149,7 @@ export class AppComponent {
           name: "21e25",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
           childrenItems: [
             {
               startDate: new Date('2022-09-09T00:00:00'),
@@ -158,7 +158,7 @@ export class AppComponent {
               name: "asda",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
             },
           ]
         },
