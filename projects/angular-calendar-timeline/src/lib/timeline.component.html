@@ -13,7 +13,7 @@
   [rowHeight]="rowHeight">
 </timeline-panel>
 
-<div class='content-wrapper'>
+<div class='content-wrapper' (click)="_handleContentClick($event)">
   <timeline-scale-header
     [height]="headerHeight"
     [formatter]="scaleGenerator.formatter"
@@ -45,9 +45,9 @@
   <div class='timeline-items' *ngIf="!itemsIterator.isEmpty()">
     <ng-container *ngFor='let group of itemsIterator.items; trackBy: _trackById;'>
       <ng-container *ngIf="!group.streamItems">
-        <div [style.height.px]='rowHeight' class='item-row'>
+        <div [style.height.px]='rowHeight' #rowContainer class='item-row'>
           <ng-container [ngTemplateOutlet]='itemTemplate'
-                        [ngTemplateOutletContext]='{$implicit: group}'
+                        [ngTemplateOutletContext]='{$implicit: group, rowContainer: rowContainer}'
           ></ng-container>
         </div>
       </ng-container>
@@ -57,10 +57,12 @@
       ></ng-container>
     </ng-container>
 
-    <ng-template #itemTemplate let-item>
+    <ng-template #itemTemplate let-item let-rowContainer="rowContainer">
       <timeline-item [item]='item'
+                     [rowContainer]='rowContainer'
                      [scale]="scale"
                      [height]="itemHeight"
+                     [rowHeight]="rowHeight"
                      [locale]="locale"
                      (itemResized)="_onItemResized($event.event, $event.item)"
                      (itemMoved)="_onItemMoved($event.event, $event.item)"
@@ -70,20 +72,23 @@
 
     <ng-template #itemsIterationTemplate let-group>
         <div *ngFor='let streamLevel of (group._streamLevels || []); trackBy: _trackById;'>
-          <div [style.height.px]='rowHeight' class='item-row'>
+          <div [style.height.px]='rowHeight' class='item-row' #rowContainer>
             <ng-container *ngFor="let item of streamLevel">
               <ng-container [ngTemplateOutlet]="itemTemplate"
-                            [ngTemplateOutletContext]="{$implicit: item}"
+                            [ngTemplateOutletContext]="{$implicit: item, rowContainer: rowContainer}"
               ></ng-container>
             </ng-container>
           </div>
         </div>
 
+      <div [style.height.px]='rowHeight' class='item-row' *ngIf="group?._streamLevels?.length === 0">
+      </div>
+
       <ng-container *ngIf='group.childrenItemsExpanded'>
         <div *ngFor='let item of (group.childrenItems || []); trackBy: _trackById;'>
-          <div [style.height.px]='rowHeight' *ngIf="!item.streamItems" class='item-row'>
+          <div [style.height.px]='rowHeight' *ngIf="!item.streamItems" class='item-row' #rowContainer>
             <ng-container [ngTemplateOutlet]="itemTemplate"
-                          [ngTemplateOutletContext]="{$implicit: item}"
+                          [ngTemplateOutletContext]="{$implicit: item, rowContainer: rowContainer}"
             ></ng-container>
           </div>
 

@@ -17,8 +17,7 @@
     <ng-container [ngTemplateOutlet]='itemTemplate || defaultItemTemplate'
                   [ngTemplateOutletContext]='{item: item, index: index, depth: depth, locale: locale}'>
     </ng-container>
-
-
+    
     <div *ngIf='item.childrenItemsExpanded'>
       <ng-container *ngFor='let innerItem of (item.childrenItems || []); trackBy: trackById;  let index = index'
                     [ngTemplateOutletContext]='{item: innerItem, index: index, depth: depth + 1, locale: locale}'
