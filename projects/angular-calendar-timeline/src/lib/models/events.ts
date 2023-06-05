@@ -1,4 +1,4 @@
-import { ITimelineItem } from "angular-calendar-timeline";
+import { ITimelineItem } from "./item";
 
 export interface IItemTimeChangedEvent {
   item: ITimelineItem;

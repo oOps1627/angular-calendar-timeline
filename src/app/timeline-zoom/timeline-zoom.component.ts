@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DefaultZooms, TimelineComponent } from "angular-calendar-timeline";
+import { TimelineComponent } from "angular-calendar-timeline";
 
 @Component({
   selector: 'app-timeline-zoom',

@@ -1,4 +1,4 @@
-import { IItemsIterator, ITimelineItem } from "angular-calendar-timeline";
+import { IItemsIterator, ITimelineItem } from "../models";
 
 interface IRow {
   items: ITimelineItem[];
