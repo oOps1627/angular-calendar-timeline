@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ITimelineItem } from "angular-calendar-timeline";
+import { IItemRowChangedEvent, IItemTimeChangedEvent, ITimelineItem } from "angular-calendar-timeline";
 import { registerLocaleData } from "@angular/common";
 import localeUk from "@angular/common/locales/uk";
 
@@ -23,7 +23,8 @@ export class AppComponent {
       name: "First",
       canResizeLeft: true,
       canResizeRight: true,
-      canDragX: true
+      canDragX: true,
+      canDragY: true,
     },
     {
       startDate: new Date('2022-07-09T00:00:00'),
@@ -33,6 +34,7 @@ export class AppComponent {
       canResizeLeft: true,
       canResizeRight: true,
       canDragX: true,
+      canDragY: true,
       childrenItems: [
         {
           startDate: new Date('2022-07-09T00:00:00'),
@@ -42,6 +44,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDragX: true,
+          canDragY: true,
           childrenItems: [
             {
               startDate: new Date('2022-07-19T00:00:00'),
@@ -51,6 +54,7 @@ export class AppComponent {
               canResizeLeft: true,
               canResizeRight: true,
               canDragX: true,
+              canDragY: true,
             }
           ]
         },
@@ -62,6 +66,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDragX: true,
+          canDragY: true,
         }
       ]
     },
@@ -73,6 +78,7 @@ export class AppComponent {
       canResizeLeft: true,
       canResizeRight: true,
       canDragX: true,
+      canDragY: true,
       childrenItems: [
         {
           startDate: new Date('2022-08-09T00:00:00'),
@@ -82,6 +88,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDragX: true,
+          canDragY: true,
         }
       ]
     },
@@ -97,6 +104,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDragX: true,
+          canDragY: true,
         },
         {
           startDate: new Date('2022-08-09T00:00:00'),
@@ -106,6 +114,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDragX: true,
+          canDragY: true,
         },
         {
           startDate: new Date('2022-07-09T00:00:00'),
@@ -115,6 +124,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDragX: true,
+          canDragY: true,
         }
       ],
       childrenItems: [
@@ -130,6 +140,7 @@ export class AppComponent {
               canResizeLeft: true,
               canResizeRight: true,
               canDragX: true,
+              canDragY: true,
             },
             {
               startDate: new Date('2022-07-09T00:00:00'),
@@ -139,6 +150,7 @@ export class AppComponent {
               canResizeLeft: true,
               canResizeRight: true,
               canDragX: true,
+              canDragY: true,
             },
           ]
         },
@@ -150,6 +162,7 @@ export class AppComponent {
           canResizeLeft: true,
           canResizeRight: true,
           canDragX: true,
+          canDragY: true,
           childrenItems: [
             {
               startDate: new Date('2022-09-09T00:00:00'),
@@ -159,11 +172,23 @@ export class AppComponent {
               canResizeLeft: true,
               canResizeRight: true,
               canDragX: true,
+              canDragY: true,
             },
           ]
         },
       ]
     }
   ];
+
+  onItemTimeChanged(event: IItemTimeChangedEvent): void {
+    const item = event.item;
+    item.startDate = event.newStartDate ?? item.startDate;
+    item.endDate = event.newEndDate ?? item.endDate;
+    this.items = [...this.items];
+  }
+
+  onItemRowChanged(event: IItemRowChangedEvent): void {
+    console.log(event);
+  }
 }
 

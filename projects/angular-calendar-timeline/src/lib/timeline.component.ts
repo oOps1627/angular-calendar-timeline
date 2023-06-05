@@ -23,7 +23,7 @@ import {
   IScale,
   IScaleGenerator,
   ITimelineItem,
-  ITimelineZoom, IZoomsHandler, IScaleColumn
+  ITimelineZoom, IZoomsHandler, IScaleColumn, IItemTimeChangedEvent, IItemRowChangedEvent
 } from './models';
 import { isPlatformBrowser } from "@angular/common";
 import { MillisecondsToTime } from "./helpers/date-helpers";
@@ -33,7 +33,6 @@ import { DefaultZooms } from "./zooms-handler/zooms";
 import { DragEndEvent } from "angular-draggable-droppable/lib/draggable.directive";
 import { StrategyManager } from "./strategy-manager";
 import { RowDeterminant } from "./helpers/row-determinant";
-import { isStream } from "./helpers/stream";
 
 @Component({
   selector: 'timeline-calendar',
@@ -70,14 +69,15 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   private _destroy$: Subject<void> = new Subject<void>();
 
   /**
-   * Emits event when startDate and endDate of some item was changed by moving it.
+   * Emits event when startDate and endDate of some item was changed by resizing/moving it.
    */
-  @Output() itemMoved: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
+  @Output() itemTimeChanged: EventEmitter<IItemTimeChangedEvent> = new EventEmitter();
 
   /**
-   * Emits event when startDate or endDate of some item was changed by resizing it.
+   * Emits event when item was moved by Y axis.
    */
-  @Output() itemResized: EventEmitter<ITimelineItem> = new EventEmitter<ITimelineItem>();
+  @Output() itemRowChanged: EventEmitter<IItemRowChangedEvent> = new EventEmitter();
+
   /**
    * Emits event when current zoom was changed.
    */
@@ -311,24 +311,10 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this.zoomsHandler.zoomOut();
   }
 
-  private _calculateOptimalZoom(startDate: Date, endDate: Date, paddings = 15): ITimelineZoom {
-    let possibleZoom: ITimelineZoom = this.zoomsHandler.getFirstZoom();
-
-    for (let i = this.zoomsHandler.getLastZoom().index; i >= this.zoomsHandler.getFirstZoom().index; i--) {
-      const currentZoom = this.zoomsHandler.zooms[i];
-      const viewModeAdaptor = this._strategyManager.getViewModeAdaptor(currentZoom.viewMode);
-      const countOfColumns = viewModeAdaptor.getUniqueColumnsWithinRange(startDate, endDate);
-
-      if (countOfColumns * currentZoom.columnWidth < (this.visibleScaleWidth - paddings * 2)) {
-        possibleZoom = currentZoom;
-        break;
-      }
-    }
-
-    return possibleZoom;
-  }
-
-  getCellByCoordinates(x: number, y: number): {row: ITimelineItem, column: IScaleColumn} {
+  /**
+   * Accepts the relative coordinates to the timeline container and returns the row and column.
+   */
+  getCellByCoordinates(x: number, y: number): {row: ITimelineItem | undefined, column: IScaleColumn} {
     const rowDeterminant = new RowDeterminant(this.itemsIterator);
     const rowIndex = Math.floor((y - this.headerHeight) / this.rowHeight);
     const row: ITimelineItem = rowDeterminant.getStreamByRowIndex(rowIndex);
@@ -352,12 +338,16 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       this._onItemMovedVertically(event, item);
     }
 
+    if (event.x) {
+      this._onItemMovedHorizontally(event, item);
+    }
+  }
+
+  private _onItemMovedHorizontally(event: DragEndEvent, item: ITimelineItem): void {
     const transferColumns = Math.round(event.x / this.zoom.columnWidth);
-    item.startDate = this.viewModeAdaptor.addColumnToDate(new Date(item.startDate), transferColumns);
-    item.endDate = this.viewModeAdaptor.addColumnToDate(new Date(item.endDate), transferColumns);
-    this._updateItemPosition(item);
-    this.itemsIterator.setItems([...this.itemsIterator.items]);
-    this.itemMoved.emit(item);
+    const newStartDate = this.viewModeAdaptor.addColumnToDate(new Date(item.startDate), transferColumns);
+    const newEndDate = this.viewModeAdaptor.addColumnToDate(new Date(item.endDate), transferColumns);
+    this.itemTimeChanged.emit({item, newStartDate, newEndDate});
   }
 
   private _onItemMovedVertically(event: DragEndEvent, item: ITimelineItem): void {
@@ -369,25 +359,27 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     if (rowIndex === newRowIndex)
       return;
 
-    const group = rowDeterminant.getStreamByRowIndex(rowIndex);
-    const newGroup = rowDeterminant.getStreamByRowIndex(newRowIndex);
+    const oldRow = rowDeterminant.getStreamByRowIndex(rowIndex);
+    const newRow = rowDeterminant.getStreamByRowIndex(newRowIndex);
 
-    if (isStream(newGroup)) {
-      newGroup.streamItems = [...newGroup.streamItems, item];
-    } else {
-      const {childrenItems, ...newItem} = {...newGroup};
-      newGroup.streamItems = [{...newItem}, {...item}];
-      delete newGroup.startDate;
-      delete newGroup.endDate;
+    this.itemRowChanged.emit({item, oldRow, newRow});
+  }
+
+  private _calculateOptimalZoom(startDate: Date, endDate: Date, paddings = 15): ITimelineZoom {
+    let possibleZoom: ITimelineZoom = this.zoomsHandler.getFirstZoom();
+
+    for (let i = this.zoomsHandler.getLastZoom().index; i >= this.zoomsHandler.getFirstZoom().index; i--) {
+      const currentZoom = this.zoomsHandler.zooms[i];
+      const viewModeAdaptor = this._strategyManager.getViewModeAdaptor(currentZoom.viewMode);
+      const countOfColumns = viewModeAdaptor.getUniqueColumnsWithinRange(startDate, endDate);
+
+      if (countOfColumns * currentZoom.columnWidth < (this.visibleScaleWidth - paddings * 2)) {
+        possibleZoom = currentZoom;
+        break;
+      }
     }
 
-    if (isStream(group)) {
-      group.streamItems = group.streamItems.filter(i => i.id !== item.id);
-    } else {
-      delete group.endDate;
-      delete group.startDate;
-      group.streamItems = [];
-    }
+    return possibleZoom;
   }
 
   _trackById(index: number, item: IIdObject): number | string {
@@ -415,20 +407,19 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
       const newStartDate = this.viewModeAdaptor.setDateToStartOfColumn(
         calculateNewDate(<number>event.edges.left, new Date(item.startDate))
       );
-      if (this.viewModeAdaptor.setDateToStartOfColumn(newStartDate).getTime() <= new Date(item.endDate).getTime()) {
-        item.startDate = newStartDate;
+      const isNewStartDateValid: boolean =
+        this.viewModeAdaptor.setDateToStartOfColumn(newStartDate).getTime() <= new Date(item.endDate).getTime();
+      if (isNewStartDateValid) {
+        this.itemTimeChanged.emit({item, newStartDate});
       }
     } else {
       const newEndDate = calculateNewDate(<number>event.edges.right, new Date(item.endDate));
-
-      if (this.viewModeAdaptor.setDateToEndOfColumn(newEndDate).getTime() >= new Date(item.startDate).getTime()) {
-        item.endDate = newEndDate;
+      const isNewEndDateValid: boolean =
+        this.viewModeAdaptor.setDateToEndOfColumn(newEndDate).getTime() >= new Date(item.startDate).getTime();
+      if (isNewEndDateValid) {
+        this.itemTimeChanged.emit({item, newEndDate});
       }
     }
-
-    this._updateItemPosition(item);
-    this.itemsIterator.setItems([...this.itemsIterator.items]);
-    this.itemResized.emit(item);
   }
 
   @HostListener('scroll', ['$event'])

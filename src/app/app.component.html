@@ -3,6 +3,8 @@
 
  <div class="timeline-wrapper">
    <timeline-calendar #timelineComponent
+                      (itemTimeChanged)="onItemTimeChanged($event)"
+                      (itemRowChanged)="onItemRowChanged($event)"
                       [panelLabel]="label"
                       [items]='items'
                       [locale]="locale">

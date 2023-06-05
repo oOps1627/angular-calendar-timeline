@@ -6,3 +6,4 @@ export * from "./view-adapter";
 export * from "./scale";
 export * from "./items-iterator";
 export * from "./zooms-builder";
+export * from "./events";

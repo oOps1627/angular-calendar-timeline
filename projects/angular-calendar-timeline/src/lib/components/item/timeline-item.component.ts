@@ -4,7 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
+  Output, Renderer2,
   TemplateRef
 } from '@angular/core';
 import { ResizeEvent } from "angular-resizable-element";
@@ -37,6 +37,8 @@ export class TimelineItemComponent {
     this._checkIsInScaleRange();
   };
 
+  @Input() rowContainer: HTMLElement;
+
   @Input() height: number;
 
   @Input() rowHeight: number;
@@ -53,7 +55,8 @@ export class TimelineItemComponent {
     return this._item;
   }
 
-  constructor(private _cdr: ChangeDetectorRef) {
+  constructor(private _cdr: ChangeDetectorRef,
+              private _renderer: Renderer2) {
   }
 
   onItemResizeStart(event: ResizeEvent): void {
@@ -65,10 +68,16 @@ export class TimelineItemComponent {
     setTimeout(() => this.isItemResizingStarted = false);
   }
 
+  onItemDragStart(event): void {
+    this._setRowZIndex(1000);
+  }
+
   onItemDropped(event: DragEndEvent): void {
     if (!this.isItemResizingStarted) {
       this.itemMoved.emit({event, item: this._item});
     }
+
+    this._setRowZIndex(1);
   }
 
   private _checkIsInScaleRange(): void {
@@ -83,5 +92,9 @@ export class TimelineItemComponent {
 
     this.isInScaleRange = this._scale.startDate.getTime() <= this._item.startDate.getTime()
       && this._scale.endDate.getTime() >= this._item.endDate.getTime();
+  }
+
+  private _setRowZIndex(index: number): void {
+    this._renderer.setStyle(this.rowContainer, 'z-index', index);
   }
 }

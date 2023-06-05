@@ -3,6 +3,8 @@
      ghostElementPositioning='absolute'
      mwlResizable
      mwlDraggable
+     [dragActiveClass]="'timeline-item_dragging'"
+     (dragStart)='onItemDragStart($event)'
      (dragEnd)='onItemDropped($event)'
      (resizeEnd)='onItemResizeEnd($event)'
      (resizeStart)='onItemResizeStart($event)'
