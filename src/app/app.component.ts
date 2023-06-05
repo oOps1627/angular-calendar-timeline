@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ITimelineItem } from "angular-calendar-timeline";
+import { IItemRowChangedEvent, IItemTimeChangedEvent, ITimelineItem } from "angular-calendar-timeline";
 import { registerLocaleData } from "@angular/common";
 import localeUk from "@angular/common/locales/uk";
 
@@ -23,7 +23,8 @@ export class AppComponent {
       name: "First",
       canResizeLeft: true,
       canResizeRight: true,
-      canDrag: true
+      canDragX: true,
+      canDragY: true,
     },
     {
       startDate: new Date('2022-07-09T00:00:00'),
@@ -32,7 +33,8 @@ export class AppComponent {
       name: "Second",
       canResizeLeft: true,
       canResizeRight: true,
-      canDrag: true,
+      canDragX: true,
+      canDragY: true,
       childrenItems: [
         {
           startDate: new Date('2022-07-09T00:00:00'),
@@ -41,7 +43,8 @@ export class AppComponent {
           name: "2.1",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
+          canDragY: true,
           childrenItems: [
             {
               startDate: new Date('2022-07-19T00:00:00'),
@@ -50,7 +53,8 @@ export class AppComponent {
               name: "2.1.1",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
+              canDragY: true,
             }
           ]
         },
@@ -61,7 +65,8 @@ export class AppComponent {
           name: "2.2",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
+          canDragY: true,
         }
       ]
     },
@@ -72,7 +77,8 @@ export class AppComponent {
       name: "Third",
       canResizeLeft: true,
       canResizeRight: true,
-      canDrag: true,
+      canDragX: true,
+      canDragY: true,
       childrenItems: [
         {
           startDate: new Date('2022-08-09T00:00:00'),
@@ -81,7 +87,8 @@ export class AppComponent {
           name: "3.1",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
+          canDragY: true,
         }
       ]
     },
@@ -96,7 +103,8 @@ export class AppComponent {
           name: "4",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
+          canDragY: true,
         },
         {
           startDate: new Date('2022-08-09T00:00:00'),
@@ -105,7 +113,8 @@ export class AppComponent {
           name: "5",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
+          canDragY: true,
         },
         {
           startDate: new Date('2022-07-09T00:00:00'),
@@ -114,7 +123,8 @@ export class AppComponent {
           name: "6",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
+          canDragY: true,
         }
       ],
       childrenItems: [
@@ -129,7 +139,8 @@ export class AppComponent {
               name: "Stream 11 (1)",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
+              canDragY: true,
             },
             {
               startDate: new Date('2022-07-09T00:00:00'),
@@ -138,7 +149,8 @@ export class AppComponent {
               name: "Stream 11 (2)",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
+              canDragY: true,
             },
           ]
         },
@@ -149,7 +161,8 @@ export class AppComponent {
           name: "21e25",
           canResizeLeft: true,
           canResizeRight: true,
-          canDrag: true,
+          canDragX: true,
+          canDragY: true,
           childrenItems: [
             {
               startDate: new Date('2022-09-09T00:00:00'),
@@ -158,12 +171,24 @@ export class AppComponent {
               name: "asda",
               canResizeLeft: true,
               canResizeRight: true,
-              canDrag: true,
+              canDragX: true,
+              canDragY: true,
             },
           ]
         },
       ]
     }
   ];
+
+  onItemTimeChanged(event: IItemTimeChangedEvent): void {
+    const item = event.item;
+    item.startDate = event.newStartDate ?? item.startDate;
+    item.endDate = event.newEndDate ?? item.endDate;
+    this.items = [...this.items];
+  }
+
+  onItemRowChanged(event: IItemRowChangedEvent): void {
+    console.log(event);
+  }
 }
 

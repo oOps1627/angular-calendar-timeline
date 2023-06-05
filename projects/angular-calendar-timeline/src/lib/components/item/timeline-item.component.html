@@ -3,11 +3,14 @@
      ghostElementPositioning='absolute'
      mwlResizable
      mwlDraggable
+     [dragActiveClass]="'timeline-item_dragging'"
+     (dragStart)='onItemDragStart($event)'
      (dragEnd)='onItemDropped($event)'
      (resizeEnd)='onItemResizeEnd($event)'
      (resizeStart)='onItemResizeStart($event)'
-     [dragAxis]="{y: false, x: item.canDrag}"
+     [dragAxis]="{y: item.canDragY, x: item.canDragX}"
      [enableGhostResize]='true'
+     [dragSnapGrid]="{y: rowHeight}"
      [style.height.px]='height'
      [style.left.px]='item?._left'
      [style.width.px]='item?._width'>
@@ -18,7 +21,9 @@
   </div>
 
   <ng-template #nameTemplate>
-    {{item.name}}
+   <div class="default-content">
+     {{item.name}}
+   </div>
   </ng-template>
 
   <div *ngIf='item.canResizeLeft'

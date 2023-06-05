@@ -3,9 +3,18 @@
 
  <div class="timeline-wrapper">
    <timeline-calendar #timelineComponent
+                      (itemTimeChanged)="onItemTimeChanged($event)"
+                      (itemRowChanged)="onItemRowChanged($event)"
+                      [itemContentTemplate]="itemContent"
                       [panelLabel]="label"
                       [items]='items'
                       [locale]="locale">
    </timeline-calendar>
+
+   <ng-template #itemContent let-item>
+     <div class="item-content">
+       {{item.name}}
+     </div>
+   </ng-template>
  </div>
 </div>
