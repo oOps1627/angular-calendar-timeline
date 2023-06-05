@@ -21,7 +21,9 @@
   </div>
 
   <ng-template #nameTemplate>
-    {{item.name}}
+   <div class="default-content">
+     {{item.name}}
+   </div>
   </ng-template>
 
   <div *ngIf='item.canResizeLeft'
