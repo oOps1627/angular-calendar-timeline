@@ -18,53 +18,43 @@ export class ItemsIterator implements IItemsIterator {
   }
 
   getFirstItem(onlyVisible: boolean): ITimelineItem {
-    let firstItem = this._items[0];
-    const iterator = (onlyVisible ? this.forEachVisible : this.forEach).bind(this);
+    let firstItem = null;
 
-    iterator((item, parent) => {
+    this.forEach((item, parent) => {
       if (!item.startDate || !item.endDate) {
         return;
       }
 
-      if (new Date(firstItem.startDate).getTime() > new Date(item.startDate).getTime()) {
+      if (!firstItem || new Date(firstItem.startDate).getTime() > new Date(item.startDate).getTime()) {
         firstItem = item;
       }
-    });
+    }, onlyVisible);
 
     return firstItem;
   }
 
   getLastItem(onlyVisible: boolean): ITimelineItem {
-    let lastItem = this._items[0];
-    const iterator = (onlyVisible ? this.forEachVisible : this.forEach).bind(this);
+    let lastItem = null;
 
-    iterator((item, parent) => {
-      if (new Date(lastItem.endDate).getTime() < new Date(item.endDate).getTime()) {
+    this.forEach((item, parent) => {
+      if (!item.startDate || !item.endDate) {
+        return;
+      }
+
+      if (!lastItem || new Date(lastItem.endDate).getTime() < new Date(item.endDate).getTime()) {
         lastItem = item;
       }
-    });
+    }, onlyVisible);
 
     return lastItem;
   }
 
-  forEach(handler: (item: ITimelineItem, parent: (ITimelineItem | null)) => void): void {
+  forEach(handler: (item: ITimelineItem, parent: (ITimelineItem | null)) => void, onlyVisible = false): void {
     function iterateAll(items: ITimelineItem[], parent: ITimelineItem | null): void {
       (items ?? []).forEach(item => {
         handler(item, parent);
         iterateAll(item.streamItems ?? [], item);
-        iterateAll(item.childrenItems ?? [], item);
-      });
-    }
-
-    iterateAll(this._items, null);
-  }
-
-  forEachVisible(handler: (item: ITimelineItem, parent: (ITimelineItem | null)) => void): void {
-    function iterateAll(items: ITimelineItem[], parent: ITimelineItem | null): void {
-      (items ?? []).forEach(item => {
-        handler(item, parent);
-        iterateAll(item.streamItems ?? [], item);
-        if (item.childrenItemsExpanded) {
+        if (!onlyVisible || item.childrenItemsExpanded) {
           iterateAll(item.childrenItems ?? [], item);
         }
       });
