@@ -1,7 +1,7 @@
 import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScaleGenerator, IScaleGeneratorConfig, IScaleGroup } from '../models';
 import { DateHelpers } from "../helpers/date-helpers";
-import { Injectable, InjectionToken } from "@angular/core";
+import { inject, Injectable, InjectionToken } from "@angular/core";
 import { MonthScaleFormatter } from "../formatters/month-scale-formatter";
 
 export const MONTH_SCALE_GENERATOR_CONFIG = new InjectionToken<IScaleGeneratorConfig>('Month scale config');
@@ -13,7 +13,7 @@ const DefaultConfig: IScaleGeneratorConfig = {
 @Injectable()
 export class DefaultMonthScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
   protected _getConfig(): IScaleGeneratorConfig {
-    return {...DefaultConfig, ...this._injector.get(MONTH_SCALE_GENERATOR_CONFIG, {})};
+    return {...DefaultConfig, ...inject(MONTH_SCALE_GENERATOR_CONFIG, {})};
   }
 
   protected _validateStartDate(startDate: DateInput): Date {

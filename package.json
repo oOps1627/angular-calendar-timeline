@@ -1,6 +1,6 @@
 {
   "name": "angular-calendar-timeline",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "A timeline for angular 13 that shows tasks or events on a timeline in different modes: days, weeks, and months.",
   "author": "Andrii Krashivskyi",
   "license": "MIT",
@@ -34,24 +34,22 @@
     "angular-resizable-element": "5.0.0",
     "tslib": "^2.3.0"
   },
-  "peerDependencies": {
-    "@angular/core": "~13.0.0"
-  },
+  "peerDependencies": {},
   "devDependencies": {
     "rxjs": "~7.4.0",
     "zone.js": "~0.11.4",
-    "@angular/animations": "~13.0.0",
-    "@angular/cdk": "~13.0.0",
-    "@angular/common": "~13.0.0",
-    "@angular/compiler": "~13.0.0",
-    "@angular/core": "~13.0.0",
-    "@angular/forms": "~13.0.0",
-    "@angular/platform-browser": "~13.0.0",
-    "@angular/platform-browser-dynamic": "~13.0.0",
-    "@angular/router": "~13.0.0",
-    "@angular-devkit/build-angular": "~13.0.3",
-    "@angular/cli": "~13.0.3",
-    "@angular/compiler-cli": "~13.0.0",
+    "@angular/animations": "^14.3.0",
+    "@angular/cdk": "^13.0.0",
+    "@angular/common": "^14.3.0",
+    "@angular/compiler": "^14.3.0",
+    "@angular/core": "^14.3.0",
+    "@angular/forms": "^14.3.0",
+    "@angular/platform-browser": "^14.3.0",
+    "@angular/platform-browser-dynamic": "^14.3.0",
+    "@angular/router": "^14.3.0",
+    "@angular-devkit/build-angular": "^14.2.13",
+    "@angular/cli": "^14.2.13",
+    "@angular/compiler-cli": "^14.3.0",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.10.0",
@@ -60,8 +58,8 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "ng-packagr": "^13.0.0",
-    "typescript": "~4.4.3",
+    "ng-packagr": "^14.2.2",
+    "typescript": "~4.8.4",
     "copyfiles": "^2.4.1"
   }
 }

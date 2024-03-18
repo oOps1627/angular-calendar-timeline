@@ -2,7 +2,7 @@ import { BaseScaleGenerator } from './base-scale-generator';
 import { DateInput, IScaleGenerator, IScaleGeneratorConfig, IScaleGroup } from '../models';
 import { DateHelpers } from "../helpers/date-helpers";
 import { WeekScaleFormatter } from "../formatters/week-scale-formatter";
-import { Injectable, InjectionToken } from "@angular/core";
+import { inject, Injectable, InjectionToken } from "@angular/core";
 
 export const WEEK_SCALE_GENERATOR_CONFIG = new InjectionToken<IScaleGeneratorConfig>('Week scale config');
 
@@ -13,7 +13,7 @@ const DefaultConfig: IScaleGeneratorConfig = {
 @Injectable()
 export class DefaultWeekScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
   protected _getConfig(): IScaleGeneratorConfig {
-    return {...DefaultConfig, ...this._injector.get(WEEK_SCALE_GENERATOR_CONFIG, {})};
+    return {...DefaultConfig, ...inject(WEEK_SCALE_GENERATOR_CONFIG, {})};
   }
 
   protected _validateStartDate(startDate: DateInput): Date {

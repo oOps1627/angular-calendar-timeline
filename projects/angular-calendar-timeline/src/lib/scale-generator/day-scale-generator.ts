@@ -1,7 +1,7 @@
 import { BaseScaleGenerator } from './base-scale-generator';
-import { DateInput, IScaleColumn, IScaleGenerator, IScaleGeneratorConfig, IScaleGroup } from '../models';
+import { DateInput, IScaleGenerator, IScaleGeneratorConfig, IScaleGroup } from '../models';
 import { DateHelpers } from "../helpers/date-helpers";
-import { Injectable, InjectionToken } from "@angular/core";
+import { inject, Injectable, InjectionToken } from "@angular/core";
 import { DayScaleFormatter } from "../formatters/day-scale-formatter";
 
 export const DAY_SCALE_GENERATOR_CONFIG = new InjectionToken<IScaleGeneratorConfig>('Day scale config');
@@ -14,17 +14,7 @@ const DefaultConfig: IScaleGeneratorConfig = {
 @Injectable()
 export class DefaultDayScaleGenerator extends BaseScaleGenerator implements IScaleGenerator {
   protected _getConfig(): IScaleGeneratorConfig {
-    return {...DefaultConfig, ...this._injector.get(DAY_SCALE_GENERATOR_CONFIG, {})};
-  }
-
-  protected _generateColumn(date: DateInput): IScaleColumn {
-    date = new Date(date);
-
-    return {
-      id: DateHelpers.generateDateId(date),
-      date: date,
-      index: date.getDate(),
-    };
+    return {...DefaultConfig, ...inject(DAY_SCALE_GENERATOR_CONFIG, {})};
   }
 
   protected _validateStartDate(startDate: DateInput): Date {

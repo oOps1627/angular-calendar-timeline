@@ -8,7 +8,7 @@ import {
   IScaleGeneratorConfig,
   IScaleGroup
 } from "../models";
-import { Inject, Injectable, Injector } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { DateHelpers } from "../helpers/date-helpers";
 import { DatesCacheDecorator } from "../helpers/cache";
 
@@ -18,7 +18,7 @@ export abstract class BaseScaleGenerator implements IScaleGenerator {
 
   public formatter: IScaleFormatter;
 
-  constructor(protected _injector: Injector) {
+  constructor() {
     this._config = this._getConfig();
     this.formatter = this._config.formatter;
   }

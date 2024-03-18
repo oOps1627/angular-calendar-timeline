@@ -244,6 +244,12 @@ export class MyModule {
 }
 ```
 
+
+<h2 align="center">Angular versions</h2>
+
+<li>For Angular <= 13 use 0.4.3</li>
+<li>For Angular >= 14 use 0.5.0</li>
+
 Have an issue? Leave it here: https://github.com/oOps1627/angular-calendar-timeline/issues
 
 You can support me by donation:
