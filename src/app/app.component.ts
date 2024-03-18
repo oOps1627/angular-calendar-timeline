@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
-import { IItemRowChangedEvent, IItemTimeChangedEvent, ITimelineItem } from "angular-calendar-timeline";
+import { Component, ViewChild } from '@angular/core';
+import {
+  IItemRowChangedEvent,
+  IItemTimeChangedEvent,
+  ITimelineItem,
+  TimelineComponent
+} from "angular-calendar-timeline";
 import { registerLocaleData } from "@angular/common";
 import localeUk from "@angular/common/locales/uk";
+import { CustomViewMode } from "./custom-strategy";
 
 registerLocaleData(localeUk);
 
@@ -11,6 +17,8 @@ registerLocaleData(localeUk);
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @ViewChild('timelineComponent', {static: true}) timeline: TimelineComponent<CustomViewMode>;
+
   label = 'Label';
 
   locale = 'en';

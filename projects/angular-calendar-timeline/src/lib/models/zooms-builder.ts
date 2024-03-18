@@ -1,28 +1,28 @@
 import { Observable } from "rxjs";
-import { ITimelineZoom } from "./zoom";
+import { ITimelineZoom, TimelineViewMode } from "./zoom";
 
-export interface IIndexedZoom extends ITimelineZoom {
+export interface IIndexedZoom<ViewMode = TimelineViewMode> extends ITimelineZoom<ViewMode> {
   index: number;
 }
 
-export interface IZoomsHandler {
-  activeZoom$: Observable<IIndexedZoom>;
+export interface IZoomsHandler<ViewMode> {
+  activeZoom$: Observable<IIndexedZoom<ViewMode>>;
 
-  readonly activeZoom: IIndexedZoom;
+  readonly activeZoom: IIndexedZoom<ViewMode>;
 
-  readonly zooms: IIndexedZoom[];
+  readonly zooms: IIndexedZoom<ViewMode>[];
 
-  setZooms(zooms: ITimelineZoom[]): void;
+  setZooms(zooms: ITimelineZoom<ViewMode>[]): void;
 
-  getFirstZoom(): IIndexedZoom;
+  getFirstZoom(): IIndexedZoom<ViewMode>;
 
-  getLastZoom(): IIndexedZoom;
+  getLastZoom(): IIndexedZoom<ViewMode>;
 
   zoomIn(): void;
 
   zoomOut(): void;
 
-  changeActiveZoom(zoom: ITimelineZoom): void;
+  changeActiveZoom(zoom: ITimelineZoom<ViewMode>): void;
 
-  isZoomActive(zoom: ITimelineZoom): boolean;
+  isZoomActive(zoom: ITimelineZoom<ViewMode>): boolean;
 }

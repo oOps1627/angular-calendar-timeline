@@ -205,14 +205,14 @@ import {
 } from 'angular-timeline-calendar';
 
 enum CustomViewMode {
+  CustomView = 1,
   Day = TimelineViewMode.Day,
   Week = TimelineViewMode.Week,
   Month = TimelineViewMode.Month,
-  Custom = 'Custom'
 }
 
-class CustomStrategyManager extends StrategyManager implements IStrategyManager<TimelineViewMode> {
-  getScaleGenerator(viewMode: CustomViewMode): IScaleGenerator {
+class CustomStrategyManager extends StrategyManager implements IStrategyManager<CustomViewMode> {
+  getScaleGenerator(viewMode): IScaleGenerator {
     if (viewMode === CustomViewMode.Custom) {
       return {...};  // your custom logic here
     }
@@ -220,12 +220,12 @@ class CustomStrategyManager extends StrategyManager implements IStrategyManager<
     return super.getScaleGenerator(viewMode);
   };
 
-  getViewModeAdaptor(viewMode: CustomViewMode): IViewModeAdaptor {
+  getViewModeAdaptor(viewMode): IViewModeAdaptor {
     if (viewMode === CustomViewMode.Custom) {
       return {...} // custom adaptor;
     }
 
-    return super.getAdaptor(viewMode);
+    return super.getViewModeAdaptor(viewMode);
   }
 }
 

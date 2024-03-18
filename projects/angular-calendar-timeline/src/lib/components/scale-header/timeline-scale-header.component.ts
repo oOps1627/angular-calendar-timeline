@@ -24,7 +24,7 @@ export class TimelineScaleHeaderComponent implements OnChanges {
 
   @Input() locale: string;
 
-  @Input() zoom: ITimelineZoom;
+  @Input() zoom: ITimelineZoom<any>;
 
   public groups: IGeneratedGroup[] = [];
 

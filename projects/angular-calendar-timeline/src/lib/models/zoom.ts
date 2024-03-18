@@ -1,7 +1,7 @@
 export enum TimelineViewMode {
-  Month = 'Month',
-  Week = 'Week',
-  Day = 'Day'
+  Month = 101,
+  Week = 102,
+  Day = 103
 }
 
 export interface ITimelineZoom<ViewMode = TimelineViewMode> {

@@ -23,7 +23,7 @@ import {
   IScale,
   IScaleGenerator,
   ITimelineItem,
-  ITimelineZoom, IZoomsHandler, IScaleColumn, IItemTimeChangedEvent, IItemRowChangedEvent
+  ITimelineZoom, IZoomsHandler, IScaleColumn, IItemTimeChangedEvent, IItemRowChangedEvent, TimelineViewMode
 } from './models';
 import { isPlatformBrowser } from "@angular/common";
 import { MillisecondsToTime } from "./helpers/date-helpers";
@@ -40,7 +40,7 @@ import { RowDeterminant } from "./helpers/row-determinant";
   styleUrls: ['./timeline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimelineComponent implements AfterViewInit, OnDestroy {
+export class TimelineComponent<ViewMode = TimelineViewMode> implements AfterViewInit, OnDestroy {
   /**
    * Indicates the current shown date in the middle of user`s screen.
    */
@@ -62,7 +62,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
 
   public itemsIterator: IItemsIterator = new ItemsIterator();
 
-  public zoomsHandler: IZoomsHandler = new ZoomsHandler(DefaultZooms);
+  public zoomsHandler: IZoomsHandler<ViewMode> = new ZoomsHandler<ViewMode>(DefaultZooms as any);
 
   private _ignoreNextScrollEvent: boolean = false;
 
@@ -81,7 +81,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * Emits event when current zoom was changed.
    */
-  @Output() zoomChanged: EventEmitter<ITimelineZoom> = new EventEmitter<ITimelineZoom>();
+  @Output() zoomChanged: EventEmitter<ITimelineZoom<ViewMode>> = new EventEmitter<ITimelineZoom<ViewMode>>();
 
   /**
    * Emits event when user clicked somewhere on time grid.
@@ -167,7 +167,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
    * Register array of custom zooms.
    * Current zoom can be changed to any existed in this array by calling method "changeZoom()"
    */
-  @Input() set zooms(value: ITimelineZoom[]) {
+  @Input() set zooms(value: ITimelineZoom<ViewMode>[]) {
     this.zoomsHandler.setZooms(value);
   }
 
@@ -190,19 +190,19 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * Active zoom.
    */
-  get zoom(): ITimelineZoom {
+  get zoom(): ITimelineZoom<ViewMode> {
     return this.zoomsHandler.activeZoom;
   }
 
   /**
    * Registered zooms list.
    */
-  get zooms(): ITimelineZoom[] {
+  get zooms(): ITimelineZoom<ViewMode>[] {
     return this.zoomsHandler.zooms;
   }
 
   constructor(private _cdr: ChangeDetectorRef,
-              private _strategyManager: StrategyManager,
+              private _strategyManager: StrategyManager<ViewMode>,
               @Inject(ElementRef) private _elementRef: ElementRef,
               @Inject(PLATFORM_ID) private _platformId: object) {
     this._setStrategies(this.zoom);
@@ -279,7 +279,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
   /**
    * Change zoom to one of the existed
    */
-  changeZoom(zoom: ITimelineZoom): void {
+  changeZoom(zoom: ITimelineZoom<ViewMode>): void {
     this.zoomsHandler.changeActiveZoom(zoom);
   }
 
@@ -365,8 +365,8 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this.itemRowChanged.emit({item, oldRow, newRow});
   }
 
-  private _calculateOptimalZoom(startDate: Date, endDate: Date, paddings = 15): ITimelineZoom {
-    let possibleZoom: ITimelineZoom = this.zoomsHandler.getFirstZoom();
+  private _calculateOptimalZoom(startDate: Date, endDate: Date, paddings = 15): ITimelineZoom<ViewMode> {
+    let possibleZoom: ITimelineZoom<ViewMode> = this.zoomsHandler.getFirstZoom();
 
     for (let i = this.zoomsHandler.getLastZoom().index; i >= this.zoomsHandler.getFirstZoom().index; i--) {
       const currentZoom = this.zoomsHandler.zooms[i];
@@ -438,13 +438,13 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this.itemsIterator.forEach((item) => this._updateItemPosition(item));
   }
 
-  private _updateItemPosition(item: ITimelineItem): void {
+  private _updateItemPosition(item: ITimelineItem<ViewMode>): void {
     item._width = this._calculateItemWidth(item);
     item._left = this._calculateItemLeftPosition(item);
     item.updateView && item.updateView();
   }
 
-  private _calculateItemLeftPosition(item: ITimelineItem): number {
+  private _calculateItemLeftPosition(item: ITimelineItem<ViewMode>): number {
     if (!item.startDate || !item.endDate)
       return 0;
 
@@ -453,7 +453,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     return columnsOffsetFromStart * this.zoom.columnWidth;
   }
 
-  private _calculateItemWidth(item: ITimelineItem): number {
+  private _calculateItemWidth(item: ITimelineItem<ViewMode>): number {
     if (!item.startDate || !item.endDate)
       return 0;
 
@@ -468,7 +468,7 @@ export class TimelineComponent implements AfterViewInit, OnDestroy {
     this.dateMarkerLeftPosition = countOfColumns * this.zoom.columnWidth;
   }
 
-  private _setStrategies(zoom: ITimelineZoom): void {
+  private _setStrategies(zoom: ITimelineZoom<ViewMode>): void {
     this.viewModeAdaptor = this._strategyManager.getViewModeAdaptor(zoom.viewMode);
     this.scaleGenerator = this._strategyManager.getScaleGenerator(zoom.viewMode);
   }
