@@ -43,12 +43,20 @@ describe('WeeksViewModeAdaptor', () => {
     expect(countOfWeeks).toEqual(1);
   });
 
-  it('Column should begins on 05.06.2023 when date is in (05-11).06.2023 dates range', () => {
+  it('Column should begins on 05.06.2023 when date is 06.11.06.2023', () => {
     const date = new Date(2023, 5, 6);
     const beginningDate = viewModeAdaptor.getBeginningDateOfColumn(date);
     expect(beginningDate.getDate()).toBe(5);
     expect(beginningDate.getMonth()).toBe(5);
     expect(beginningDate.getFullYear()).toBe(2023);
+  });
+
+  it('Column should begins on 10.06.2024 when date is 10.06.2024', () => {
+    const date = new Date(2024, 5, 10);
+    const beginningDate = viewModeAdaptor.getBeginningDateOfColumn(date);
+    expect(beginningDate.getDate()).toBe(10);
+    expect(beginningDate.getMonth()).toBe(5);
+    expect(beginningDate.getFullYear()).toBe(2024);
   });
 
   it('Column should ends on 11.06.2023 when date is in 07.06.2023', () => {
@@ -65,5 +73,13 @@ describe('WeeksViewModeAdaptor', () => {
     expect(beginningDate.getDate()).toBe(18);
     expect(beginningDate.getMonth()).toBe(5);
     expect(beginningDate.getFullYear()).toBe(2023);
+  });
+
+  it('Column should ends on 9.06.2024 when date is 9.06.2024', () => {
+    const date = new Date(2024, 5, 9);
+    const beginningDate = viewModeAdaptor.getEndingDateOfColumn(date);
+    expect(beginningDate.getDate()).toBe(9);
+    expect(beginningDate.getMonth()).toBe(5);
+    expect(beginningDate.getFullYear()).toBe(2024);
   });
 });

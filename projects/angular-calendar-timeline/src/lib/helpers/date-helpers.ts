@@ -33,9 +33,11 @@ export class DateHelpers {
 
   static lastDayOfWeek(date: DateInput): Date {
     date = new Date(date);
-    const first = date.getDate() - date.getDay() + 7;
+    const dayOfWeek = date.getDay();
+    const diffToSunday = (dayOfWeek === 0) ? 0 : 7 - dayOfWeek;
+    date.setDate(date.getDate() + diffToSunday);
 
-    return new Date(new Date(date).setDate(first));
+    return date;
   }
 
   static dayBeginningTime(day: Date): Date {
