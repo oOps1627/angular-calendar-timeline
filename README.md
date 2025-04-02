@@ -251,6 +251,7 @@ export class MyModule {
 <li>For Angular >= 14 use <b>0.5</b></li>
 <li>For Angular = 16 use <b>0.6</b></li>
 <li>For Angular = 17 use <b>0.7</b></li>
+<li>For Angular > 18 use <b>0.8</b></li>
 
 <br>
 
