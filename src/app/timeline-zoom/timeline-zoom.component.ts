@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { TimelineComponent } from "angular-calendar-timeline";
-import { CustomViewMode, TimelineZoom } from "../custom-strategy";
+import { CustomViewMode } from "../custom-strategy";
 
 @Component({
   selector: 'app-timeline-zoom',
@@ -8,11 +8,20 @@ import { CustomViewMode, TimelineZoom } from "../custom-strategy";
   styleUrls: ['./timeline-zoom.component.scss'],
 })
 export class TimelineZoomComponent implements AfterViewInit {
+  minZoomIndex: number;
+  maxZoomIndex: number;
+  currentZoomIndex: number;
+
   @Input() timelineComponent: TimelineComponent<CustomViewMode>;
 
   ngAfterViewInit(): void {
-    const customZoom: TimelineZoom = {columnWidth: 60, viewMode: CustomViewMode.Month};
-    this.timelineComponent!.changeZoom(customZoom);
+    this.minZoomIndex = this.timelineComponent.zoomsHandler.getFirstZoom().index;
+    this.maxZoomIndex = this.timelineComponent.zoomsHandler.getLastZoom().index;
+
+    this.timelineComponent.zoomsHandler.activeZoom$
+      .subscribe((zoom) => this.currentZoomIndex = zoom.index);
+
+    this.zoomAndFitToContent();
   }
 
   zoomIn(): void {
@@ -30,6 +39,10 @@ export class TimelineZoomComponent implements AfterViewInit {
 
   zoomAndFitToContent(): void {
     this.timelineComponent.fitToContent(15);
+  }
+
+  changeZoom(event: Event): void {
+    this.timelineComponent.changeZoomByIndex(+(event.target as HTMLInputElement).value);
   }
 }
 

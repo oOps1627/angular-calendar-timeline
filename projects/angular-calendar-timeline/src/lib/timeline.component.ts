@@ -284,6 +284,18 @@ export class TimelineComponent<ViewMode = TimelineViewMode> implements AfterView
   }
 
   /**
+   * Find zoom by its index and change
+   */
+  changeZoomByIndex(index: number): void {
+    const zoom = this.zoomsHandler.zooms.find(zoom => zoom.index === index);
+    if (zoom) {
+      this.zoomsHandler.changeActiveZoom(zoom);
+    } else {
+      console.error(`Cannot find zoom with index ${index}`);
+    }
+  }
+
+  /**
    * Changes zoom to the max value
    */
   zoomFullIn(): void {

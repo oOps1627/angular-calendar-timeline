@@ -4,6 +4,11 @@
 </button>
 
 <div class='zoom-group'>
+  <input type="range"
+         [min]="minZoomIndex"
+         [max]="maxZoomIndex"
+         [value]="currentZoomIndex"
+         (input)="changeZoom($event)">
   <button (click)='zoomOut()' class='reduce'>-</button>
 
   <button (click)='zoomIn()' class='increase'>+</button>
