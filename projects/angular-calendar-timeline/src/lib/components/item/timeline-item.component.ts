@@ -61,6 +61,7 @@ export class TimelineItemComponent {
 
   onItemResizeStart(event: ResizeEvent): void {
     this.isItemResizingStarted = true;
+    this._cdr.markForCheck();
   }
 
   onItemResizeEnd(event: ResizeEvent): void {
@@ -87,11 +88,13 @@ export class TimelineItemComponent {
 
     if (!this._item.startDate || !this._item.endDate) {
       this.isInScaleRange = true;
+      this._cdr.markForCheck();
       return;
     }
 
     this.isInScaleRange = this._scale.startDate.getTime() <= this._item.startDate.getTime()
       && this._scale.endDate.getTime() >= this._item.endDate.getTime();
+    this._cdr.markForCheck();
   }
 
   private _setRowZIndex(index: number): void {

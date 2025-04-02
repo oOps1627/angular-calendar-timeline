@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -42,6 +42,9 @@ export class TimelinePanelComponent implements OnChanges {
 
   @Output() widthChanged = new EventEmitter<number>();
 
+  constructor(private _cdr: ChangeDetectorRef) {
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (Object.keys(changes).some(key => ['width', 'minWidth', 'maxWidth'].includes(key))) {
       this._validateWidth();
@@ -64,6 +67,7 @@ export class TimelinePanelComponent implements OnChanges {
 
   toggleExpand(item: ITimelineItem): void {
     item.childrenItemsExpanded = !item.childrenItemsExpanded;
+    this._cdr.markForCheck();
   }
 
   private _validateWidth(): void {
