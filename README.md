@@ -37,7 +37,7 @@ Library also supports SSR.
 Install through npm:
 
 ```bash
-npm install --save angular-timeline-calendar
+npm install --save angular-calendar-timeline
 ```
 
 Then import the timeline module into the module where you want to use the timeline.

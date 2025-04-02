@@ -1,7 +1,7 @@
 {
   "name": "angular-calendar-timeline",
   "version": "0.5.1",
-  "description": "A timeline for angular 13 that shows tasks or events on a timeline in different modes: days, weeks, and months.",
+  "description": "A timeline for angular that shows tasks or events on a timeline in different modes: days, weeks, and months.",
   "author": "Andrii Krashivskyi",
   "license": "MIT",
   "homepage": "https://github.com/oOps1627/angular-calendar-timeline#readme",
@@ -12,6 +12,7 @@
   "keywords": [
     "angular",
     "angular2",
+    "angular17",
     "timeline",
     "calendar",
     "schedule",
