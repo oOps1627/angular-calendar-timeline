@@ -72,10 +72,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "calendar-timeline:build:production"
+              "buildTarget": "calendar-timeline:build:production"
             },
             "development": {
-              "browserTarget": "calendar-timeline:build:development"
+              "buildTarget": "calendar-timeline:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +83,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "calendar-timeline:build"
+            "buildTarget": "calendar-timeline:build"
           }
         },
         "test": {
