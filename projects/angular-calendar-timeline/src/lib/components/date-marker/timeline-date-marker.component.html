@@ -1,7 +1,7 @@
 <ng-container *ngIf="isInScaleRange">
   <ng-container *ngIf="customTemplate; else defaultDateMarkerTemplate"
                 [ngTemplateOutlet]="customTemplate"
-                [ngTemplateOutletContext]="{left: leftPosition}">
+                [ngTemplateOutletContext]="{leftPosition: leftPosition}">
   </ng-container>
 
   <ng-template #defaultDateMarkerTemplate>

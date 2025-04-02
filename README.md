@@ -247,8 +247,9 @@ export class MyModule {
 
 <h2 align="center">Angular versions</h2>
 
-<li>For Angular 13 use <b>0.4.3</b></li>
-<li>For Angular >= 14 use <b>0.5.0</b></li>
+<li>For Angular = 13 use <b>0.4</b></li>
+<li>For Angular >= 14 use <b>0.5</b></li>
+<li>For Angular >= 16 use <b>0.6</b></li>
 
 <br>
 
